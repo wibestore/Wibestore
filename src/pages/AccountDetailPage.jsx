@@ -1,8 +1,9 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, Shield, Clock, MessageCircle, Crown, ChevronRight, AlertTriangle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { accounts, formatPrice, calculateCommission, COMMISSION_RATE } from '../data/mockData';
 import AccountCard from '../components/AccountCard';
+import ReviewModal from '../components/ReviewModal';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 
@@ -12,8 +13,29 @@ const AccountDetailPage = () => {
     const { user, isAuthenticated } = useAuth();
     const { startConversation } = useChat();
     const [selectedPayment, setSelectedPayment] = useState('payme');
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [hasPurchased, setHasPurchased] = useState(false);
+    const [hasReviewed, setHasReviewed] = useState(false);
 
     const account = accounts.find(acc => acc.id === parseInt(accountId));
+
+    // Check if user has purchased this account
+    useEffect(() => {
+        if (user && account) {
+            const savedPurchases = localStorage.getItem(`wibePurchases_${user.id}`);
+            if (savedPurchases) {
+                const purchaseIds = JSON.parse(savedPurchases);
+                setHasPurchased(purchaseIds.includes(account.id));
+            }
+
+            // Check if already reviewed
+            const savedReviews = localStorage.getItem('wibeReviews');
+            if (savedReviews) {
+                const reviews = JSON.parse(savedReviews);
+                setHasReviewed(reviews.some(r => r.accountId === account.id && r.reviewerId === user.id));
+            }
+        }
+    }, [user, account]);
 
     // Handle contact seller
     const handleContactSeller = () => {
@@ -30,6 +52,10 @@ const AccountDetailPage = () => {
         };
 
         startConversation(seller, account);
+    };
+
+    const handleReviewSubmit = (review) => {
+        setHasReviewed(true);
     };
 
     const relatedAccounts = accounts
@@ -224,6 +250,26 @@ const AccountDetailPage = () => {
                     </div>
                 )}
             </div>
+
+            {/* Review Modal */}
+            <ReviewModal
+                isOpen={showReviewModal}
+                onClose={() => setShowReviewModal(false)}
+                seller={account?.seller}
+                account={account}
+                onSubmit={handleReviewSubmit}
+            />
+
+            {/* Floating Review Button for purchased accounts */}
+            {hasPurchased && !hasReviewed && (
+                <button
+                    onClick={() => setShowReviewModal(true)}
+                    className="fixed bottom-24 right-6 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full text-black font-semibold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all z-40"
+                >
+                    <Star className="w-5 h-5" />
+                    Baholash
+                </button>
+            )}
         </div>
     );
 };

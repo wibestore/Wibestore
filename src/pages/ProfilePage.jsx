@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package } from 'lucide-react';
+import { User, ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import AccountCard from '../components/AccountCard';
+import ReviewList from '../components/ReviewList';
 import { accounts, formatPrice } from '../data/mockData';
 
 const ProfilePage = () => {
@@ -12,6 +13,8 @@ const ProfilePage = () => {
     const [likedAccounts, setLikedAccounts] = useState([]);
     const [purchases, setPurchases] = useState([]);
     const [sales, setSales] = useState([]);
+    const [reviewCount, setReviewCount] = useState(0);
+    const [averageRating, setAverageRating] = useState(5.0);
 
     // Redirect if not logged in
     useEffect(() => {
@@ -30,26 +33,36 @@ const ProfilePage = () => {
                 setLikedAccounts(accounts.filter(acc => likedIds.includes(acc.id)));
             }
 
-            // Load purchases (mock - get random accounts for demo)
+            // Load purchases
             const savedPurchases = localStorage.getItem(`wibePurchases_${user.id}`);
             if (savedPurchases) {
                 const purchaseIds = JSON.parse(savedPurchases);
                 setPurchases(accounts.filter(acc => purchaseIds.includes(acc.id)));
             } else {
-                // Demo: assign some random purchases
                 const demoPurchases = accounts.slice(0, 2);
                 setPurchases(demoPurchases);
                 localStorage.setItem(`wibePurchases_${user.id}`, JSON.stringify(demoPurchases.map(a => a.id)));
             }
 
-            // Load sales (mock)
+            // Load sales
             const savedSales = localStorage.getItem(`wibeSales_${user.id}`);
             if (savedSales) {
                 const saleIds = JSON.parse(savedSales);
                 setSales(accounts.filter(acc => saleIds.includes(acc.id)));
             } else {
-                // Demo: no sales initially
                 setSales([]);
+            }
+
+            // Load reviews received
+            const savedReviews = localStorage.getItem('wibeReviews');
+            if (savedReviews) {
+                const allReviews = JSON.parse(savedReviews);
+                const userReviews = allReviews.filter(r => r.sellerId === user.id);
+                setReviewCount(userReviews.length);
+                if (userReviews.length > 0) {
+                    const avg = userReviews.reduce((sum, r) => sum + r.rating, 0) / userReviews.length;
+                    setAverageRating(avg.toFixed(1));
+                }
             }
         }
     }, [user]);
@@ -63,6 +76,7 @@ const ProfilePage = () => {
         { id: 'purchases', label: 'Sotib olganlarim', icon: ShoppingBag, count: purchases.length },
         { id: 'sales', label: 'Sotganlarim', icon: Tag, count: sales.length },
         { id: 'likes', label: 'Yoqtirganlarim', icon: Heart, count: likedAccounts.length },
+        { id: 'reviews', label: 'Baholashlarim', icon: MessageSquare, count: reviewCount },
     ];
 
     if (!user) {
@@ -92,15 +106,16 @@ const ProfilePage = () => {
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm">
                                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full">
                                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                    <span className="text-white">{user.rating || 5.0}</span>
+                                    <span className="text-white">{averageRating}</span>
+                                    <span className="text-gray-500">({reviewCount})</span>
                                 </div>
                                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full">
                                     <Package className="w-4 h-4 text-cyan-400" />
-                                    <span className="text-gray-300">{user.sales || 0} ta sotuvlar</span>
+                                    <span className="text-gray-300">{sales.length} ta sotuvlar</span>
                                 </div>
                                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full">
                                     <ShoppingBag className="w-4 h-4 text-purple-400" />
-                                    <span className="text-gray-300">{user.purchases || purchases.length} ta xaridlar</span>
+                                    <span className="text-gray-300">{purchases.length} ta xaridlar</span>
                                 </div>
                             </div>
                         </div>
@@ -225,6 +240,13 @@ const ProfilePage = () => {
                                     </Link>
                                 </div>
                             )}
+                        </>
+                    )}
+
+                    {activeTab === 'reviews' && (
+                        <>
+                            <h2 className="text-xl font-bold text-white mb-6">Mening baholashlarim</h2>
+                            <ReviewList userId={user.id} type="received" />
                         </>
                     )}
                 </div>
