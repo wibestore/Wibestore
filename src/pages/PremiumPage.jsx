@@ -102,7 +102,7 @@ const PremiumPage = () => {
                         >
                             {/* Popular Badge */}
                             {plan.popular && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full text-sm font-bold text-black">
+                                <div className="za absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full text-sm font-bold text-black">
                                     🔥 Eng mashhur
                                 </div>
                             )}
