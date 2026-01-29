@@ -13,6 +13,7 @@ import TopAccountsPage from './pages/TopAccountsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
+import TermsPage from './pages/TermsPage';
 
 // Admin pages
 import AdminLayout from './pages/admin/AdminLayout';
@@ -54,6 +55,7 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/terms" element={<TermsPage />} />
                   </Routes>
                 </main>
                 <Footer />
