@@ -71,7 +71,7 @@ const PremiumPage = () => {
     ];
 
     return (
-        <div className="bt min-h-screen pt-24 pb-16">
+        <div className="bt min-h-screen pt-24 pb-16 page-enter">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="bs text-center mb-16">
@@ -91,7 +91,7 @@ const PremiumPage = () => {
                 </div>
 
                 {/* Pricing Cards */}
-                <div className="bs grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div className="bs grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-16">
                     {plans.map((plan) => (
                         <div
                             key={plan.id}
@@ -171,7 +171,7 @@ const PremiumPage = () => {
                 </div>
 
                 {/* Benefits Section */}
-                <div className="bg-gradient-to-b from-[#1e1e32] to-[#25253a] rounded-3xl p-8 lg:p-12 border border-white/5 mb-16">
+                <div className="xw bg-gradient-to-b from-[#1e1e32] to-[#25253a] rounded-3xl p-8 lg:p-12 border border-white/5 mb-16">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold text-white mb-4">Premium afzalliklari</h2>
                         <p className="text-gray-400">Nima uchun sotuvchilar Premium tanlaydi?</p>

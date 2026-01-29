@@ -13,7 +13,7 @@ const TopAccountsPage = () => {
     });
 
     return (
-        <div className="bt min-h-screen pt-24 pb-16 ">
+        <div className="bt min-h-screen pt-24 pb-16 page-enter">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="bs text-center mb-12">
@@ -25,9 +25,9 @@ const TopAccountsPage = () => {
                         Top <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">akkauntlar</span>
                     </h1>
                     <div className="text1">
-                    <p className=" text-gray-400 max-w-2xl mx-auto">
-                        Eng yuqori reytingli va ishonchli sotuvchilardan eng yaxshi akkauntlar
-                    </p>
+                        <p className=" text-gray-400 max-w-2xl mx-auto">
+                            Eng yuqori reytingli va ishonchli sotuvchilardan eng yaxshi akkauntlar
+                        </p>
 
                     </div>
                 </div>

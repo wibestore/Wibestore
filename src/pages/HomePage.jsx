@@ -15,14 +15,14 @@ const HomePage = () => {
     ];
 
     return (
-        <div className="min-h-screen cons">
+        <div className="min-h-screen cons page-enter">
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden">
                 {/* Background effect */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-purple-500/15 to-transparent rounded-full blur-3xl animate-float" />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative ">
-                    
+
                     <div className="text-center cons">
                         {/* Badge */}
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-medium mb-6 animate-fadeInUp">
@@ -41,10 +41,10 @@ const HomePage = () => {
                         {/* Subtitle */}
                         <div className="bad">
 
-                        <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                            PUBG Mobile, Free Fire, Steam va boshqa o'yinlar uchun akkauntlarni xavfsiz sotib oling yoki soting.
-                            Payme, Click, Paynet orqali to'lang.
-                        </p>
+                            <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+                                PUBG Mobile, Free Fire, Steam va boshqa o'yinlar uchun akkauntlarni xavfsiz sotib oling yoki soting.
+                                Payme, Click, Paynet orqali to'lang.
+                            </p>
                         </div>
 
                         {/* CTA Buttons */}
@@ -162,9 +162,9 @@ const HomePage = () => {
                                 Nega <span className="text-purple-400">WibeStore</span>?
                             </h2>
                             <div className='c1'>
-                            <p className="text-gray-400 max-w-2xl mx-auto text-center">
-                                Biz xavfsizlik va ishonchni birinchi o'ringa qo'yamiz
-                            </p>
+                                <p className="text-gray-400 max-w-2xl mx-auto text-center">
+                                    Biz xavfsizlik va ishonchni birinchi o'ringa qo'yamiz
+                                </p>
 
                             </div>
                         </div>
@@ -218,10 +218,10 @@ const HomePage = () => {
                                 Akkauntlaringizni soting!
                             </h2>
                             <div className="c4">
-                            <p className="text-white/80 max-w-2xl mx-auto mb-8">
-                                Premium va oddiy sotuvchilar uchun imkoniyat. Faqat 10% komissiya.
-                                Payme, Click, Paynet orqali pul oling.
-                            </p>
+                                <p className="text-white/80 max-w-2xl mx-auto mb-8">
+                                    Premium va oddiy sotuvchilar uchun imkoniyat. Faqat 10% komissiya.
+                                    Payme, Click, Paynet orqali pul oling.
+                                </p>
                             </div>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                                 <Link
