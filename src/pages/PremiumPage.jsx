@@ -83,15 +83,15 @@ const PremiumPage = () => {
                         Sotuvlaringizni <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">oshiring</span>
                     </h1>
                     <div className='text1'>
-                    <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                        Premium obuna bilan akkauntlaringiz ko'proq ko'rinadi, tezroq sotiladi va ko'proq daromad keltiradi
-                    </p>
+                        <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                            Premium obuna bilan akkauntlaringiz ko'proq ko'rinadi, tezroq sotiladi va ko'proq daromad keltiradi
+                        </p>
 
                     </div>
                 </div>
 
                 {/* Pricing Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div className="bs grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                     {plans.map((plan) => (
                         <div
                             key={plan.id}
@@ -149,9 +149,23 @@ const PremiumPage = () => {
                             </ul>
 
                             {/* Button */}
-                            <button className={`w-full py-4 rounded-xl font-semibold transition-all ${plan.buttonClass}`}>
-                                {plan.price > 0 ? 'Sotib olish' : 'Hozirgi reja'}
-                            </button>
+                            {plan.price > 0 ? (
+                                <a
+                                    href="https://t.me/amor_fati71"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`va block text-center w-full py-4 rounded-xl font-semibold transition-all ${plan.buttonClass}`}
+                                >
+                                    💬 Telegram orqali sotib olish
+                                </a>
+                            ) : (
+                                <button
+                                    disabled
+                                    className={`va w-full py-4 rounded-xl font-semibold transition-all ${plan.buttonClass} opacity-50 cursor-not-allowed`}
+                                >
+                                    Hozirgi reja
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>

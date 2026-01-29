@@ -26,6 +26,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminAccounts from './pages/admin/AdminAccounts';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminLogin from './pages/admin/AdminLogin';
+import AdminPremium from './pages/admin/AdminPremium';
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
               <Route path="/admin/accounts" element={<AdminLayout><AdminAccounts /></AdminLayout>} />
               <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
               <Route path="/admin/reports" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-              <Route path="/admin/premium" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+              <Route path="/admin/premium" element={<AdminLayout><AdminPremium /></AdminLayout>} />
               <Route path="/admin/finance" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
               <Route path="/admin/settings" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
 

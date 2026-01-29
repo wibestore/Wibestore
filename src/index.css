@@ -183,6 +183,11 @@ body::before {
     background-position: 200% 0;
   }
 }
+.va{
+  padding: 10px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
 .za{
   height: 30px;
   padding: 5px;
