@@ -41,6 +41,9 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+.bt{
+  margin-bottom: 50px;
+}
 
 .pag {
   padding-top: 50px;
@@ -55,6 +58,7 @@ body {
 }
 .cons{
   padding-top: 70px;
+  padding-bottom: 40px;
 }
 .bad{
   display: flex;
@@ -179,7 +183,29 @@ body::before {
     background-position: 200% 0;
   }
 }
+.st{
+  margin-bottom: 20px;
+ 
+}
 
+.bb{
+  padding-top: 50px;
+}
+.md{
+  
+  margin-left: 15px;
+}
+.pad{
+  padding: 10px;
+}
+.wd{
+  width: 150px;
+}
+
+.cl{
+  padding-top: 100px;
+  padding-bottom: 40px;
+}
 .animate-fadeInUp {
   animation: fadeInUp 0.6s ease-out both;
 }

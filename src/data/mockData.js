@@ -5,7 +5,7 @@ export const games = [
     {
         id: 'pubg-mobile',
         name: 'PUBG Mobile',
-        icon: 'рџЋЇ',
+        icon: '⚔️',
         image: '/img/icons/Pubg-icon.webp',
         accountCount: 547,
         color: '#F7B32B'
@@ -13,7 +13,7 @@ export const games = [
     {
         id: 'steam',
         name: 'Steam Account',
-        icon: 'рџЋ®',
+        icon: '🎮',
         image: '/img/icons/steam.png',
         accountCount: 1203,
         color: '#1B2838'
@@ -21,7 +21,7 @@ export const games = [
     {
         id: 'free-fire',
         name: 'Free Fire',
-        icon: 'рџ”Ґ',
+        icon: '🔫',
         image: '/img/icons/free.webp',  
         accountCount: 389,
         color: '#FF5722'
@@ -29,7 +29,7 @@ export const games = [
     {
         id: 'standoff2',
         name: 'Standoff 2',
-        icon: 'рџ”«',
+        icon: '🔫',
         image: '/img/icons/st.webp',
         accountCount: 256,
         color: '#E91E63'
@@ -37,7 +37,7 @@ export const games = [
     {
         id: 'mobile-legends',
         name: 'Mobile Legends',
-        icon: 'вљ”пёЏ',
+        icon: '⚔️',
         image: '/img/icons/ml.webp',
         accountCount: 478,
         color: '#00BCD4'
@@ -45,7 +45,7 @@ export const games = [
     {
         id: 'clash-of-clans',
         name: 'Clash of Clans',
-        icon: 'рџЏ°',
+        icon: '🏰',
         image: '/img/icons/cc.webp',
         accountCount: 312,
         color: '#8BC34A'
@@ -53,7 +53,7 @@ export const games = [
     {
         id: 'codm',
         name: 'Call of Duty Mobile',
-        icon: 'рџЋ–пёЏ',
+        icon: '🔫',
         image: '/img/icons/cal.webp',
         accountCount: 289,
         color: '#4CAF50'
@@ -61,7 +61,7 @@ export const games = [
     {
         id: 'roblox',
         name: 'Roblox',
-        icon: 'рџ§±',
+        icon: '🤖',
         image: '/img/icons/roblox.webp',
         accountCount: 634,
         color: '#E2231A'

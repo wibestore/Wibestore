@@ -52,23 +52,23 @@ const ProductsPage = () => {
     ];
 
     return (
-        <div className="min-h-screen pt-24 pb-16">
+        <div className="min-h-screen pt-24 pb-16 cl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-8 text-center">
                     <h1 className="text-3xl font-bold text-white mb-2">Barcha mahsulotlar</h1>
                     <p className="text-gray-400">Bu yerda barcha o'yin akkauntlari va raqamli mahsulotlar mavjud</p>
                 </div>
 
                 {/* Games Filter */}
                 <div className="mb-8">
-                    <h2 className="text-lg font-semibold text-white mb-4">O'yinlar bo'yicha</h2>
+                    <h2 className="text-lg font-semibold text-white mb-4 md">O'yinlar bo'yicha</h2>
                     <div className="flex flex-wrap gap-2">
                         <button
                             onClick={() => setSelectedGame('all')}
-                            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGame === 'all'
-                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                    : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a]'
+                            className={` wd px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGame === 'all'
+                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                                : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a] '
                                 }`}
                         >
                             Barchasi
@@ -78,8 +78,8 @@ const ProductsPage = () => {
                                 key={game.id}
                                 onClick={() => setSelectedGame(game.id)}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGame === game.id
-                                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                        : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a]'
+                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                                    : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a]'
                                     }`}
                             >
                                 <span>{game.icon}</span>
@@ -90,25 +90,25 @@ const ProductsPage = () => {
                 </div>
 
                 {/* Search & Filters Bar */}
-                <div className="flex flex-col lg:flex-row gap-4 mb-8">
+                <div className="flex flex-col lg:flex-row items-center gap-4 mb-8">
                     {/* Search */}
-                    <div className="relative flex-1">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                    <div className="relative flex-1 w-full">
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Akkauntlarni qidirish..."
-                            className="w-full pl-12 pr-4 py-3 bg-[#1e1e32] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                            className="w-full pl-5 pr-12 py-4 bg-[#1e1e32] border border-white/10 rounded-xl text-white text-base placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors h-14 leading-tight"
                         />
+                        <Search className="st absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                     </div>
 
                     {/* Sort */}
-                    <div className="relative">
+                    <div className="relative w-full lg:w-auto">
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="appearance-none w-full lg:w-48 px-4 py-3 pr-10 bg-[#1e1e32] border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500/50 cursor-pointer transition-colors"
+                            className="appearance-none w-full lg:w-56 px-5 pr-12 bg-[#1e1e32] border border-white/10 rounded-xl text-white text-base focus:outline-none focus:border-purple-500/50 cursor-pointer transition-colors h-14 flex items-center"
                         >
                             <option value="newest">Eng yangilari</option>
                             <option value="price-low">Narx: arzon</option>
@@ -119,17 +119,17 @@ const ProductsPage = () => {
                     </div>
 
                     {/* View Mode */}
-                    <div className="flex bg-[#1e1e32] rounded-xl p-1">
+                    <div className="flex bg-[#1e1e32] rounded-xl p-1 h-14 items-center">
                         <button
                             onClick={() => setViewMode('grid')}
-                            className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'
+                            className={`p-3 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'
                                 }`}
                         >
                             <Grid className="w-5 h-5" />
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`p-2 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'
+                            className={`p-3 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'
                                 }`}
                         >
                             <List className="w-5 h-5" />
@@ -145,8 +145,8 @@ const ProductsPage = () => {
                 {/* Accounts Grid/List */}
                 {finalAccounts.length > 0 ? (
                     <div className={`grid gap-6 ${viewMode === 'grid'
-                            ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                            : 'grid-cols-1'
+                        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                        : 'grid-cols-1'
                         }`}>
                         {finalAccounts.map((account) => (
                             <AccountCard key={account.id} account={account} />
