@@ -2,7 +2,33 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Gamepad2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { loginWithGoogle } from '../lib/appwrite';
+import { useGoogleLogin } from '@react-oauth/google';
+import emailjs from '@emailjs/browser';
+
+// EmailJS credentials
+const EMAILJS_SERVICE_ID = 'service_eh6ud1l';
+const EMAILJS_TEMPLATE_ID = 'template_hukqqt4';
+const EMAILJS_PUBLIC_KEY = 'Fe_UI6pb3qY22XkZd';
+
+// Email yuborish funksiyasi
+const sendLoginEmail = (user) => {
+    const loginTime = new Date().toLocaleString('uz-UZ', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Tashkent'
+    });
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        user_name: user.name || 'Foydalanuvchi',
+        user_email: user.email,
+        login_time: loginTime
+    }, EMAILJS_PUBLIC_KEY)
+        .then(() => console.log('Login email yuborildi!'))
+        .catch((err) => console.error('Email xatosi:', err));
+};
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -21,7 +47,8 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            await login(formData.email, formData.password);
+            const loggedUser = await login(formData.email, formData.password);
+            sendLoginEmail(loggedUser);  // Email yuborish
             navigate('/');
         } catch (err) {
             setError(err.message);
@@ -30,13 +57,58 @@ const LoginPage = () => {
         }
     };
 
-    const handleGoogleLogin = async () => {
-        try {
-            await loginWithGoogle();
-        } catch (err) {
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try {
+                setIsLoading(true);
+                // Get user info from Google
+                const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                });
+                const googleUser = await userInfoResponse.json();
+
+                // Create user object
+                const user = {
+                    id: googleUser.sub,
+                    name: googleUser.name,
+                    email: googleUser.email,
+                    avatar: googleUser.picture,
+                    isPremium: false,
+                    isAdmin: false,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Check if user exists in localStorage, if not add them
+                const savedUsers = localStorage.getItem('wibeUsers');
+                let users = savedUsers ? JSON.parse(savedUsers) : [];
+                const existingUser = users.find(u => u.email === googleUser.email);
+
+                if (existingUser) {
+                    // Update existing user's avatar if changed
+                    existingUser.avatar = googleUser.picture;
+                    localStorage.setItem('wibeUsers', JSON.stringify(users));
+                    localStorage.setItem('wibeUser', JSON.stringify(existingUser));
+                    sendLoginEmail(existingUser);  // Email yuborish
+                } else {
+                    users.push(user);
+                    localStorage.setItem('wibeUsers', JSON.stringify(users));
+                    localStorage.setItem('wibeUser', JSON.stringify(user));
+                    sendLoginEmail(user);  // Email yuborish
+                }
+
+                // Dispatch custom event to update AuthContext
+                window.dispatchEvent(new Event('storage'));
+                navigate('/');
+            } catch {
+                setError('Google bilan kirishda xatolik yuz berdi');
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        onError: () => {
             setError('Google bilan kirishda xatolik yuz berdi');
         }
-    };
+    });
 
     return (
         <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">

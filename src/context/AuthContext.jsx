@@ -1,22 +1,39 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    // Check for existing session on mount
-    useEffect(() => {
+    const [user, setUser] = useState(() => {
+        // Lazy initialization - runs only once, not in effect
         const savedUser = localStorage.getItem('wibeUser');
         if (savedUser) {
             try {
-                setUser(JSON.parse(savedUser));
+                return JSON.parse(savedUser);
             } catch {
                 localStorage.removeItem('wibeUser');
             }
         }
-        setIsLoading(false);
+        return null;
+    });
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Listen for storage events (for Google OAuth login)
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const savedUser = localStorage.getItem('wibeUser');
+            if (savedUser) {
+                try {
+                    setUser(JSON.parse(savedUser));
+                } catch {
+                    localStorage.removeItem('wibeUser');
+                }
+            } else {
+                setUser(null);
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
     // Get all registered users

@@ -2,7 +2,32 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, Gamepad2, Phone, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import emailjs from '@emailjs/browser';
 
+// EmailJS credentials
+const EMAILJS_SERVICE_ID = 'service_eh6ud1l';
+const EMAILJS_TEMPLATE_ID = 'template_hukqqt4';
+const EMAILJS_PUBLIC_KEY = 'Fe_UI6pb3qY22XkZd';
+
+// Xush kelibsiz emaili
+const sendWelcomeEmail = (user) => {
+    const registerTime = new Date().toLocaleString('uz-UZ', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Tashkent'
+    });
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        user_name: user.name,
+        user_email: user.email,
+        login_time: registerTime + " (Ro'yxatdan o'tish)"
+    }, EMAILJS_PUBLIC_KEY)
+        .then(() => console.log('Welcome email yuborildi!'))
+        .catch((err) => console.error('Email xatosi:', err));
+};
 const SignupPage = () => {
     const navigate = useNavigate();
     const { register } = useAuth();
@@ -41,12 +66,13 @@ const SignupPage = () => {
         setIsLoading(true);
 
         try {
-            await register({
+            const newUser = await register({
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
                 password: formData.password
             });
+            sendWelcomeEmail(newUser);  // Xush kelibsiz emaili
             navigate('/');
         } catch (err) {
             setError(err.message);
