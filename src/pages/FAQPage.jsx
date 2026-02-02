@@ -178,7 +178,7 @@ const FAQPage = () => {
                     <p className="text-gray-400 mb-6">Bizning qo'llab-quvvatlash jamoamiz sizga yordam beradi</p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <a
-                            href="https://t.me/wibestore"
+                            href="https://t.me/wibestoreuz"
                             className="flex items-center gap-2 px-6 py-3 bg-[#0088cc] rounded-xl text-white font-medium hover:opacity-90 transition-opacity"
                         >
                             💬 Telegram orqali

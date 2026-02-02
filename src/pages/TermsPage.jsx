@@ -272,8 +272,8 @@ const TermsPage = () => {
                                 <a href="mailto:support@wibestore.uz" className="px-4 py-2 bg-[#25253a] rounded-xl text-purple-400 hover:bg-purple-500/20 transition-colors">
                                     📧 support@wibestore.uz
                                 </a>
-                                <a href="https://t.me/wibestore" className="px-4 py-2 bg-[#25253a] rounded-xl text-cyan-400 hover:bg-cyan-500/20 transition-colors">
-                                    💬 Telegram: @wibestore
+                                <a href="https://t.me/wibestoreuz" className="px-4 py-2 bg-[#25253a] rounded-xl text-cyan-400 hover:bg-cyan-500/20 transition-colors">
+                                    💬 Telegram: @wibestoreuz
                                 </a>
                             </div>
                         </div>
