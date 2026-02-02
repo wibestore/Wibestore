@@ -91,7 +91,7 @@ const SignupPage = () => {
                             <Gamepad2 className="w-7 h-7 text-white" />
                         </div>
                         <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            wibestore.com
+                            wibestore.uz
                         </span>
                     </Link>
                     <h1 className="text-2xl font-bold text-white mb-2">Ro'yxatdan o'ting</h1>
@@ -106,7 +106,7 @@ const SignupPage = () => {
                     </div>
                     <div className="flex items-center gap-3 text-sm mt-2">
                         <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                        <span className="text-gray-300">Faqat 10% komissiya (Premium: 0%)</span>
+                        <span className="text-gray-300">Faqat 10% komissiya (Premium: 8%, Pro: 5%)</span>
                     </div>
                 </div>
 

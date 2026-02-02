@@ -35,7 +35,7 @@ const Footer = () => {
                                 <Gamepad2 className="w-6 h-6 text-white" />
                             </div>
                             <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                wibestore.com
+                                wibestore.uz
                             </span>
                         </Link>
                         <p className="text-gray-400 text-sm mb-6 max-w-sm">
@@ -43,9 +43,9 @@ const Footer = () => {
                             Xavfsiz savdo, tez yetkazib berish.
                         </p>
                         <div className="space-y-2">
-                            <a href="mailto:support@wibestore.com" className="flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors">
+                            <a href="mailto:support@wibestore.uz" className="flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors">
                                 <Mail className="w-4 h-4" />
-                                support@wibestore.com
+                                support@wibestore.uz
                             </a>
                             <a href="tel:+998901234567" className="flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors">
                                 <Phone className="w-4 h-4" />

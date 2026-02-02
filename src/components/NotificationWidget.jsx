@@ -51,7 +51,10 @@ const NotificationWidget = () => {
 
             {/* Dropdown */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-[#1e1e32] rounded-2xl border border-white/10 shadow-2xl z-50 overflow-hidden">
+                <div
+                    className="fixed sm:absolute left-4 right-4 sm:left-auto sm:right-0 top-16 sm:top-full sm:mt-2 bg-[#1e1e32] rounded-2xl border border-white/10 shadow-2xl z-50 overflow-hidden"
+                    style={{ minWidth: '320px', maxWidth: '400px' }}
+                >
                     {/* Header */}
                     <div className="flex items-center justify-between p-4 border-b border-white/5">
                         <h3 className="font-semibold text-white">Bildirishnomalar</h3>

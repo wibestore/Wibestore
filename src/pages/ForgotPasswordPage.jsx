@@ -78,7 +78,7 @@ const ForgotPasswordPage = () => {
                             <Gamepad2 className="w-7 h-7 text-white" />
                         </div>
                         <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            wibestore.com
+                            wibestore.uz
                         </span>
                     </Link>
                     <h1 className="text-2xl font-bold text-white mb-2">Parolni tiklash</h1>

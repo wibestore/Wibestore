@@ -269,8 +269,8 @@ const TermsPage = () => {
                         <div className="text-gray-300 space-y-4">
                             <p>Savollar yoki takliflar uchun biz bilan bog'laning:</p>
                             <div className="flex flex-wrap gap-4">
-                                <a href="mailto:support@wibestore.com" className="px-4 py-2 bg-[#25253a] rounded-xl text-purple-400 hover:bg-purple-500/20 transition-colors">
-                                    📧 support@wibestore.com
+                                <a href="mailto:support@wibestore.uz" className="px-4 py-2 bg-[#25253a] rounded-xl text-purple-400 hover:bg-purple-500/20 transition-colors">
+                                    📧 support@wibestore.uz
                                 </a>
                                 <a href="https://t.me/wibestore" className="px-4 py-2 bg-[#25253a] rounded-xl text-cyan-400 hover:bg-cyan-500/20 transition-colors">
                                     💬 Telegram: @wibestore

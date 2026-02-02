@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Gamepad2, Flame, Star, LogIn, UserPlus, Package, User, LogOut, ChevronDown, Settings, PlusCircle } from 'lucide-react';
+import { Menu, X, Gamepad2, Flame, Star, LogIn, UserPlus, Package, User, LogOut, ChevronDown, Settings, PlusCircle, Sun, Moon, Coins, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { useCoins } from '../context/CoinContext';
 import NotificationWidget from './NotificationWidget';
 
 const Navbar = () => {
@@ -11,6 +13,8 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { user, isAuthenticated, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
+    const { balance } = useCoins();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -35,6 +39,7 @@ const Navbar = () => {
     const navLinks = [
         { to: '/products', icon: Package, label: 'Boshqa mahsulotlar' },
         { to: '/top', icon: Flame, label: 'Top akkauntlar' },
+        { to: '/statistics', icon: Trophy, label: 'Statistika' },
         { to: '/premium', icon: Star, label: 'Site Premium', premium: true },
     ];
 
@@ -43,7 +48,7 @@ const Navbar = () => {
             ? 'bg-[#0f0f1a]/95 backdrop-blur-xl shadow-lg shadow-black/20'
             : 'bg-[#0f0f1a]/80 backdrop-blur-lg'
             } border-b border-white/5`}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div className="sl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
                 <div className="flex items-center justify-between h-full">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-3 group">
@@ -51,12 +56,12 @@ const Navbar = () => {
                             <Gamepad2 className="w-6 h-6 text-white" />
                         </div>
                         <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            wibestore.com
+                            wibestore.uz
                         </span>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-2">
+                    <div className="hidden lg:flex items-center gap-4">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.to}
@@ -73,9 +78,28 @@ const Navbar = () => {
                     </div>
 
                     {/* Auth Section */}
-                    <div className="hidden lg:flex items-center gap-3">
+                    <div className="hidden lg:flex items-center gap-4">
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                        >
+                            {theme === 'dark' ? (
+                                <Sun className="w-5 h-5 text-yellow-400" />
+                            ) : (
+                                <Moon className="w-5 h-5 text-purple-400" />
+                            )}
+                        </button>
+
                         {isAuthenticated && user ? (
                             <>
+                                {/* Coin Balance */}
+                                <Link to="/coins" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 hover:bg-yellow-500/20 transition-colors">
+                                    <Coins className="w-4 h-4 text-yellow-400" />
+                                    <span className="text-sm font-semibold text-yellow-400">{balance}</span>
+                                </Link>
+
                                 {/* Sell Button */}
                                 <Link
                                     to="/sell"

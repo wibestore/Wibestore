@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { CoinProvider } from './context/CoinContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
@@ -20,6 +22,8 @@ import SellPage from './pages/SellPage';
 import FAQPage from './pages/FAQPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import SettingsPage from './pages/SettingsPage';
+import StatisticsPage from './pages/StatisticsPage';
+import CoinsPage from './pages/CoinsPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Admin pages
@@ -33,54 +37,60 @@ import AdminPremium from './pages/admin/AdminPremium';
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <ChatProvider>
-          <NotificationProvider>
-            <Routes>
-              {/* Admin Login - No layout */}
-              <Route path="/admin/login" element={<AdminLogin />} />
+      <ThemeProvider>
+        <AuthProvider>
+          <CoinProvider>
+            <ChatProvider>
+              <NotificationProvider>
+                <Routes>
+                  {/* Admin Login - No layout */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
 
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-              <Route path="/admin/accounts" element={<AdminLayout><AdminAccounts /></AdminLayout>} />
-              <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
-              <Route path="/admin/reports" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-              <Route path="/admin/premium" element={<AdminLayout><AdminPremium /></AdminLayout>} />
-              <Route path="/admin/finance" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-              <Route path="/admin/settings" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  {/* Admin Routes */}
+                  <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  <Route path="/admin/accounts" element={<AdminLayout><AdminAccounts /></AdminLayout>} />
+                  <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
+                  <Route path="/admin/reports" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  <Route path="/admin/premium" element={<AdminLayout><AdminPremium /></AdminLayout>} />
+                  <Route path="/admin/finance" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+                  <Route path="/admin/settings" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
 
-              {/* Public Routes */}
-              <Route path="/*" element={
-                <div className="min-h-screen bg-[#0f0f1a]">
-                  <ScrollToTop />
-                  <Navbar />
-                  <main>
-                    <Routes>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/game/:gameId" element={<GamePage />} />
-                      <Route path="/account/:accountId" element={<AccountDetailPage />} />
-                      <Route path="/products" element={<ProductsPage />} />
-                      <Route path="/premium" element={<PremiumPage />} />
-                      <Route path="/top" element={<TopAccountsPage />} />
-                      <Route path="/login" element={<LoginPage />} />
-                      <Route path="/signup" element={<SignupPage />} />
-                      <Route path="/profile" element={<ProfilePage />} />
-                      <Route path="/terms" element={<TermsPage />} />
-                      <Route path="/sell" element={<SellPage />} />
-                      <Route path="/faq" element={<FAQPage />} />
-                      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                      <Route path="/settings" element={<SettingsPage />} />
-                      <Route path="*" element={<NotFoundPage />} />
-                    </Routes>
-                  </main>
-                  <Footer />
-                  <ChatWidget />
-                </div>
-              } />
-            </Routes>
-          </NotificationProvider>
-        </ChatProvider>
-      </AuthProvider>
+                  {/* Public Routes */}
+                  <Route path="/*" element={
+                    <div className="min-h-screen bg-[#0f0f1a]">
+                      <ScrollToTop />
+                      <Navbar />
+                      <main>
+                        <Routes>
+                          <Route path="/" element={<HomePage />} />
+                          <Route path="/game/:gameId" element={<GamePage />} />
+                          <Route path="/account/:accountId" element={<AccountDetailPage />} />
+                          <Route path="/products" element={<ProductsPage />} />
+                          <Route path="/premium" element={<PremiumPage />} />
+                          <Route path="/top" element={<TopAccountsPage />} />
+                          <Route path="/login" element={<LoginPage />} />
+                          <Route path="/signup" element={<SignupPage />} />
+                          <Route path="/profile" element={<ProfilePage />} />
+                          <Route path="/terms" element={<TermsPage />} />
+                          <Route path="/sell" element={<SellPage />} />
+                          <Route path="/faq" element={<FAQPage />} />
+                          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                          <Route path="/settings" element={<SettingsPage />} />
+                          <Route path="/statistics" element={<StatisticsPage />} />
+                          <Route path="/coins" element={<CoinsPage />} />
+                          <Route path="*" element={<NotFoundPage />} />
+                        </Routes>
+                      </main>
+                      <Footer />
+                      <ChatWidget />
+                    </div>
+                  } />
+                </Routes>
+              </NotificationProvider>
+            </ChatProvider>
+          </CoinProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }

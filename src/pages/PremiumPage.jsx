@@ -16,7 +16,7 @@ const PremiumPage = () => {
         ],
         premium: [
             { text: 'Akkauntlarni sotish', included: true },
-            { text: "10% komissiya", included: true },
+            { text: "8% komissiya", included: true },
             { text: "Tavsiyalarda 3x ko'proq", included: true },
             { text: 'Premium ⭐ badge', included: true },
             { text: "Bosh sahifada ko'rinish", included: true },
@@ -26,7 +26,7 @@ const PremiumPage = () => {
         ],
         pro: [
             { text: 'Akkauntlarni sotish', included: true },
-            { text: "0% komissiya (standart 10%)", included: true },
+            { text: "5% komissiya (standart 10%)", included: true },
             { text: "Eng yuqori pozitsiya", included: true },
             { text: 'VIP 💎 golden badge', included: true },
             { text: "Bosh sahifada birinchi", included: true },

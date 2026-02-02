@@ -43,7 +43,7 @@ const FAQPage = () => {
         {
             category: 'selling',
             question: 'Komissiya qancha?',
-            answer: 'Free rejada 10%, Premium rejada 10% (lekin ko\'proq ko\'rinish), Pro rejada 0% komissiya. Pro reja eng foydali variant!'
+            answer: 'Free rejada 10%, Premium rejada 8%, Pro rejada 5% komissiya. Pro reja eng foydali variant!'
         },
         {
             category: 'selling',
@@ -130,8 +130,8 @@ const FAQPage = () => {
                             key={cat.id}
                             onClick={() => setActiveCategory(cat.id)}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${activeCategory === cat.id
-                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                    : 'bg-[#1e1e32] text-gray-400 hover:bg-[#25253a] hover:text-white'
+                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                                : 'bg-[#1e1e32] text-gray-400 hover:bg-[#25253a] hover:text-white'
                                 }`}
                         >
                             <cat.icon className="w-4 h-4" />
@@ -184,7 +184,7 @@ const FAQPage = () => {
                             💬 Telegram orqali
                         </a>
                         <a
-                            href="mailto:support@wibestore.com"
+                            href="mailto:support@wibestore.uz"
                             className="flex items-center gap-2 px-6 py-3 bg-[#25253a] rounded-xl text-white font-medium hover:bg-[#2a2a45] transition-colors"
                         >
                             📧 Email orqali

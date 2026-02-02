@@ -22,7 +22,7 @@ export const games = [
         id: 'free-fire',
         name: 'Free Fire',
         icon: '🔫',
-        image: '/img/icons/free.webp',  
+        image: '/img/icons/free.webp',
         accountCount: 389,
         color: '#FF5722'
     },
@@ -65,6 +65,281 @@ export const games = [
         image: '/img/icons/roblox.webp',
         accountCount: 634,
         color: '#E2231A'
+    },
+    // Mobile Games (Google Play / App Store linked)
+    {
+        id: 'minecraft',
+        name: 'Minecraft',
+        icon: '⛏️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#8B4513'
+    },
+    {
+        id: 'genshin',
+        name: 'Genshin Impact',
+        icon: '⚔️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#00D4FF'
+    },
+    {
+        id: 'honkai-sr',
+        name: 'Honkai: Star Rail',
+        icon: '🚂',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#5C4B99'
+    },
+    {
+        id: 'honkai-3rd',
+        name: 'Honkai Impact 3rd',
+        icon: '⚡',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#FF6B6B'
+    },
+    {
+        id: 'brawl-stars',
+        name: 'Brawl Stars',
+        icon: '⭐',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#FFD93D'
+    },
+    {
+        id: 'clash-royale',
+        name: 'Clash Royale',
+        icon: '👑',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#0080FF'
+    },
+    {
+        id: 'hay-day',
+        name: 'Hay Day',
+        icon: '🌾',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#FFB347'
+    },
+    {
+        id: 'arena-breakout',
+        name: 'Arena Breakout',
+        icon: '🎯',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#2D5016'
+    },
+    {
+        id: 'lords-mobile',
+        name: 'Lords Mobile',
+        icon: '🏰',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#8B0000'
+    },
+    {
+        id: 'afk-arena',
+        name: 'AFK Arena',
+        icon: '🛡️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#6B4423'
+    },
+    {
+        id: 'raid',
+        name: 'RAID: Shadow Legends',
+        icon: '⚔️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#4A0080'
+    },
+    {
+        id: 'squad-busters',
+        name: 'Squad Busters',
+        icon: '💪',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#FF4500'
+    },
+    // PC/Console Games
+    {
+        id: 'csgo',
+        name: 'CS:GO / CS2',
+        icon: '🔫',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#DE9B35'
+    },
+    {
+        id: 'dota2',
+        name: 'Dota 2',
+        icon: '🛡️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#CC3333'
+    },
+    {
+        id: 'lol',
+        name: 'League of Legends',
+        icon: '⚔️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#C89B3C'
+    },
+    {
+        id: 'valorant',
+        name: 'Valorant',
+        icon: '🎯',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#FF4655'
+    },
+    {
+        id: 'apex',
+        name: 'Apex Legends',
+        icon: '🔥',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#DA292A'
+    },
+    {
+        id: 'fortnite',
+        name: 'Fortnite',
+        icon: '🎮',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#3D5AFE'
+    },
+    {
+        id: 'cod-warzone',
+        name: 'Call of Duty: Warzone',
+        icon: '🔫',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#4CAF50'
+    },
+    {
+        id: 'fifa',
+        name: 'EA FC / FIFA',
+        icon: '⚽',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#1A472A'
+    },
+    {
+        id: 'rust',
+        name: 'Rust',
+        icon: '🏚️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#CD412B'
+    },
+    {
+        id: 'gta5',
+        name: 'GTA V Online',
+        icon: '🚗',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#98FB98'
+    },
+    {
+        id: 'tarkov',
+        name: 'Escape from Tarkov',
+        icon: '🎒',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#2F4F4F'
+    },
+    {
+        id: 'world-of-warcraft',
+        name: 'World of Warcraft',
+        icon: '🐉',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#0074E0'
+    },
+    {
+        id: 'overwatch',
+        name: 'Overwatch 2',
+        icon: '🦸',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#FA9C1E'
+    },
+    {
+        id: 'rainbow-six',
+        name: 'Rainbow Six Siege',
+        icon: '🌈',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#1A1A2E'
+    },
+    {
+        id: 'rocket-league',
+        name: 'Rocket League',
+        icon: '🚀',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#0077FF'
+    },
+    // Gaming Platforms
+    {
+        id: 'epic',
+        name: 'Epic Games',
+        icon: '🎮',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#2F2F2F'
+    },
+    {
+        id: 'ubisoft',
+        name: 'Ubisoft Connect',
+        icon: '🎮',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#0066FF'
+    },
+    {
+        id: 'origin',
+        name: 'EA / Origin',
+        icon: '🎮',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#F56C2D'
+    },
+    {
+        id: 'blizzard',
+        name: 'Battle.net',
+        icon: '❄️',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#00AEFF'
+    },
+    {
+        id: 'riot',
+        name: 'Riot Games',
+        icon: '🎮',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#D32936'
+    },
+    {
+        id: 'xbox',
+        name: 'Xbox Account',
+        icon: '🎮',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#107C10'
+    },
+    {
+        id: 'playstation',
+        name: 'PlayStation PSN',
+        icon: '🎮',
+        image: '/img/icons/placeholder.png',
+        accountCount: 0,
+        color: '#003791'
     }
 ];
 
@@ -285,7 +560,7 @@ export const premiumPlans = [
             'Barcha Premium afzalliklari',
             'VIP golden badge',
             'Eng yuqori pozitsiya',
-            "0% komissiya (standart 10%)",
+            "5% komissiya (standart 10%)",
             'Tezkor to\'lov (24 soat)',
             'Shaxsiy manager'
         ],
