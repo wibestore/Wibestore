@@ -5,22 +5,29 @@ const ChatContext = createContext(null);
 
 export const ChatProvider = ({ children }) => {
     const { user } = useAuth();
-    const [conversations, setConversations] = useState([]);
+    const [conversations, setConversations] = useState(() => {
+        // Lazy initialization - birinchi renderda localStorage dan o'qish
+        if (typeof window !== 'undefined') {
+            const currentUser = JSON.parse(localStorage.getItem('wibeUser') || 'null');
+            if (currentUser) {
+                const savedConversations = localStorage.getItem(`wibeChats_${currentUser.id}`);
+                if (savedConversations) {
+                    try {
+                        return JSON.parse(savedConversations);
+                    } catch {
+                        return [];
+                    }
+                }
+            }
+        }
+        return [];
+    });
     const [activeChat, setActiveChat] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    // Load conversations on mount
+    // Sync conversations when user changes
     useEffect(() => {
-        if (user) {
-            const savedConversations = localStorage.getItem(`wibeChats_${user.id}`);
-            if (savedConversations) {
-                try {
-                    setConversations(JSON.parse(savedConversations));
-                } catch {
-                    setConversations([]);
-                }
-            }
-        } else {
+        if (!user) {
             setConversations([]);
             setActiveChat(null);
         }

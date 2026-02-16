@@ -1,7 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, Shield, Clock, MessageCircle, Crown, ChevronRight, AlertTriangle } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { accounts, formatPrice, calculateCommission, COMMISSION_RATE } from '../data/mockData';
+import { accounts, formatPrice, COMMISSION_RATE } from '../data/mockData';
 import AccountCard from '../components/AccountCard';
 import ReviewModal from '../components/ReviewModal';
 import { useAuth } from '../context/AuthContext';
@@ -54,7 +54,7 @@ const AccountDetailPage = () => {
         startConversation(seller, account);
     };
 
-    const handleReviewSubmit = (review) => {
+    const handleReviewSubmit = () => {
         setHasReviewed(true);
     };
 
@@ -66,8 +66,8 @@ const AccountDetailPage = () => {
         return (
             <div className="min-h-screen pt-24 flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold text-white mb-4">Akkaunt topilmadi</h1>
-                    <Link to="/" className="text-purple-400 hover:underline">Bosh sahifaga qaytish</Link>
+                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Akkaunt topilmadi</h1>
+                    <Link to="/" className="text-blue-500 hover:underline">Bosh sahifaga qaytish</Link>
                 </div>
             </div>
         );
@@ -84,7 +84,7 @@ const AccountDetailPage = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Breadcrumb */}
                 <div className="mb-6">
-                    <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                    <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-600 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Orqaga
                     </Link>
@@ -94,7 +94,7 @@ const AccountDetailPage = () => {
                     {/* Left Column - Image & Details */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Image */}
-                        <div className="relative aspect-video bg-[#1e1e32] rounded-2xl overflow-hidden">
+                        <div className="relative aspect-video bg-white rounded-2xl overflow-hidden">
                             {account.image ? (
                                 <img src={account.image} alt={account.title} className="w-full h-full object-cover" />
                             ) : (
@@ -110,58 +110,58 @@ const AccountDetailPage = () => {
                         </div>
 
                         {/* Account Info */}
-                        <div className="bg-[#1e1e32] rounded-2xl p-6 border border-white/5">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200">
                             <div className="flex items-center gap-2 text-sm text-gray-400 mb-3">
-                                <Link to={`/game/${account.gameId}`} className="hover:text-purple-400 transition-colors">
+                                <Link to={`/game/${account.gameId}`} className="hover:text-blue-500 transition-colors">
                                     {account.gameName}
                                 </Link>
                                 <ChevronRight className="w-4 h-4" />
                                 <span>#{account.id}</span>
                             </div>
 
-                            <h1 className="text-2xl font-bold text-white mb-4">{account.title}</h1>
+                            <h1 className="text-2xl font-bold text-gray-800 mb-4">{account.title}</h1>
 
-                            <p className="text-gray-300 leading-relaxed mb-6">
+                            <p className="text-gray-600 leading-relaxed mb-6">
                                 {account.description}
                             </p>
 
                             {/* Features */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div className="flex items-center gap-3 p-4 bg-[#25253a] rounded-xl">
+                                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
                                     <Shield className="w-6 h-6 text-green-400" />
                                     <div>
                                         <div className="text-sm text-gray-400">Xavfsizlik</div>
-                                        <div className="font-semibold text-white">Escrow kafolat</div>
+                                        <div className="font-semibold text-gray-800">Escrow kafolat</div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 p-4 bg-[#25253a] rounded-xl">
+                                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
                                     <Clock className="w-6 h-6 text-cyan-400" />
                                     <div>
                                         <div className="text-sm text-gray-400">Yetkazish</div>
-                                        <div className="font-semibold text-white">1-24 soat</div>
+                                        <div className="font-semibold text-gray-800">1-24 soat</div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 p-4 bg-[#25253a] rounded-xl">
-                                    <MessageCircle className="w-6 h-6 text-purple-400" />
+                                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl">
+                                    <MessageCircle className="w-6 h-6 text-blue-500" />
                                     <div>
                                         <div className="text-sm text-gray-400">Qo'llab-quvvatlash</div>
-                                        <div className="font-semibold text-white">24/7</div>
+                                        <div className="font-semibold text-gray-800">24/7</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Seller Info */}
-                        <div className="bg-[#1e1e32] rounded-2xl p-6 border border-white/5">
-                            <h3 className="text-lg font-semibold text-white mb-4">Sotuvchi haqida</h3>
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Sotuvchi haqida</h3>
 
                             <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xl font-bold text-white">
+                                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-xl font-bold text-white">
                                     {account.seller.name.charAt(0)}
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-semibold text-white">{account.seller.name}</span>
+                                        <span className="font-semibold text-gray-800">{account.seller.name}</span>
                                         {account.seller.isPremium && (
                                             <Crown className="w-4 h-4 text-yellow-400" />
                                         )}
@@ -176,7 +176,7 @@ const AccountDetailPage = () => {
                                 </div>
                                 <button
                                     onClick={handleContactSeller}
-                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-sm font-medium text-white hover:shadow-lg hover:shadow-purple-500/30 transition-all"
+                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-sm font-medium text-white hover:shadow-lg hover:shadow-blue-500/30 transition-all"
                                 >
                                     <MessageCircle className="w-4 h-4" />
                                     Bog'lanish
@@ -188,7 +188,7 @@ const AccountDetailPage = () => {
                     {/* Right Column - Purchase */}
                     <div className="space-y-6">
                         {/* Price Card */}
-                        <div className="bg-[#1e1e32] rounded-2xl p-6 border border-white/5 sticky top-24">
+                        <div className="bg-white rounded-2xl p-6 border border-slate-200 sticky top-24">
                             <div className="text-center mb-6">
                                 <div className="text-sm text-gray-400 mb-1">Narxi</div>
                                 <div className="text-3xl font-bold text-cyan-400">{formatPrice(account.price)}</div>
@@ -203,19 +203,19 @@ const AccountDetailPage = () => {
                                             key={method.id}
                                             onClick={() => setSelectedPayment(method.id)}
                                             className={`p-3 rounded-xl border-2 transition-all ${selectedPayment === method.id
-                                                ? 'border-purple-500 bg-purple-500/10'
-                                                : 'border-white/10 hover:border-white/20'
+                                                ? 'border-blue-500 bg-blue-500/10'
+                                                : 'border-slate-200 hover:border-white/20'
                                                 }`}
                                         >
                                             <div className={`w-8 h-8 mx-auto rounded-lg ${method.color} mb-1`} />
-                                            <div className="text-xs text-gray-300">{method.name}</div>
+                                            <div className="text-xs text-gray-600">{method.name}</div>
                                         </button>
                                     ))}
                                 </div>
                             </div>
 
                             {/* Buy Button */}
-                            <button className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all duration-300">
+                            <button className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all duration-300">
                                 Sotib olish
                             </button>
 
@@ -223,7 +223,7 @@ const AccountDetailPage = () => {
                             <div className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl">
                                 <div className="flex items-start gap-2">
                                     <Shield className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                                    <div className="text-xs text-gray-300">
+                                    <div className="text-xs text-gray-600">
                                         <span className="text-green-400 font-medium">Xavfsiz xarid.</span> Pul faqat akkaunt tasdiqlangandan so'ng sotuvchiga o'tkaziladi.
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@ const AccountDetailPage = () => {
                 {/* Related Accounts */}
                 {relatedAccounts.length > 0 && (
                     <div className="mt-16">
-                        <h2 className="text-xl font-bold text-white mb-6">O'xshash akkauntlar</h2>
+                        <h2 className="text-xl font-bold text-gray-800 mb-6">O'xshash akkauntlar</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {relatedAccounts.map((acc) => (
                                 <AccountCard key={acc.id} account={acc} />

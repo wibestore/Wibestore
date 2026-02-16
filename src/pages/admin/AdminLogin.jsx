@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, Eye, EyeOff, Shield, AlertCircle } from 'lucide-react';
 
-// Admin credentials - In production, this should be in backend
+// Admin credentials from environment variables
 const ADMIN_CREDENTIALS = {
-    username: 'admin',
-    password: 'wibe2024'
+    username: import.meta.env.VITE_ADMIN_USERNAME || 'admin',
+    password: import.meta.env.VITE_ADMIN_PASSWORD || ''
 };
 
 const AdminLogin = () => {

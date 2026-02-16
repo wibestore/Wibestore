@@ -59,19 +59,23 @@ export const CoinProvider = ({ children }) => {
 
     // Spend coins (for premium)
     const spendCoins = (amount, reason) => {
-        if (coinState.balance < amount) return false;
-        setCoinState(prev => ({
-            ...prev,
-            balance: prev.balance - amount,
-            history: [...prev.history, {
-                id: Date.now(),
-                amount: -amount,
-                reason,
-                date: new Date().toISOString(),
-                type: 'spent'
-            }]
-        }));
-        return true;
+        let success = false;
+        setCoinState(prev => {
+            if (prev.balance < amount) return prev;
+            success = true;
+            return {
+                ...prev,
+                balance: prev.balance - amount,
+                history: [...prev.history, {
+                    id: crypto.randomUUID(),
+                    amount: -amount,
+                    reason,
+                    date: new Date().toISOString(),
+                    type: 'spent'
+                }]
+            };
+        });
+        return success;
     };
 
     // Can earn more coins this month?

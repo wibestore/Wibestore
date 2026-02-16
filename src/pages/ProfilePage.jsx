@@ -128,38 +128,38 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="min-h-screen pt-24 pb-16">
+        <div className="min-h-screen" style={{ paddingTop: '140px', paddingBottom: '64px' }}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Profile Header */}
-                <div className="bg-gradient-to-r from-[#1e1e32] to-[#25253a] rounded-3xl p-6 lg:p-8 border border-white/5 mb-8">
+                <div className="bg-white rounded-3xl p-6 lg:p-8 border border-slate-200 mb-8 shadow-sm">
                     <div className="flex flex-col md:flex-row items-center gap-6">
                         {/* Avatar */}
                         <div className="relative">
-                            <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-4xl font-bold text-white shadow-lg shadow-purple-500/30">
+                            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-4xl font-bold shadow-lg shadow-blue-500/30" style={{ color: '#ffffff' }}>
                                 {user.name?.charAt(0) || 'U'}
                             </div>
-                            <button className="absolute bottom-0 right-0 w-8 h-8 bg-[#25253a] rounded-full flex items-center justify-center border-2 border-[#1e1e32] hover:bg-purple-500 transition-colors">
-                                <Edit2 className="w-4 h-4 text-white" />
+                            <button className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white hover:bg-blue-600 transition-colors">
+                                <Edit2 className="w-4 h-4" style={{ color: '#ffffff' }} />
                             </button>
                         </div>
 
                         {/* User Info */}
                         <div className="flex-1 text-center md:text-left">
-                            <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2">{user.name}</h1>
-                            <p className="text-gray-400 mb-3">{user.email}</p>
+                            <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">{user.name}</h1>
+                            <p className="text-gray-500 mb-3">{user.email}</p>
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm">
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full">
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
                                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                    <span className="text-white">{averageRating}</span>
+                                    <span className="text-gray-800">{averageRating}</span>
                                     <span className="text-gray-500">({reviewCount})</span>
                                 </div>
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full">
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
                                     <Package className="w-4 h-4 text-cyan-400" />
-                                    <span className="text-gray-300">{sales.length} ta sotuvlar</span>
+                                    <span className="text-gray-600">{sales.length} ta sotuvlar</span>
                                 </div>
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full">
-                                    <ShoppingBag className="w-4 h-4 text-purple-400" />
-                                    <span className="text-gray-300">{purchases.length} ta xaridlar</span>
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
+                                    <ShoppingBag className="w-4 h-4 text-blue-500" />
+                                    <span className="text-gray-600">{purchases.length} ta xaridlar</span>
                                 </div>
                             </div>
                         </div>
@@ -168,7 +168,7 @@ const ProfilePage = () => {
                         <div className="flex items-center gap-3">
                             <Link
                                 to="/settings"
-                                className="p-3 bg-white/5 rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
+                                className="p-3 bg-slate-100 rounded-xl text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                             >
                                 <Settings className="w-5 h-5" />
                             </Link>
@@ -190,9 +190,10 @@ const ProfilePage = () => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all ${activeTab === tab.id
-                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
-                                : 'bg-[#1e1e32] text-gray-400 hover:bg-[#25253a] hover:text-white'
+                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25'
+                                : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
                                 }`}
+                            style={activeTab === tab.id ? { color: '#ffffff' } : {}}
                         >
                             <tab.icon className="w-5 h-5" />
                             {tab.label}
@@ -205,11 +206,11 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Tab Content */}
-                <div className="bg-[#1e1e32] rounded-2xl p-6 border border-white/5 min-h-[400px]">
+                <div className="bg-white rounded-2xl p-6 border border-slate-200 min-h-[400px] shadow-sm">
                     {activeTab === 'mylistings' && (
                         <>
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-white">Mening mahsulotlarim</h2>
+                                <h2 className="text-xl font-bold text-gray-800">Mening mahsulotlarim</h2>
                                 <Link
                                     to="/sell"
                                     className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl text-white text-sm font-medium"
@@ -224,9 +225,9 @@ const ProfilePage = () => {
                                         const status = getStatusBadge(listing.status);
                                         const StatusIcon = status.icon;
                                         return (
-                                            <div key={listing.id} className="flex flex-col sm:flex-row gap-4 p-4 bg-[#25253a] rounded-xl border border-white/5">
+                                            <div key={listing.id} className="flex flex-col sm:flex-row gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
                                                 {/* Image */}
-                                                <div className="w-full sm:w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-[#1e1e32]">
+                                                <div className="w-full sm:w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-slate-100">
                                                     {listing.images && listing.images.length > 0 ? (
                                                         <img
                                                             src={listing.images[0]}
@@ -248,7 +249,7 @@ const ProfilePage = () => {
                                                 <div className="flex-1">
                                                     <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                                                         <div>
-                                                            <h3 className="text-lg font-semibold text-white">{listing.title}</h3>
+                                                            <h3 className="text-lg font-semibold text-gray-800">{listing.title}</h3>
                                                             <p className="text-sm text-gray-400">{getGameName(listing.gameId)}</p>
                                                         </div>
                                                         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm ${status.color}`}>
@@ -259,18 +260,18 @@ const ProfilePage = () => {
 
                                                     <div className="flex flex-wrap gap-2 mb-3">
                                                         {listing.level && (
-                                                            <span className="px-2 py-1 bg-white/5 rounded text-xs text-gray-300">Level: {listing.level}</span>
+                                                            <span className="px-2 py-1 bg-slate-100 rounded text-xs text-gray-600">Level: {listing.level}</span>
                                                         )}
                                                         {listing.rank && (
-                                                            <span className="px-2 py-1 bg-white/5 rounded text-xs text-gray-300">Rank: {listing.rank}</span>
+                                                            <span className="px-2 py-1 bg-slate-100 rounded text-xs text-gray-600">Rank: {listing.rank}</span>
                                                         )}
                                                         {listing.skins && (
-                                                            <span className="px-2 py-1 bg-white/5 rounded text-xs text-gray-300">Skinlar: {listing.skins}</span>
+                                                            <span className="px-2 py-1 bg-slate-100 rounded text-xs text-gray-600">Skinlar: {listing.skins}</span>
                                                         )}
                                                     </div>
 
                                                     <div className="flex items-center justify-between">
-                                                        <p className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                                        <p className="text-xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
                                                             {formatPrice(listing.price)} so'm
                                                         </p>
                                                         <div className="flex items-center gap-2">
@@ -296,7 +297,7 @@ const ProfilePage = () => {
                                                             </div>
                                                         ))}
                                                         {listing.images.length > 4 && (
-                                                            <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center text-xs text-gray-400">
+                                                            <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-xs text-gray-400">
                                                                 +{listing.images.length - 4}
                                                             </div>
                                                         )}
@@ -312,7 +313,7 @@ const ProfilePage = () => {
                                     <p className="text-gray-400 mb-4">Hali e'lon bermadingiz</p>
                                     <Link
                                         to="/sell"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-medium"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
                                     >
                                         <PlusCircle className="w-5 h-5" />
                                         E'lon berish
@@ -324,7 +325,7 @@ const ProfilePage = () => {
 
                     {activeTab === 'purchases' && (
                         <>
-                            <h2 className="text-xl font-bold text-white mb-6">Sotib olgan akkauntlarim</h2>
+                            <h2 className="text-xl font-bold text-gray-800 mb-6">Sotib olgan akkauntlarim</h2>
                             {purchases.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                     {purchases.map((account) => (
@@ -337,7 +338,7 @@ const ProfilePage = () => {
                                     <p className="text-gray-400 mb-4">Hali hech narsa sotib olmadingiz</p>
                                     <Link
                                         to="/"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-medium"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
                                     >
                                         Xarid qilish
                                     </Link>
@@ -349,10 +350,10 @@ const ProfilePage = () => {
                     {activeTab === 'sales' && (
                         <>
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-white">Sotgan akkauntlarim</h2>
+                                <h2 className="text-xl font-bold text-gray-800">Sotgan akkauntlarim</h2>
                                 <Link
                                     to="/sell"
-                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white text-sm font-medium"
+                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white text-sm font-medium"
                                 >
                                     <Tag className="w-4 h-4" />
                                     Yangi e'lon
@@ -370,7 +371,7 @@ const ProfilePage = () => {
                                     <p className="text-gray-400 mb-4">Hali hech narsa sotmadingiz</p>
                                     <Link
                                         to="/sell"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-medium"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
                                     >
                                         E'lon berish
                                     </Link>
@@ -381,7 +382,7 @@ const ProfilePage = () => {
 
                     {activeTab === 'likes' && (
                         <>
-                            <h2 className="text-xl font-bold text-white mb-6">Yoqtirgan akkauntlarim</h2>
+                            <h2 className="text-xl font-bold text-gray-800 mb-6">Yoqtirgan akkauntlarim</h2>
                             {likedAccounts.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                     {likedAccounts.map((account) => (
@@ -394,7 +395,7 @@ const ProfilePage = () => {
                                     <p className="text-gray-400 mb-4">Hali yoqtirgan akkauntlar yo'q</p>
                                     <Link
                                         to="/"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-medium"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
                                     >
                                         Akkauntlarni ko'rish
                                     </Link>
@@ -405,7 +406,7 @@ const ProfilePage = () => {
 
                     {activeTab === 'reviews' && (
                         <>
-                            <h2 className="text-xl font-bold text-white mb-6">Mening baholashlarim</h2>
+                            <h2 className="text-xl font-bold text-gray-800 mb-6">Mening baholashlarim</h2>
                             <ReviewList userId={user.id} type="received" />
                         </>
                     )}

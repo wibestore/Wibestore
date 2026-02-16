@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
                 }
 
                 const newUser = {
-                    id: Date.now(),
+                    id: crypto.randomUUID(),
                     name: userData.name,
                     email: userData.email,
                     phone: userData.phone,

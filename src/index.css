@@ -1,48 +1,198 @@
 @import "tailwindcss";
 
-/* Theme variables */
+/* ==========================================
+   BLUE & WHITE THEME
+   ========================================== */
+
+/* Override all purple colors to blue */
+.from-purple-500,
+.from-purple-400,
+.from-purple-600 {
+  --tw-gradient-from: #3B82F6 !important;
+}
+
+.to-purple-500,
+.to-purple-400,
+.to-purple-600 {
+  --tw-gradient-to: #1D4ED8 !important;
+}
+
+.via-purple-500,
+.via-purple-400 {
+  --tw-gradient-via: #2563EB !important;
+}
+
+/* Override all pink colors to light blue */
+.from-pink-500,
+.from-pink-400,
+.from-pink-600 {
+  --tw-gradient-from: #60A5FA !important;
+}
+
+.to-pink-500,
+.to-pink-400,
+.to-pink-600 {
+  --tw-gradient-to: #3B82F6 !important;
+}
+
+.via-pink-500,
+.via-pink-400 {
+  --tw-gradient-via: #93C5FD !important;
+}
+
+/* Override cyan colors to blue */
+.from-cyan-500,
+.from-cyan-400,
+.to-cyan-500,
+.to-cyan-400,
+.via-cyan-500,
+.via-cyan-400 {
+  --tw-gradient-from: #2563EB !important;
+  --tw-gradient-to: #3B82F6 !important;
+  --tw-gradient-via: #60A5FA !important;
+}
+
+/* Text colors */
+.text-purple-400,
+.text-purple-500,
+.text-purple-600 {
+  color: #3B82F6 !important;
+}
+
+.text-pink-400,
+.text-pink-500,
+.text-pink-600 {
+  color: #60A5FA !important;
+}
+
+.text-cyan-400,
+.text-cyan-500 {
+  color: #2563EB !important;
+}
+
+/* Background colors */
+.bg-purple-500,
+.bg-purple-400,
+.bg-purple-600 {
+  background-color: #3B82F6 !important;
+  color: #ffffff !important;
+}
+
+.bg-pink-500,
+.bg-pink-400,
+.bg-pink-600 {
+  background-color: #60A5FA !important;
+  color: #ffffff !important;
+}
+
+/* Semi-transparent backgrounds */
+.bg-purple-500\/10,
+.bg-purple-500\/20,
+.bg-purple-500\/5 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+.bg-pink-500\/10,
+.bg-pink-500\/20,
+.bg-pink-500\/5 {
+  background-color: rgba(96, 165, 250, 0.08) !important;
+}
+
+/* Border colors */
+.border-purple-500,
+.border-purple-400,
+.border-purple-500\/20,
+.border-purple-500\/30,
+.border-purple-500\/50 {
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.border-pink-500,
+.border-pink-500\/20,
+.border-pink-500\/30 {
+  border-color: rgba(96, 165, 250, 0.2) !important;
+}
+
+/* Shadow colors */
+.shadow-purple-500\/30,
+.shadow-purple-500\/50,
+.shadow-purple-500\/25 {
+  --tw-shadow-color: rgba(59, 130, 246, 0.25) !important;
+  --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color) !important;
+}
+
+/* Hover states */
+.hover\:border-purple-500\/50:hover {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.hover\:bg-purple-500\/20:hover {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Focus states */
+.focus\:border-purple-500\/50:focus {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.focus\:ring-purple-500:focus {
+  --tw-ring-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Green/Success colors - keep subtle */
+.text-green-400,
+.text-green-500 {
+  color: #22C55E !important;
+}
+
+.bg-green-500\/10,
+.bg-green-500\/20 {
+  background-color: rgba(34, 197, 94, 0.1) !important;
+}
+
+/* Theme variables - Blue & White Design */
 :root,
 [data-theme="dark"] {
-  --bg-primary: #0f0f1a;
-  --bg-secondary: #1a1a2e;
-  --bg-card: #1e1e32;
-  --bg-elevated: #25253a;
-  --text-primary: #ffffff;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
-  --border-color: rgba(255, 255, 255, 0.1);
+  --bg-primary: #ffffff;
+  --bg-secondary: #F0F7FF;
+  --bg-card: #ffffff;
+  --bg-elevated: #E8F1FF;
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --border-color: rgba(59, 130, 246, 0.15);
 }
 
 [data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
+  --bg-primary: #ffffff;
+  --bg-secondary: #F0F7FF;
   --bg-card: #ffffff;
-  --bg-elevated: #f1f5f9;
-  --text-primary: #1e293b;
+  --bg-elevated: #E8F1FF;
+  --text-primary: #1E293B;
   --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --border-color: rgba(0, 0, 0, 0.1);
+  --text-muted: #94A3B8;
+  --border-color: rgba(59, 130, 246, 0.12);
 }
 
-/* Custom design tokens */
+/* Custom design tokens - Blue & White */
 @theme {
-  --color-primary: #667eea;
-  --color-primary-dark: #5a6fd6;
-  --color-secondary: #764ba2;
-  --color-accent: #00d4aa;
-  --color-accent-light: #00f5c4;
-  --color-premium: #ffd700;
-  --color-premium-dark: #e6c200;
+  --color-primary: #3B82F6;
+  --color-primary-dark: #2563EB;
+  --color-secondary: #60A5FA;
+  --color-accent: #3B82F6;
+  --color-accent-light: #DBEAFE;
+  --color-premium: #1D4ED8;
+  --color-premium-dark: #1E40AF;
 
-  --color-dark: #0a0a14;
-  --color-body: #0f0f1a;
-  --color-card: #1a1a2e;
-  --color-card-hover: #222238;
-  --color-elevated: #25253a;
+  --color-dark: #1E293B;
+  --color-body: #F8FAFC;
+  --color-card: #ffffff;
+  --color-card-hover: #F0F7FF;
+  --color-elevated: #E8F1FF;
 
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
 }
 
 /* Base styles */
@@ -58,8 +208,8 @@ html {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: #F8FAFC;
+  color: #1E293B;
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
@@ -67,32 +217,221 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* ==========================================
+   GLOBAL DARK → LIGHT OVERRIDES
+   Forces all dark backgrounds to white/blue
+   ========================================== */
+
+/* Hardcoded dark hex backgrounds → white/light */
+.bg-\[\#0f0f1a\] {
+  background: #F8FAFC !important;
+}
+
+.bg-\[\#1e1e32\],
+.bg-\[\#1a1a2e\] {
+  background: #ffffff !important;
+}
+
+.bg-\[\#25253a\] {
+  background: #F0F7FF !important;
+}
+
+/* Tailwind dark backgrounds → white/light */
+.bg-gray-900 {
+  background-color: #F8FAFC !important;
+}
+
+.bg-gray-800 {
+  background-color: #ffffff !important;
+}
+
+.bg-gray-700 {
+  background-color: #F0F7FF !important;
+}
+
+.bg-black {
+  background-color: #F8FAFC !important;
+}
+
+/* Text white → dark for light theme (scoped to main content, not dark sidebar) */
+.text-white {
+  color: #1E293B !important;
+}
+
+/* Keep text-white on colored backgrounds */
+[class*="bg-gradient"] .text-white,
+[class*="bg-gradient"].text-white,
+[class*="from-blue"] .text-white,
+[class*="from-green"] .text-white,
+[class*="from-purple"] .text-white,
+[class*="from-pink"] .text-white,
+[class*="from-yellow"] .text-white,
+[class*="from-red"] .text-white,
+.bg-blue-500 .text-white,
+.bg-blue-600 .text-white,
+.bg-green-500 .text-white,
+.bg-red-500 .text-white,
+.bg-\[\#3B82F6\] .text-white,
+.bg-\[\#0f172a\] .text-white,
+.bg-\[\#0f172a\] h1.text-white,
+.bg-\[\#0f172a\] span.text-white,
+.bg-\[\#0f172a\] p.text-white,
+.bg-\[\#0f172a\] div.text-white {
+  color: #ffffff !important;
+}
+
+/* Admin sidebar must keep white text */
+aside .text-white,
+aside span.text-white,
+aside .text-lg,
+.bg-\[\#0f172a\] .text-white {
+  color: #ffffff !important;
+}
+
+/* Buttons and links with gradient/blue bg should keep white text */
+button.text-white,
+a.text-white {
+  color: #ffffff !important;
+}
+
+/* Purple → Blue gradient overrides (catches all remaining pages) */
+.from-purple-500 {
+  --tw-gradient-from: #3B82F6 !important;
+}
+
+.to-pink-500 {
+  --tw-gradient-to: #2563EB !important;
+}
+
+.from-purple-400 {
+  --tw-gradient-from: #60A5FA !important;
+}
+
+.to-pink-400 {
+  --tw-gradient-to: #3B82F6 !important;
+}
+
+.text-purple-400,
+.text-purple-300 {
+  color: #3B82F6 !important;
+}
+
+.text-purple-500,
+.text-purple-600 {
+  color: #2563EB !important;
+}
+
+.text-pink-400,
+.text-pink-500 {
+  color: #3B82F6 !important;
+}
+
+.hover\:text-purple-300:hover,
+.hover\:text-purple-400:hover {
+  color: #3B82F6 !important;
+}
+
+.bg-purple-500 {
+  background-color: #3B82F6 !important;
+}
+
+.bg-purple-600 {
+  background-color: #2563EB !important;
+}
+
+.border-purple-500\/30,
+.border-purple-500\/50 {
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.from-purple-500\/20 {
+  --tw-gradient-from: rgba(59, 130, 246, 0.2) !important;
+}
+
+.to-pink-500\/20 {
+  --tw-gradient-to: rgba(37, 99, 235, 0.2) !important;
+}
+
+.hover\:border-purple-500\/50:hover {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.focus\:border-purple-500\/50:focus {
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+.shadow-purple-500\/30 {
+  --tw-shadow-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.shadow-purple-500\/50 {
+  --tw-shadow-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Gray text adjustments for light bg */
+.text-gray-300 {
+  color: #475569 !important;
+}
+
+.text-gray-400 {
+  color: #64748B !important;
+}
+
+.text-gray-500 {
+  color: #6B7280 !important;
+}
+
+/* Border overrides for light theme */
+.border-white\/5,
+.border-white\/10,
+.border-white\/20 {
+  border-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+.border-gray-700,
+.border-gray-800 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Semi-transparent white bg → light blue */
+.bg-white\/5 {
+  background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+.bg-white\/10 {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+}
+
+.bg-white\/20 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
 /* Light mode specific overrides */
 [data-theme="light"] body,
 [data-theme="light"] .bg-\[\#0f0f1a\] {
-  background: var(--bg-primary) !important;
+  background: #F8FAFC !important;
 }
 
 [data-theme="light"] .bg-\[\#1e1e32\],
 [data-theme="light"] .bg-\[\#1a1a2e\] {
-  background: var(--bg-card) !important;
+  background: #ffffff !important;
 }
 
 [data-theme="light"] .bg-\[\#25253a\] {
-  background: var(--bg-elevated) !important;
+  background: #F0F7FF !important;
 }
 
 [data-theme="light"] .text-white {
-  color: var(--text-primary) !important;
+  color: #1E293B !important;
 }
 
 [data-theme="light"] .text-gray-300,
 [data-theme="light"] .text-gray-400 {
-  color: var(--text-secondary) !important;
+  color: #475569 !important;
 }
 
 [data-theme="light"] .text-gray-500 {
-  color: var(--text-muted) !important;
+  color: #6B7280 !important;
 }
 
 [data-theme="light"] .border-white\/5,
@@ -141,9 +480,7 @@ body {
   padding: 20px;
 }
 
-.flex {
-  padding: 15px;
-}
+/* .flex padding removed - was breaking Tailwind's flex utility */
 
 .c1 {
   display: flex;
@@ -180,39 +517,28 @@ body {
 
 }
 
-/* Background gradient effect */
+/* Background - clean solid color, no gradient */
 body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(0, 212, 170, 0.03) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
+  display: none;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Blue & White */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a2e;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #25253a;
+  background: #93C5FD;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #667eea;
+  background: #3B82F6;
 }
 
 /* Animations */
@@ -232,11 +558,11 @@ body::before {
 
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
   }
 
   50% {
-    box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
   }
 }
 
@@ -269,10 +595,11 @@ body::before {
 }
 
 .za {
-  height: 30px;
-  padding: 5px;
-  margin-bottom: 20px;
-
+  height: auto;
+  min-height: 36px;
+  padding: 8px 20px;
+  margin-bottom: 24px;
+  gap: 10px;
 }
 
 .height-w {
@@ -421,7 +748,7 @@ body::before {
 .animate-shimmer {
   background: linear-gradient(90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
+      rgba(59, 130, 246, 0.1) 50%,
       transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
@@ -441,6 +768,7 @@ body::before {
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -483,7 +811,7 @@ body,
   width: 100%;
 }
 
-/* Fix container widths */
+/* Fix container widths - center content */
 .max-w-7xl {
   width: 100%;
   max-width: 100%;
@@ -556,8 +884,8 @@ img {
   height: auto;
 }
 
-/* Fix flex overflow */
-.flex {
+/* Fix flex child overflow */
+.flex>* {
   min-width: 0;
 }
 
@@ -567,3 +895,291 @@ img {
   min-width: 0;
   max-width: 100%;
 }
+
+/* Ensure gap works properly in inline-flex badges */
+.inline-flex.items-center.gap-2 {
+  gap: 0.5rem !important;
+}
+
+.gap-3 {
+  gap: 0.75rem !important;
+}
+
+.gap-4 {
+  gap: 1rem !important;
+}
+
+/* Global input padding fix - Prevent icon overlap */
+input.pl-12 {
+  padding-left: 3.5rem !important;
+}
+
+input.pl-14 {
+  padding-left: 4rem !important;
+}
+
+.relative>svg+input {
+  padding-left: 3.5rem !important;
+}
+
+/* Trust Section Styling */
+.trust-section {
+  background: linear-gradient(180deg, #F0F7FF 0%, #FFFFFF 100%);
+  border-color: #DBEAFE;
+}
+
+[data-theme="dark"] .trust-section {
+  background: linear-gradient(180deg, #1e1e32 0%, #151528 100%);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .trust-section h2,
+[data-theme="dark"] .trust-section h3 {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .trust-section .bg-white {
+  background-color: #1e1e32 !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Ensure placeholder text also has padding */
+input::placeholder {
+  transition: opacity 0.2s;
+}
+
+/* ============================================
+   DARK MODE - Telegram-style Dark Theme
+   ============================================ */
+
+/* Main backgrounds */
+[data-theme="dark"] .bg-slate-50,
+[data-theme="dark"] .bg-gray-50 {
+  background-color: #17212b !important;
+}
+
+[data-theme="dark"] .bg-white {
+  background-color: #0e1621 !important;
+}
+
+[data-theme="dark"] .min-h-screen {
+  background-color: #17212b !important;
+}
+
+/* Cards and containers */
+[data-theme="dark"] .bg-slate-100 {
+  background-color: #1b2836 !important;
+}
+
+[data-theme="dark"] .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+[data-theme="dark"] .bg-yellow-50 {
+  background-color: rgba(234, 179, 8, 0.1) !important;
+}
+
+[data-theme="dark"] .bg-green-100 {
+  background-color: rgba(34, 197, 94, 0.12) !important;
+}
+
+[data-theme="dark"] .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Text colors - Main */
+[data-theme="dark"] .text-gray-800 {
+  color: #e4e6eb !important;
+}
+
+[data-theme="dark"] .text-gray-700 {
+  color: #d1d5db !important;
+}
+
+[data-theme="dark"] .text-gray-600 {
+  color: #9ca3af !important;
+}
+
+[data-theme="dark"] .text-gray-500 {
+  color: #7c8b9d !important;
+}
+
+[data-theme="dark"] .text-gray-400 {
+  color: #6b7f95 !important;
+}
+
+[data-theme="dark"] .text-gray-300 {
+  color: #8899a6 !important;
+}
+
+/* Borders */
+[data-theme="dark"] .border-slate-200,
+[data-theme="dark"] .border-slate-100 {
+  border-color: #253341 !important;
+}
+
+[data-theme="dark"] .border-blue-100 {
+  border-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+[data-theme="dark"] .border-blue-200 {
+  border-color: rgba(59, 130, 246, 0.25) !important;
+}
+
+[data-theme="dark"] .border-blue-300 {
+  border-color: rgba(59, 130, 246, 0.35) !important;
+}
+
+[data-theme="dark"] .border-yellow-300 {
+  border-color: rgba(234, 179, 8, 0.3) !important;
+}
+
+[data-theme="dark"] .border-yellow-400 {
+  border-color: rgba(234, 179, 8, 0.4) !important;
+}
+
+/* Navbar dark mode */
+[data-theme="dark"] nav.fixed {
+  background-color: rgba(14, 22, 33, 0.95) !important;
+  border-bottom-color: #253341 !important;
+}
+
+[data-theme="dark"] nav .bg-white\/95,
+[data-theme="dark"] nav .bg-white\/90 {
+  background-color: rgba(14, 22, 33, 0.95) !important;
+}
+
+/* Navbar dropdown */
+[data-theme="dark"] .absolute.bg-white {
+  background-color: #0e1621 !important;
+}
+
+/* Inputs & Forms */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: #1b2836 !important;
+  color: #e4e6eb !important;
+  border-color: #253341 !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #6b7f95 !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Hover states */
+[data-theme="dark"] .hover\:bg-blue-50:hover {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+[data-theme="dark"] .hover\:bg-slate-50:hover {
+  background-color: #1b2836 !important;
+}
+
+[data-theme="dark"] .hover\:bg-blue-100:hover {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+}
+
+[data-theme="dark"] .hover\:bg-slate-200:hover {
+  background-color: #253341 !important;
+}
+
+[data-theme="dark"] .hover\:border-blue-300:hover {
+  border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+[data-theme="dark"] .hover\:border-slate-300:hover {
+  border-color: #35475a !important;
+}
+
+/* Shadows - darken */
+[data-theme="dark"] .shadow-sm,
+[data-theme="dark"] .shadow-md,
+[data-theme="dark"] .shadow-lg,
+[data-theme="dark"] .shadow-xl,
+[data-theme="dark"] .shadow-2xl {
+  --tw-shadow-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .hover\:shadow-md:hover,
+[data-theme="dark"] .hover\:shadow-xl:hover {
+  --tw-shadow-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Mobile menu */
+[data-theme="dark"] .lg\:hidden.absolute {
+  background-color: #0e1621 !important;
+  border-bottom-color: #253341 !important;
+}
+
+/* Footer dark mode */
+[data-theme="dark"] footer {
+  background-color: #0e1621 !important;
+  border-top-color: #253341 !important;
+}
+
+/* Scrollbar dark mode */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #17212b;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #35475a;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #4a6278;
+}
+
+/* Ring focus colors */
+[data-theme="dark"] .focus\:ring-blue-100:focus {
+  --tw-ring-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Body background for dark mode */
+[data-theme="dark"] body {
+  background-color: #17212b !important;
+}
+
+/* Chat widget dark mode */
+[data-theme="dark"] .fixed.bottom-6 .bg-white {
+  background-color: #0e1621 !important;
+}
+
+/* Stat cards in dark mode */
+[data-theme="dark"] .bg-white.rounded-2xl,
+[data-theme="dark"] .bg-white.rounded-3xl {
+  background-color: #0e1621 !important;
+}
+
+/* Modal backdrop */
+[data-theme="dark"] .bg-black\/70 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Dividers */
+[data-theme="dark"] .divide-slate-200>*+* {
+  border-color: #253341 !important;
+}
+
+[data-theme="dark"] .border-t.border-slate-200,
+[data-theme="dark"] .border-b.border-slate-200 {
+  border-color: #253341 !important;
+}
+
+/* Keep white text in gradient buttons */
+[data-theme="dark"] .from-blue-500,
+[data-theme="dark"] .from-blue-600,
+[data-theme="dark"] .from-green-500 {
+  color: #ffffff;
+}
+
+/* Admin pages keep their own dark theme - no additional overrides needed */

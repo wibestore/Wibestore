@@ -33,9 +33,9 @@ const CoinsPage = () => {
             <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
                 <div className="text-center">
                     <Coins className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                    <h1 className="text-2xl font-bold text-white mb-2">Kirish talab etiladi</h1>
+                    <h1 className="text-2xl font-semibold text-gray-800 mb-2">Kirish talab etiladi</h1>
                     <p className="text-gray-400 mb-6">Coinlar va vaucherlarni ko'rish uchun tizimga kiring</p>
-                    <Link to="/login" className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-semibold">
+                    <Link to="/login" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-semibold">
                         Kirish
                     </Link>
                 </div>
@@ -52,7 +52,7 @@ const CoinsPage = () => {
                         <Coins className="w-4 h-4" />
                         <span>Coin Tizimi</span>
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
                         🪙 Coinlar va Vaucherlar
                     </h1>
                     <p className="text-gray-400 max-w-2xl mx-auto">
@@ -69,7 +69,7 @@ const CoinsPage = () => {
                             </div>
                             <div>
                                 <p className="text-gray-400 text-sm">Sizning balansingiz</p>
-                                <p className="text-4xl font-bold text-white">{balance} <span className="text-yellow-400">Coin</span></p>
+                                <p className="text-4xl font-semibold text-gray-800">{balance} <span className="text-yellow-400">Coin</span></p>
                             </div>
                         </div>
                         <div className="flex flex-wrap gap-4">
@@ -79,7 +79,7 @@ const CoinsPage = () => {
                             </div>
                             <div className="bg-white/5 rounded-xl px-4 py-3">
                                 <p className="text-xs text-gray-500">Tranzaksiyalar</p>
-                                <p className="text-lg font-bold text-white">{monthlyTransactions}/{MAX_MONTHLY_TRANSACTIONS}</p>
+                                <p className="text-lg font-semibold text-gray-800">{monthlyTransactions}/{MAX_MONTHLY_TRANSACTIONS}</p>
                             </div>
                         </div>
                     </div>
@@ -96,8 +96,8 @@ const CoinsPage = () => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${activeTab === tab.id
-                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                    : 'bg-[#1e1e32] text-gray-400 hover:text-white'
+                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
+                                : 'bg-white border-slate-200 text-gray-500 hover:text-blue-600'
                                 }`}
                         >
                             <tab.icon className="w-4 h-4" />
@@ -107,35 +107,35 @@ const CoinsPage = () => {
                 </div>
 
                 {/* Tab Content */}
-                <div className="bg-[#1e1e32] rounded-2xl border border-white/5 p-6">
+                <div className="bg-white border-slate-200 rounded-2xl border border-slate-200 p-6">
                     {activeTab === 'about' && (
                         <div className="space-y-8">
                             {/* How to earn */}
                             <div>
-                                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                     <TrendingUp className="w-5 h-5 text-green-400" />
                                     Coin qanday yig'iladi?
                                 </h3>
                                 <div className="grid md:grid-cols-2 gap-4">
-                                    <div className="bg-[#25253a] rounded-xl p-4 border border-white/5">
+                                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
                                         <div className="flex items-center gap-3 mb-3">
                                             <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
                                                 <ShoppingBag className="w-5 h-5 text-green-400" />
                                             </div>
                                             <div>
-                                                <p className="font-semibold text-white">Akkaunt sotish</p>
+                                                <p className="font-semibold text-gray-800">Akkaunt sotish</p>
                                                 <p className="text-sm text-gray-500">Har bir sotuv uchun</p>
                                             </div>
                                         </div>
                                         <p className="text-2xl font-bold text-yellow-400">+{COINS_PER_TRANSACTION} coin</p>
                                     </div>
-                                    <div className="bg-[#25253a] rounded-xl p-4 border border-white/5">
+                                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
                                         <div className="flex items-center gap-3 mb-3">
                                             <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
                                                 <ShoppingBag className="w-5 h-5 text-blue-400" />
                                             </div>
                                             <div>
-                                                <p className="font-semibold text-white">Akkaunt sotib olish</p>
+                                                <p className="font-semibold text-gray-800">Akkaunt sotib olish</p>
                                                 <p className="text-sm text-gray-500">Har bir xarid uchun</p>
                                             </div>
                                         </div>
@@ -153,17 +153,17 @@ const CoinsPage = () => {
 
                             {/* How to use */}
                             <div>
-                                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <Gift className="w-5 h-5 text-purple-400" />
+                                <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                    <Gift className="w-5 h-5 text-blue-500" />
                                     Coinni qanday ishlatish mumkin?
                                 </h3>
                                 <div className="space-y-3">
                                     <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
                                             <Star className="w-6 h-6 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <p className="font-semibold text-white">Premium obuna BEPUL</p>
+                                            <p className="font-semibold text-gray-800">Premium obuna BEPUL</p>
                                             <p className="text-sm text-gray-400">100 coin sarflab Premium obunani bepul oling</p>
                                         </div>
                                         <div className="text-right">
@@ -176,19 +176,19 @@ const CoinsPage = () => {
 
                             {/* Voucher Info */}
                             <div>
-                                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                     <Clock className="w-5 h-5 text-orange-400" />
                                     Voucher haqida
                                 </h3>
                                 <div className="grid md:grid-cols-2 gap-4">
-                                    <div className="p-4 bg-[#25253a] rounded-xl border border-white/5">
-                                        <p className="text-purple-400 font-semibold mb-2">Premium obunachi</p>
-                                        <p className="text-3xl font-bold text-white mb-1">50% <span className="text-lg text-gray-400">chegirma</span></p>
+                                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                        <p className="text-blue-500 font-semibold mb-2">Premium obunachi</p>
+                                        <p className="text-3xl font-semibold text-gray-800 mb-1">50% <span className="text-lg text-gray-400">chegirma</span></p>
                                         <p className="text-sm text-gray-500">Premium obunaga avtomatik voucher</p>
                                     </div>
-                                    <div className="p-4 bg-[#25253a] rounded-xl border border-white/5">
+                                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
                                         <p className="text-blue-400 font-semibold mb-2">Pro obunachi</p>
-                                        <p className="text-3xl font-bold text-white mb-1">20% <span className="text-lg text-gray-400">chegirma</span></p>
+                                        <p className="text-3xl font-semibold text-gray-800 mb-1">20% <span className="text-lg text-gray-400">chegirma</span></p>
                                         <p className="text-sm text-gray-500">Pro obunaga avtomatik voucher</p>
                                     </div>
                                 </div>
@@ -205,23 +205,23 @@ const CoinsPage = () => {
 
                     {activeTab === 'vouchers' && (
                         <div>
-                            <h3 className="text-xl font-bold text-white mb-4">Sizning vaucherlaringiz</h3>
+                            <h3 className="text-xl font-semibold text-gray-800 mb-4">Sizning vaucherlaringiz</h3>
                             {vouchers.length > 0 ? (
                                 <div className="space-y-3">
                                     {vouchers.map(voucher => (
-                                        <div key={voucher.id} className="flex items-center gap-4 p-4 bg-[#25253a] rounded-xl border border-white/5">
+                                        <div key={voucher.id} className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
                                             <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${voucher.type === 'premium'
-                                                    ? 'bg-gradient-to-br from-purple-500 to-pink-500'
-                                                    : 'bg-gradient-to-br from-blue-500 to-cyan-500'
+                                                ? 'bg-gradient-to-br from-blue-500 to-blue-600'
+                                                : 'bg-gradient-to-br from-blue-500 to-cyan-500'
                                                 }`}>
                                                 <Gift className="w-7 h-7 text-white" />
                                             </div>
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2">
-                                                    <p className="font-semibold text-white">{voucher.discount}% chegirma</p>
+                                                    <p className="font-semibold text-gray-800">{voucher.discount}% chegirma</p>
                                                     <span className={`px-2 py-0.5 text-xs rounded-full ${voucher.type === 'premium'
-                                                            ? 'bg-purple-500/20 text-purple-400'
-                                                            : 'bg-blue-500/20 text-blue-400'
+                                                        ? 'bg-purple-500/20 text-blue-500'
+                                                        : 'bg-blue-500/20 text-blue-400'
                                                         }`}>
                                                         {voucher.type === 'premium' ? 'Premium' : 'Pro'}
                                                     </span>
@@ -236,7 +236,7 @@ const CoinsPage = () => {
                                                 </p>
                                                 <Link
                                                     to="/premium"
-                                                    className="text-xs text-purple-400 hover:underline flex items-center gap-1 justify-end mt-1"
+                                                    className="text-xs text-blue-500 hover:underline flex items-center gap-1 justify-end mt-1"
                                                 >
                                                     Ishlatish <ChevronRight className="w-3 h-3" />
                                                 </Link>
@@ -256,11 +256,11 @@ const CoinsPage = () => {
 
                     {activeTab === 'history' && (
                         <div>
-                            <h3 className="text-xl font-bold text-white mb-4">Coin tarixi</h3>
+                            <h3 className="text-xl font-semibold text-gray-800 mb-4">Coin tarixi</h3>
                             {history.length > 0 ? (
                                 <div className="space-y-2">
                                     {history.slice().reverse().map(item => (
-                                        <div key={item.id} className="flex items-center gap-4 p-3 bg-[#25253a] rounded-xl">
+                                        <div key={item.id} className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl">
                                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${item.type === 'earned' ? 'bg-green-500/20' : 'bg-red-500/20'
                                                 }`}>
                                                 {item.type === 'earned' ? (
@@ -270,7 +270,7 @@ const CoinsPage = () => {
                                                 )}
                                             </div>
                                             <div className="flex-1">
-                                                <p className="font-medium text-white">{item.reason}</p>
+                                                <p className="font-medium text-gray-800">{item.reason}</p>
                                                 <p className="text-xs text-gray-500">{formatDate(item.date)}</p>
                                             </div>
                                             <p className={`font-bold ${item.amount > 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -294,11 +294,11 @@ const CoinsPage = () => {
                 {balance >= PREMIUM_COST_IN_COINS && (
                     <div className="mt-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl p-6 border border-purple-500/30 text-center">
                         <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">Tabriklaymiz! 🎉</h3>
+                        <h3 className="text-xl font-semibold text-gray-800 mb-2">Tabriklaymiz! 🎉</h3>
                         <p className="text-gray-400 mb-4">Sizda {balance} coin bor — Premium obunani BEPUL olishingiz mumkin!</p>
                         <Link
                             to="/premium"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-semibold hover:opacity-90 transition-opacity"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-semibold hover:opacity-90 transition-opacity"
                         >
                             Premium olish
                             <ChevronRight className="w-5 h-5" />

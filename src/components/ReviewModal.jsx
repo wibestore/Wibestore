@@ -18,7 +18,7 @@ const ReviewModal = ({ isOpen, onClose, seller, account, onSubmit }) => {
         setIsSubmitting(true);
 
         const review = {
-            id: Date.now(),
+            id: crypto.randomUUID(),
             rating,
             comment,
             reviewerId: user?.id,
@@ -73,13 +73,13 @@ const ReviewModal = ({ isOpen, onClose, seller, account, onSubmit }) => {
             />
 
             {/* Modal */}
-            <div className="relative w-full max-w-md bg-[#1e1e32] rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+            <div className="relative w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-white/10">
-                    <h2 className="text-xl font-bold text-white">Baholash</h2>
+                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                    <h2 className="text-xl font-bold text-gray-800">Baholash</h2>
                     <button
                         onClick={onClose}
-                        className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -88,12 +88,12 @@ const ReviewModal = ({ isOpen, onClose, seller, account, onSubmit }) => {
                 {/* Content */}
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     {/* Seller Info */}
-                    <div className="flex items-center gap-4 p-4 bg-[#25253a] rounded-xl">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-lg font-bold text-white">
+                    <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-lg font-bold text-white">
                             {seller?.name?.charAt(0) || 'S'}
                         </div>
                         <div>
-                            <p className="text-white font-medium">{seller?.name || 'Sotuvchi'}</p>
+                            <p className="text-gray-800 font-medium">{seller?.name || 'Sotuvchi'}</p>
                             <p className="text-sm text-gray-400">{account?.title || 'Akkaunt'}</p>
                         </div>
                     </div>
@@ -113,8 +113,8 @@ const ReviewModal = ({ isOpen, onClose, seller, account, onSubmit }) => {
                                 >
                                     <Star
                                         className={`w-10 h-10 transition-colors ${star <= (hoverRating || rating)
-                                                ? 'text-yellow-400 fill-current'
-                                                : 'text-gray-600'
+                                            ? 'text-yellow-400 fill-current'
+                                            : 'text-gray-600'
                                             }`}
                                     />
                                 </button>
@@ -127,7 +127,7 @@ const ReviewModal = ({ isOpen, onClose, seller, account, onSubmit }) => {
 
                     {/* Comment */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-gray-600 mb-2">
                             Izoh (ixtiyoriy)
                         </label>
                         <textarea
@@ -135,7 +135,7 @@ const ReviewModal = ({ isOpen, onClose, seller, account, onSubmit }) => {
                             onChange={(e) => setComment(e.target.value)}
                             placeholder="Sotuvchi haqida fikringizni yozing..."
                             rows={4}
-                            className="w-full px-4 py-3 bg-[#25253a] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors resize-none"
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
                         />
                     </div>
 
@@ -143,7 +143,7 @@ const ReviewModal = ({ isOpen, onClose, seller, account, onSubmit }) => {
                     <button
                         type="submit"
                         disabled={rating === 0 || isSubmitting}
-                        className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Send className="w-5 h-5" />
                         {isSubmitting ? 'Yuborilmoqda...' : 'Baholash'}

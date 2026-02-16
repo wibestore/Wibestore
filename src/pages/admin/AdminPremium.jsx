@@ -10,11 +10,6 @@ const AdminPremium = () => {
     const [premiumDays, setPremiumDays] = useState(30);
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    // Load users from localStorage
-    useEffect(() => {
-        loadUsers();
-    }, []);
-
     const loadUsers = () => {
         const savedUsers = localStorage.getItem('wibeUsers');
         if (savedUsers) {
@@ -30,6 +25,11 @@ const AdminPremium = () => {
             setUsers(demoUsers);
         }
     };
+
+    // Load users from localStorage
+    useEffect(() => {
+        loadUsers();
+    }, []);
 
     const filteredUsers = users.filter(user =>
         user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -254,8 +254,8 @@ const AdminPremium = () => {
                                 <button
                                     onClick={() => setPremiumType('premium')}
                                     className={`p-4 rounded-xl border transition-all flex flex-col items-center gap-2 ${premiumType === 'premium'
-                                            ? 'bg-yellow-500/10 border-yellow-500/50 text-yellow-400'
-                                            : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
+                                        ? 'bg-yellow-500/10 border-yellow-500/50 text-yellow-400'
+                                        : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
                                         }`}
                                 >
                                     <Crown className="w-6 h-6" />
@@ -264,8 +264,8 @@ const AdminPremium = () => {
                                 <button
                                     onClick={() => setPremiumType('pro')}
                                     className={`p-4 rounded-xl border transition-all flex flex-col items-center gap-2 ${premiumType === 'pro'
-                                            ? 'bg-cyan-500/10 border-cyan-500/50 text-cyan-400'
-                                            : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
+                                        ? 'bg-cyan-500/10 border-cyan-500/50 text-cyan-400'
+                                        : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
                                         }`}
                                 >
                                     <Star className="w-6 h-6" />

@@ -2,35 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, Gamepad2, Phone, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import emailjs from '@emailjs/browser';
+import { sendWelcomeEmail } from '../lib/emailService';
+import { useLanguage } from '../context/LanguageContext';
 
-// EmailJS credentials
-const EMAILJS_SERVICE_ID = 'service_eh6ud1l';
-const EMAILJS_TEMPLATE_ID = 'template_hukqqt4';
-const EMAILJS_PUBLIC_KEY = 'Fe_UI6pb3qY22XkZd';
-
-// Xush kelibsiz emaili
-const sendWelcomeEmail = (user) => {
-    const registerTime = new Date().toLocaleString('uz-UZ', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'Asia/Tashkent'
-    });
-
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        user_name: user.name,
-        user_email: user.email,
-        login_time: registerTime + " (Ro'yxatdan o'tish)"
-    }, EMAILJS_PUBLIC_KEY)
-        .then(() => console.log('Welcome email yuborildi!'))
-        .catch((err) => console.error('Email xatosi:', err));
-};
 const SignupPage = () => {
     const navigate = useNavigate();
     const { register } = useAuth();
+    const { t } = useLanguage();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -49,17 +27,17 @@ const SignupPage = () => {
 
         // Validation
         if (formData.password !== formData.confirmPassword) {
-            setError('Parollar mos kelmaydi');
+            setError(t('signup.password_mismatch'));
             return;
         }
 
         if (formData.password.length < 6) {
-            setError('Parol kamida 6 ta belgidan iborat bo\'lishi kerak');
+            setError(t('signup.password_short'));
             return;
         }
 
         if (!formData.agreeTerms) {
-            setError('Foydalanish shartlariga rozilik bering');
+            setError(t('signup.agree_terms'));
             return;
         }
 
@@ -87,31 +65,31 @@ const SignupPage = () => {
                 {/* Logo */}
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-                            <Gamepad2 className="w-7 h-7 text-white" />
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                            <Gamepad2 className="w-7 h-7" style={{ color: '#ffffff' }} />
                         </div>
-                        <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
                             wibestore.uz
                         </span>
                     </Link>
-                    <h1 className="text-2xl font-bold text-white mb-2">Ro'yxatdan o'ting</h1>
-                    <p className="text-gray-400">Akkaunt sotib oling va soting!</p>
+                    <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('signup.title')}</h1>
+                    <p className="text-gray-500">{t('signup.subtitle')}</p>
                 </div>
 
                 {/* Features */}
-                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-2xl p-4 mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
                     <div className="flex items-center gap-3 text-sm">
-                        <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                        <span className="text-gray-300">Sotib oling <span className="text-purple-400 font-medium">va</span> soting - bir hisob!</span>
+                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                        <span className="text-gray-600">{t('signup.feature1')} <span className="text-blue-600 font-medium">{t('signup.feature1_and')}</span> {t('signup.feature1_end')}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm mt-2">
-                        <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                        <span className="text-gray-300">Faqat 10% komissiya (Premium: 8%, Pro: 5%)</span>
+                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                        <span className="text-gray-600">{t('signup.feature2')}</span>
                     </div>
                 </div>
 
                 {/* Signup Form */}
-                <div className="bg-[#1e1e32] rounded-2xl p-8 border border-white/5">
+                <div className="bg-white rounded-2xl p-8 border border-blue-100 shadow-lg">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Error Message */}
                         {error && (
@@ -123,8 +101,8 @@ const SignupPage = () => {
 
                         {/* Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                To'liq ism
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                {t('signup.name')}
                             </label>
                             <div className="relative">
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -132,8 +110,9 @@ const SignupPage = () => {
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder="Ismingiz"
-                                    className="w-full pl-12 pr-4 py-3 bg-[#25253a] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                                    placeholder={t('signup.name_placeholder')}
+                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
+                                    style={{ paddingLeft: '52px' }}
                                     required
                                 />
                             </div>
@@ -141,8 +120,8 @@ const SignupPage = () => {
 
                         {/* Email */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Email
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                {t('signup.email')}
                             </label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -150,8 +129,9 @@ const SignupPage = () => {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    placeholder="email@example.com"
-                                    className="w-full pl-12 pr-4 py-3 bg-[#25253a] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                                    placeholder={t('signup.email_placeholder')}
+                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
+                                    style={{ paddingLeft: '52px' }}
                                     required
                                 />
                             </div>
@@ -159,8 +139,8 @@ const SignupPage = () => {
 
                         {/* Phone */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Telefon raqam
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                {t('signup.phone')}
                             </label>
                             <div className="relative">
                                 <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -168,8 +148,9 @@ const SignupPage = () => {
                                     type="tel"
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    placeholder="+998 90 123 45 67"
-                                    className="w-full pl-12 pr-4 py-3 bg-[#25253a] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                                    placeholder={t('signup.phone_placeholder')}
+                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
+                                    style={{ paddingLeft: '52px' }}
                                     required
                                 />
                             </div>
@@ -177,8 +158,8 @@ const SignupPage = () => {
 
                         {/* Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Parol
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                {t('signup.password')}
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -186,14 +167,15 @@ const SignupPage = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    placeholder="Kamida 6 ta belgi"
-                                    className="w-full pl-12 pr-12 py-3 bg-[#25253a] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                                    placeholder={t('signup.password_placeholder')}
+                                    className="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
+                                    style={{ paddingLeft: '52px' }}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -202,8 +184,8 @@ const SignupPage = () => {
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Parolni tasdiqlang
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                {t('signup.confirm_password')}
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -211,8 +193,9 @@ const SignupPage = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    placeholder="Parolni qaytadan kiriting"
-                                    className="w-full pl-12 pr-4 py-3 bg-[#25253a] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                                    placeholder={t('signup.confirm_placeholder')}
+                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
+                                    style={{ paddingLeft: '52px' }}
                                     required
                                 />
                             </div>
@@ -224,11 +207,11 @@ const SignupPage = () => {
                                 type="checkbox"
                                 checked={formData.agreeTerms}
                                 onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })}
-                                className="w-4 h-4 mt-0.5 rounded border-white/20 bg-[#25253a] text-purple-500 focus:ring-purple-500"
+                                className="w-4 h-4 mt-0.5 rounded border-slate-300 bg-slate-50 text-blue-500 focus:ring-blue-500"
                             />
-                            <span className="text-sm text-gray-400">
-                                <Link to="/terms" className="text-purple-400 hover:underline">Foydalanish shartlari</Link> va{' '}
-                                <Link to="/privacy" className="text-purple-400 hover:underline">Maxfiylik siyosati</Link>ga roziman
+                            <span className="text-sm text-gray-500">
+                                <Link to="/terms" className="text-blue-500 hover:underline">{t('signup.terms')}</Link> va{' '}
+                                <Link to="/terms" className="text-blue-500 hover:underline">{t('signup.privacy')}</Link>{t('signup.agree')}
                             </span>
                         </label>
 
@@ -236,18 +219,19 @@ const SignupPage = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-4 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ color: '#ffffff' }}
                         >
-                            {isLoading ? 'Ro\'yxatdan o\'tilmoqda...' : 'Ro\'yxatdan o\'tish'}
+                            {isLoading ? t('signup.loading') : t('signup.submit')}
                         </button>
                     </form>
                 </div>
 
                 {/* Login Link */}
                 <p className="text-center mt-6 text-gray-400">
-                    Hisobingiz bormi?{' '}
-                    <Link to="/login" className="text-purple-400 hover:underline font-medium">
-                        Kirish
+                    {t('signup.has_account')}{' '}
+                    <Link to="/login" className="text-blue-500 hover:underline font-medium">
+                        {t('signup.login_link')}
                     </Link>
                 </p>
             </div>

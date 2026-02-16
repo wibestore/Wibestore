@@ -389,7 +389,7 @@ export const accounts = [
         title: 'Heroic Account - 50+ Characters',
         description: 'Chrono, Alok, K, Skyler. 100+ skins, Elite Pass Season 1-50',
         price: 1200000,
-        image: '/img/Pubg/pg.jpg',
+        image: '/img/FireFree/fire.jpg',
         seller: {
             id: 3,
             name: 'FFKing_UZ',
@@ -404,11 +404,11 @@ export const accounts = [
     {
         id: 4,
         gameId: 'standoff2',
-        name: 'Standoff 2',
+        gameName: 'Standoff 2',
         title: 'Elite Account - Rare Knives',
         description: 'Karambit Fade, M4A4 Howl, AK-47 Fire Serpent',
         price: 1800000,
-        image: '/img/Pubg/pg.jpg',
+        image: '/img/Steam/st.jpg',
         seller: {
             id: 4,
             name: 'SO2Master',
@@ -522,7 +522,7 @@ export const accounts = [
         title: 'CS2 Account - Global Elite',
         description: 'Global Elite, 15k hours, Knife Karambit Doppler',
         price: 2800000,
-        image: '/accounts/steam2.jpg',
+        image: '/img/Steam/st.jpg',
         seller: {
             id: 2,
             name: 'GameStore_TJ',
@@ -541,7 +541,7 @@ export const premiumPlans = [
         id: 'premium',
         name: 'Premium',
         price: 99000, // UZS per month
-        icon: 'в­ђ',
+        icon: '\u2B50',
         features: [
             "Tavsiyalarda 3x ko'proq chiqish",
             'Premium badge',
@@ -549,13 +549,13 @@ export const premiumPlans = [
             "Qidiruvda yuqori pozitsiya",
             'Maxsus support'
         ],
-        color: 'from-purple-500 to-pink-500'
+        color: 'from-blue-500 to-blue-600'
     },
     {
         id: 'pro',
         name: 'Pro',
         price: 249000, // UZS per month
-        icon: 'рџ’Ћ',
+        icon: '\uD83D\uDC8E',
         features: [
             'Barcha Premium afzalliklari',
             'VIP golden badge',
@@ -573,19 +573,19 @@ export const paymentMethods = [
     {
         id: 'payme',
         name: 'Payme',
-        icon: 'рџ’і',
+        icon: '\uD83D\uDCB3',
         logo: '/payments/payme.png'
     },
     {
         id: 'click',
         name: 'Click',
-        icon: 'рџ“±',
+        icon: '\uD83D\uDCF1',
         logo: '/payments/click.png'
     },
     {
         id: 'paynet',
         name: 'Paynet',
-        icon: 'рџЏ¦',
+        icon: '\uD83C\uDFE6',
         logo: '/payments/paynet.png'
     }
 ];

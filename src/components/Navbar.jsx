@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Gamepad2, Flame, Star, LogIn, UserPlus, Package, User, LogOut, ChevronDown, Settings, PlusCircle, Sun, Moon, Coins, Trophy } from 'lucide-react';
+import { Menu, X, Gamepad2, Flame, Star, LogIn, UserPlus, Package, User, LogOut, ChevronDown, Settings, PlusCircle, Sun, Moon, Coins, Trophy, Globe } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCoins } from '../context/CoinContext';
+import { useLanguage, languages as langList } from '../context/LanguageContext';
 import NotificationWidget from './NotificationWidget';
 
 const Navbar = () => {
@@ -15,6 +16,24 @@ const Navbar = () => {
     const { user, isAuthenticated, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const { balance } = useCoins();
+    const { t, language, setLanguage } = useLanguage();
+    const dropdownRef = useRef(null);
+    const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+    const langRef = useRef(null);
+
+    // Close user dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setIsUserMenuOpen(false);
+            }
+            if (langRef.current && !langRef.current.contains(e.target)) {
+                setIsLangMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -28,6 +47,7 @@ const Navbar = () => {
     useEffect(() => {
         setIsMobileMenuOpen(false);
         setIsUserMenuOpen(false);
+        setIsLangMenuOpen(false);
     }, [location]);
 
     const handleLogout = () => {
@@ -37,25 +57,27 @@ const Navbar = () => {
     };
 
     const navLinks = [
-        { to: '/products', icon: Package, label: 'Boshqa mahsulotlar' },
-        { to: '/top', icon: Flame, label: 'Top akkauntlar' },
-        { to: '/statistics', icon: Trophy, label: 'Statistika' },
-        { to: '/premium', icon: Star, label: 'Site Premium', premium: true },
+        { to: '/products', icon: Package, label: t('nav.products') },
+        { to: '/top', icon: Flame, label: t('nav.top') },
+        { to: '/statistics', icon: Trophy, label: t('nav.statistics') },
+        { to: '/premium', icon: Star, label: t('nav.premium'), premium: true },
     ];
+
+    const currentLang = langList.find(l => l.code === language);
 
     return (
         <nav className={`fixed top-0 left-0 right-0 h-18 z-50 transition-all duration-300 ${isScrolled
-            ? 'bg-[#0f0f1a]/95 backdrop-blur-xl shadow-lg shadow-black/20'
-            : 'bg-[#0f0f1a]/80 backdrop-blur-lg'
-            } border-b border-white/5`}>
+            ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-blue-500/5'
+            : 'bg-white/90 backdrop-blur-lg'
+            } border-b border-blue-100`}>
             <div className="sl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
                 <div className="flex items-center justify-between h-full">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30 animate-pulse-glow group-hover:scale-105 transition-transform">
-                            <Gamepad2 className="w-6 h-6 text-white" />
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30 animate-pulse-glow group-hover:scale-105 transition-transform">
+                            <Gamepad2 className="w-6 h-6" style={{ color: '#ffffff' }} />
                         </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
                             wibestore.uz
                         </span>
                     </Link>
@@ -67,28 +89,57 @@ const Navbar = () => {
                                 key={link.to}
                                 to={link.to}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 relative overflow-hidden group ${link.premium
-                                    ? 'text-yellow-400 hover:bg-yellow-400/10'
-                                    : 'text-gray-300 hover:text-white hover:bg-white/5'
-                                    } ${location.pathname === link.to ? 'bg-white/10 text-white' : ''}`}
+                                    ? 'text-yellow-500 hover:bg-yellow-50'
+                                    : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                                    } ${location.pathname === link.to ? 'bg-blue-50 text-blue-600' : ''}`}
                             >
-                                <link.icon className={`w-4 h-4 ${link.premium ? 'text-yellow-400' : ''}`} />
+                                <link.icon className={`w-4 h-4 ${link.premium ? 'text-yellow-500' : ''}`} />
                                 {link.label}
                             </Link>
                         ))}
                     </div>
 
                     {/* Auth Section */}
-                    <div className="hidden lg:flex items-center gap-4">
+                    <div className="hidden lg:flex items-center gap-3">
+                        {/* Language Switcher */}
+                        <div className="relative" ref={langRef}>
+                            <button
+                                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors text-sm font-medium text-gray-600"
+                            >
+                                <Globe className="w-4 h-4 text-blue-500" />
+                                <span>{currentLang?.flag}</span>
+                                <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
+                            </button>
+                            {isLangMenuOpen && (
+                                <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl border border-blue-100 shadow-xl overflow-hidden z-50">
+                                    {langList.map((lang) => (
+                                        <button
+                                            key={lang.code}
+                                            onClick={() => { setLanguage(lang.code); setIsLangMenuOpen(false); }}
+                                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${language === lang.code
+                                                ? 'bg-blue-50 text-blue-600 font-medium'
+                                                : 'text-gray-600 hover:bg-blue-50'
+                                                }`}
+                                        >
+                                            <span className="text-lg">{lang.flag}</span>
+                                            {lang.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
-                            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                            className="p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors"
                             title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
                         >
                             {theme === 'dark' ? (
                                 <Sun className="w-5 h-5 text-yellow-400" />
                             ) : (
-                                <Moon className="w-5 h-5 text-purple-400" />
+                                <Moon className="w-5 h-5 text-blue-500" />
                             )}
                         </button>
 
@@ -103,55 +154,56 @@ const Navbar = () => {
                                 {/* Sell Button */}
                                 <Link
                                     to="/sell"
-                                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90 transition-opacity"
+                                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90 transition-opacity"
+                                    style={{ color: '#ffffff' }}
                                 >
                                     <PlusCircle className="w-4 h-4" />
-                                    Sotish
+                                    {t('nav.sell')}
                                 </Link>
 
                                 {/* Notifications */}
                                 <NotificationWidget />
 
-                                <div className="relative">
+                                <div className="relative" ref={dropdownRef}>
                                     <button
                                         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                        className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                                        className="flex items-center gap-3 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors"
                                     >
-                                        <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-sm font-bold text-white">
+                                        <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-sm font-bold" style={{ color: '#ffffff' }}>
                                             {user.name?.charAt(0) || 'U'}
                                         </div>
-                                        <span className="text-white text-sm font-medium">{user.name?.split(' ')[0] || 'User'}</span>
+                                        <span className="text-gray-700 text-sm font-medium">{user.name?.split(' ')[0] || 'User'}</span>
                                         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
                                     </button>
 
                                     {/* Dropdown Menu */}
                                     {isUserMenuOpen && (
-                                        <div className="absolute top-full right-0 mt-2 w-56 bg-[#1e1e32] rounded-xl border border-white/10 shadow-xl overflow-hidden">
-                                            <div className="p-4 border-b border-white/10">
-                                                <p className="text-white font-medium">{user.name}</p>
-                                                <p className="text-sm text-gray-400">{user.email}</p>
+                                        <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl border border-blue-100 shadow-xl overflow-hidden">
+                                            <div className="p-4 border-b border-blue-100">
+                                                <p className="text-gray-800 font-medium">{user.name}</p>
+                                                <p className="text-sm text-gray-500">{user.email}</p>
                                             </div>
                                             <div className="p-2">
                                                 <Link
                                                     to="/profile"
-                                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors"
+                                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors"
                                                 >
                                                     <User className="w-4 h-4" />
-                                                    Mening profilim
+                                                    {t('nav.profile')}
                                                 </Link>
                                                 <Link
                                                     to="/settings"
-                                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors"
+                                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors"
                                                 >
                                                     <Settings className="w-4 h-4" />
-                                                    Sozlamalar
+                                                    {t('nav.settings')}
                                                 </Link>
                                                 <button
                                                     onClick={handleLogout}
-                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-300 hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-colors"
+                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors"
                                                 >
                                                     <LogOut className="w-4 h-4" />
-                                                    Chiqish
+                                                    {t('nav.logout')}
                                                 </button>
                                             </div>
                                         </div>
@@ -162,17 +214,18 @@ const Navbar = () => {
                             <>
                                 <Link
                                     to="/login"
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white border border-white/10 hover:border-purple-500/50 hover:bg-white/5 transition-all duration-200"
+                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-gray-600 border border-blue-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
                                 >
                                     <LogIn className="w-4 h-4" />
-                                    Kirish
+                                    {t('nav.login')}
                                 </Link>
                                 <Link
                                     to="/signup"
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all duration-200"
+                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all duration-200"
+                                    style={{ color: '#ffffff' }}
                                 >
                                     <UserPlus className="w-4 h-4" />
-                                    Ro'yxatdan o'tish
+                                    {t('nav.signup')}
                                 </Link>
                             </>
                         )}
@@ -181,7 +234,7 @@ const Navbar = () => {
                     {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+                        className="lg:hidden p-2 text-gray-500 hover:text-blue-600 transition-colors"
                     >
                         {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
@@ -189,7 +242,7 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Menu */}
-            <div className={`lg:hidden absolute top-full left-0 right-0 bg-[#1a1a2e] border-b border-white/10 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+            <div className={`lg:hidden absolute top-full left-0 right-0 bg-white border-b border-blue-100 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
                 }`}>
                 <div className="p-4 space-y-2">
                     {navLinks.map((link) => (
@@ -197,24 +250,24 @@ const Navbar = () => {
                             key={link.to}
                             to={link.to}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${link.premium ? 'text-yellow-400' : 'text-gray-300'
-                                } hover:bg-white/5`}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${link.premium ? 'text-yellow-500' : 'text-gray-600'
+                                } hover:bg-blue-50`}
                         >
                             <link.icon className="w-5 h-5" />
                             {link.label}
                         </Link>
                     ))}
 
-                    <div className="pt-4 mt-4 border-t border-white/10">
+                    <div className="pt-4 mt-4 border-t border-blue-100">
                         {isAuthenticated && user ? (
                             <>
                                 <div className="flex items-center gap-3 px-4 py-3 mb-2">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-lg font-bold text-white">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-lg font-bold" style={{ color: '#ffffff' }}>
                                         {user.name?.charAt(0) || 'U'}
                                     </div>
                                     <div>
-                                        <p className="text-white font-medium">{user.name}</p>
-                                        <p className="text-sm text-gray-400">{user.email}</p>
+                                        <p className="text-gray-800 font-medium">{user.name}</p>
+                                        <p className="text-sm text-gray-500">{user.email}</p>
                                     </div>
                                 </div>
                                 <button
@@ -222,7 +275,7 @@ const Navbar = () => {
                                     className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
                                 >
                                     <LogOut className="w-5 h-5" />
-                                    Chiqish
+                                    {t('nav.logout')}
                                 </button>
                             </>
                         ) : (
@@ -230,18 +283,19 @@ const Navbar = () => {
                                 <Link
                                     to="/login"
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-white border border-white/10 hover:bg-white/5 transition-colors"
+                                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-gray-600 border border-blue-200 hover:bg-blue-50 transition-colors"
                                 >
                                     <LogIn className="w-5 h-5" />
-                                    Kirish
+                                    {t('nav.login')}
                                 </Link>
                                 <Link
                                     to="/signup"
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-white bg-gradient-to-r from-purple-500 to-pink-500"
+                                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500"
+                                    style={{ color: '#ffffff' }}
                                 >
                                     <UserPlus className="w-5 h-5" />
-                                    Ro'yxatdan o'tish
+                                    {t('nav.signup')}
                                 </Link>
                             </div>
                         )}

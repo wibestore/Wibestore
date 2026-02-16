@@ -95,44 +95,45 @@ const FAQPage = () => {
     });
 
     return (
-        <div className="min-h-screen pt-24 pb-16">
+        <div className="min-h-screen" style={{ paddingTop: '140px', paddingBottom: '64px' }}>
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-full text-purple-400 text-sm font-medium mb-6">
+                <div className="flex flex-col items-center mb-14">
+                    <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-50 border border-blue-200 rounded-full text-blue-600 text-sm font-medium mb-6">
                         <HelpCircle className="w-4 h-4" />
                         Yordam markazi
                     </div>
-                    <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-                        Ko'p beriladigan savollar
+                    <h1 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-5" style={{ textAlign: 'center' }}>
+                        Ko&apos;p beriladigan savollar
                     </h1>
-                    <p className="text-gray-400">
-                        Savolingizga javob toping yoki biz bilan bog'laning
+                    <p className="text-gray-500 text-lg" style={{ textAlign: 'center' }}>
+                        Savolingizga javob toping yoki biz bilan bog&apos;laning
                     </p>
                 </div>
 
                 {/* Search */}
-                <div className="relative mb-8">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <div className="relative mb-10">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Savol qidiring..."
-                        className="w-full pl-12 pr-4 py-4 bg-[#1e1e32] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50"
+                        className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 shadow-sm"
                     />
                 </div>
 
                 {/* Categories */}
-                <div className="flex flex-wrap gap-2 mb-8">
+                <div className="flex flex-wrap justify-center gap-3 mb-10">
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
                             onClick={() => setActiveCategory(cat.id)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${activeCategory === cat.id
-                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                : 'bg-[#1e1e32] text-gray-400 hover:bg-[#25253a] hover:text-white'
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium transition-all ${activeCategory === cat.id
+                                ? 'bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/25'
+                                : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
                                 }`}
+                            style={activeCategory === cat.id ? { color: '#ffffff' } : {}}
                         >
                             <cat.icon className="w-4 h-4" />
                             {cat.label}
@@ -141,51 +142,52 @@ const FAQPage = () => {
                 </div>
 
                 {/* FAQ List */}
-                <div className="space-y-3">
+                <div className="space-y-4">
                     {filteredFaqs.length > 0 ? (
                         filteredFaqs.map((faq, index) => (
                             <div
                                 key={index}
-                                className="bg-[#1e1e32] rounded-xl border border-white/5 overflow-hidden"
+                                className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
                             >
                                 <button
                                     onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                    className="w-full flex items-center justify-between p-5 text-left hover:bg-[#25253a] transition-colors"
+                                    className="w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 transition-colors"
                                 >
-                                    <span className="font-medium text-white pr-4">{faq.question}</span>
-                                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform flex-shrink-0 ${openIndex === index ? 'rotate-180' : ''
+                                    <span className="font-semibold text-gray-800 pr-4">{faq.question}</span>
+                                    <ChevronDown className={`w-5 h-5 text-blue-500 transition-transform flex-shrink-0 ${openIndex === index ? 'rotate-180' : ''
                                         }`} />
                                 </button>
                                 {openIndex === index && (
-                                    <div className="px-5 pb-5 text-gray-400 border-t border-white/5 pt-4">
+                                    <div className="px-6 pb-6 text-gray-600 border-t border-slate-100 pt-4 leading-relaxed">
                                         {faq.answer}
                                     </div>
                                 )}
                             </div>
                         ))
                     ) : (
-                        <div className="text-center py-12">
-                            <HelpCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                            <p className="text-gray-400">Hech narsa topilmadi</p>
+                        <div className="text-center py-16">
+                            <HelpCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                            <p className="text-gray-500">Hech narsa topilmadi</p>
                         </div>
                     )}
                 </div>
 
                 {/* Contact */}
-                <div className="mt-12 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl p-8 border border-purple-500/20 text-center">
-                    <MessageCircle className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-white mb-2">Javob topmadingizmi?</h3>
-                    <p className="text-gray-400 mb-6">Bizning qo'llab-quvvatlash jamoamiz sizga yordam beradi</p>
+                <div className="mt-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-10 text-center shadow-lg shadow-blue-500/20">
+                    <MessageCircle className="w-12 h-12 mx-auto mb-4" style={{ color: '#ffffff' }} />
+                    <h3 className="text-xl font-bold mb-3" style={{ color: '#ffffff' }}>Javob topmadingizmi?</h3>
+                    <p className="mb-8" style={{ color: 'rgba(255,255,255,0.85)' }}>Bizning qo&apos;llab-quvvatlash jamoamiz sizga yordam beradi</p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <a
                             href="https://t.me/wibestoreuz"
-                            className="flex items-center gap-2 px-6 py-3 bg-[#0088cc] rounded-xl text-white font-medium hover:opacity-90 transition-opacity"
+                            className="flex items-center gap-2 px-6 py-3 bg-white rounded-xl text-blue-600 font-medium hover:bg-blue-50 transition-colors"
                         >
                             💬 Telegram orqali
                         </a>
                         <a
                             href="mailto:support@wibestore.uz"
-                            className="flex items-center gap-2 px-6 py-3 bg-[#25253a] rounded-xl text-white font-medium hover:bg-[#2a2a45] transition-colors"
+                            className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium border-2 transition-colors"
+                            style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#ffffff' }}
                         >
                             📧 Email orqali
                         </a>

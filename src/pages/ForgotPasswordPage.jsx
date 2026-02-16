@@ -38,15 +38,15 @@ const ForgotPasswordPage = () => {
                     <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle className="w-10 h-10 text-green-400" />
                     </div>
-                    <h1 className="text-2xl font-bold text-white mb-4">Email yuborildi!</h1>
+                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Email yuborildi!</h1>
                     <p className="text-gray-400 mb-8">
-                        Parolni tiklash havolasi <span className="text-white">{email}</span> manziliga yuborildi.
+                        Parolni tiklash havolasi <span className="text-gray-800 font-semibold">{email}</span> manziliga yuborildi.
                         Iltimos, pochta qutingizni tekshiring.
                     </p>
                     <div className="space-y-3">
                         <Link
                             to="/login"
-                            className="block w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 text-center"
+                            className="block w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 text-center"
                         >
                             Login sahifasiga qaytish
                         </Link>
@@ -55,7 +55,7 @@ const ForgotPasswordPage = () => {
                                 setIsSubmitted(false);
                                 setEmail('');
                             }}
-                            className="block w-full py-4 rounded-xl font-semibold text-gray-400 hover:text-white transition-colors"
+                            className="block w-full py-4 rounded-xl font-semibold text-gray-500 hover:text-blue-600 transition-colors"
                         >
                             Boshqa email kiritish
                         </button>
@@ -74,19 +74,19 @@ const ForgotPasswordPage = () => {
                 {/* Logo */}
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                             <Gamepad2 className="w-7 h-7 text-white" />
                         </div>
                         <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                             wibestore.uz
                         </span>
                     </Link>
-                    <h1 className="text-2xl font-bold text-white mb-2">Parolni tiklash</h1>
+                    <h1 className="text-2xl font-bold text-gray-800 mb-2">Parolni tiklash</h1>
                     <p className="text-gray-400">Email manzilingizni kiriting va biz sizga parolni tiklash havolasini yuboramiz</p>
                 </div>
 
                 {/* Form */}
-                <div className="bg-[#1e1e32] rounded-2xl p-8 border border-white/5">
+                <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Error */}
                         {error && (
@@ -108,7 +108,7 @@ const ForgotPasswordPage = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="email@example.com"
-                                    className="w-full pl-12 pr-4 py-3 bg-[#25253a] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
                                 />
                             </div>
                         </div>
@@ -117,7 +117,7 @@ const ForgotPasswordPage = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? 'Yuborilmoqda...' : 'Havola yuborish'}
                         </button>
@@ -126,7 +126,7 @@ const ForgotPasswordPage = () => {
                     {/* Back to Login */}
                     <Link
                         to="/login"
-                        className="flex items-center justify-center gap-2 mt-6 text-gray-400 hover:text-purple-400 transition-colors"
+                        className="flex items-center justify-center gap-2 mt-6 text-gray-400 hover:text-blue-500 transition-colors"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Login sahifasiga qaytish

@@ -41,9 +41,9 @@ const AccountCard = ({ account, featured = false }) => {
     return (
         <Link
             to={`/account/${account.id}`}
-            className={`group relative bg-gradient-to-b from-[#1e1e32] to-[#25253a] border rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${account.isPremium
-                ? 'border-yellow-500/30 hover:border-yellow-500/50 hover:shadow-yellow-500/10'
-                : 'border-white/5 hover:border-purple-500/50 hover:shadow-purple-500/10'
+            className={`group relative bg-white border rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${account.isPremium
+                ? 'border-yellow-400/50 hover:border-yellow-500 hover:shadow-yellow-500/10'
+                : 'border-blue-100 hover:border-blue-300 hover:shadow-blue-500/10'
                 } ${featured ? 'flex-shrink-0 w-72 snap-start' : ''}`}
         >
             {/* Premium top accent */}
@@ -52,7 +52,7 @@ const AccountCard = ({ account, featured = false }) => {
             )}
 
             {/* Image */}
-            <div className="relative h-44 bg-[#25253a] overflow-hidden">
+            <div className="relative h-44 bg-blue-50 overflow-hidden">
                 {account.image ? (
                     <img
                         src={account.image}
@@ -70,8 +70,8 @@ const AccountCard = ({ account, featured = false }) => {
                     <button
                         onClick={handleLike}
                         className={`absolute top-3 left-3 w-9 h-9 rounded-full flex items-center justify-center transition-all ${isLiked
-                                ? 'bg-red-500 text-white'
-                                : 'bg-black/40 backdrop-blur-sm text-white/70 hover:bg-black/60 hover:text-white'
+                            ? 'bg-red-500 text-white'
+                            : 'bg-black/40 backdrop-blur-sm text-white/70 hover:bg-black/60 hover:text-white'
                             }`}
                     >
                         <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
@@ -87,7 +87,7 @@ const AccountCard = ({ account, featured = false }) => {
                 )}
 
                 {/* Game Badge */}
-                <div className="absolute bottom-3 left-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-full text-xs text-gray-300">
+                <div className="absolute bottom-3 left-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-full text-xs text-white">
                     {account.gameName}
                 </div>
             </div>
@@ -95,7 +95,7 @@ const AccountCard = ({ account, featured = false }) => {
             {/* Content */}
             <div className="p-4">
                 {/* Title */}
-                <h3 className="font-semibold text-white mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors">
+                <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     {account.title}
                 </h3>
 
@@ -105,20 +105,20 @@ const AccountCard = ({ account, featured = false }) => {
                 </p>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                <div className="flex items-center justify-between pt-3 border-t border-blue-100">
                     {/* Price */}
-                    <span className="text-lg font-bold text-cyan-400">
+                    <span className="text-lg font-bold text-blue-600">
                         {formatPrice(account.price)}
                     </span>
 
                     {/* Seller Info */}
                     <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1 text-yellow-400">
+                        <div className="flex items-center gap-1 text-yellow-500">
                             <Star className="w-3.5 h-3.5 fill-current" />
-                            <span className="text-xs font-medium">{account.seller.rating}</span>
+                            <span className="text-xs font-medium text-gray-600">{account.seller.rating}</span>
                         </div>
                         {account.seller.isPremium && (
-                            <Crown className="w-3.5 h-3.5 text-yellow-400" />
+                            <Crown className="w-3.5 h-3.5 text-yellow-500" />
                         )}
                     </div>
                 </div>

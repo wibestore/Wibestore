@@ -50,23 +50,23 @@ const ReviewList = ({ userId, type = 'received' }) => {
     return (
         <div className="space-y-6">
             {/* Summary */}
-            <div className="flex items-center gap-6 p-4 bg-[#25253a] rounded-xl">
+            <div className="flex items-center gap-6 p-4 bg-slate-50 rounded-xl">
                 <div className="text-center">
-                    <div className="text-3xl font-bold text-white">{getAverageRating()}</div>
+                    <div className="text-3xl font-bold text-gray-800">{getAverageRating()}</div>
                     <div className="flex items-center gap-1 mt-1">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <Star
                                 key={star}
                                 className={`w-4 h-4 ${star <= Math.round(getAverageRating())
-                                        ? 'text-yellow-400 fill-current'
-                                        : 'text-gray-600'
+                                    ? 'text-yellow-400 fill-current'
+                                    : 'text-gray-600'
                                     }`}
                             />
                         ))}
                     </div>
                 </div>
                 <div className="text-gray-400">
-                    <span className="text-white font-medium">{reviews.length}</span> ta baholash
+                    <span className="text-gray-800 font-medium">{reviews.length}</span> ta baholash
                 </div>
             </div>
 
@@ -75,11 +75,11 @@ const ReviewList = ({ userId, type = 'received' }) => {
                 {reviews.map((review) => (
                     <div
                         key={review.id}
-                        className="p-4 bg-[#25253a] rounded-xl border border-white/5"
+                        className="p-4 bg-slate-50 rounded-xl border border-slate-200"
                     >
                         <div className="flex items-start gap-4">
                             {/* Avatar */}
-                            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
                                 {review.reviewerName?.charAt(0) || 'U'}
                             </div>
 
@@ -87,7 +87,7 @@ const ReviewList = ({ userId, type = 'received' }) => {
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between gap-4 mb-2">
                                     <div>
-                                        <span className="font-medium text-white">
+                                        <span className="font-medium text-gray-800">
                                             {review.reviewerName}
                                         </span>
                                         <span className="text-sm text-gray-500 ml-2">
@@ -99,8 +99,8 @@ const ReviewList = ({ userId, type = 'received' }) => {
                                             <Star
                                                 key={star}
                                                 className={`w-4 h-4 ${star <= review.rating
-                                                        ? 'text-yellow-400 fill-current'
-                                                        : 'text-gray-600'
+                                                    ? 'text-yellow-400 fill-current'
+                                                    : 'text-gray-600'
                                                     }`}
                                             />
                                         ))}
@@ -116,7 +116,7 @@ const ReviewList = ({ userId, type = 'received' }) => {
 
                                 {/* Comment */}
                                 {review.comment && (
-                                    <p className="text-gray-300">{review.comment}</p>
+                                    <p className="text-gray-600">{review.comment}</p>
                                 )}
                             </div>
                         </div>

@@ -30,7 +30,7 @@ const GamePage = () => {
         return (
             <div className="min-h-screen pt-24 flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold text-white mb-4">O'yin topilmadi</h1>
+                    <h1 className="text-2xl font-bold text-gray-800 mb-4">O'yin topilmadi</h1>
                     <Link to="/" className="text-purple-400 hover:underline">Bosh sahifaga qaytish</Link>
                 </div>
             </div>
@@ -42,17 +42,17 @@ const GamePage = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors">
+                    <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-blue-600 mb-4 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Orqaga
                     </Link>
 
                     <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-[#25253a] rounded-2xl flex items-center justify-center text-3xl">
+                        <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-3xl">
                             {game.icon}
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold text-white">{game.name}</h1>
+                            <h1 className="text-3xl font-bold text-gray-800">{game.name}</h1>
                             <p className="text-gray-400">{gameAccounts.length} ta akkaunt mavjud</p>
                         </div>
                     </div>
@@ -66,7 +66,7 @@ const GamePage = () => {
                         <input
                             type="text"
                             placeholder="Akkauntlarni qidirish..."
-                            className="w-full pl-12 pr-4 py-3 bg-[#1e1e32] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                            className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-blue-400 transition-colors"
                         />
                     </div>
 
@@ -75,7 +75,7 @@ const GamePage = () => {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="appearance-none w-full lg:w-48 px-4 py-3 pr-10 bg-[#1e1e32] border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500/50 cursor-pointer transition-colors"
+                            className="appearance-none w-full lg:w-48 px-4 py-3 pr-10 bg-white border border-slate-200 rounded-xl text-gray-800 focus:outline-none focus:border-blue-400 cursor-pointer transition-colors"
                         >
                             <option value="newest">Eng yangilari</option>
                             <option value="price-low">Narx: arzon</option>
@@ -88,7 +88,7 @@ const GamePage = () => {
                     {/* Filter Button */}
                     <button
                         onClick={() => setShowFilters(!showFilters)}
-                        className="flex items-center justify-center gap-2 px-6 py-3 bg-[#1e1e32] border border-white/10 rounded-xl text-white hover:border-purple-500/50 transition-colors"
+                        className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl text-gray-600 hover:border-blue-400 transition-colors"
                     >
                         <Filter className="w-5 h-5" />
                         Filtrlar
@@ -105,7 +105,7 @@ const GamePage = () => {
                 ) : (
                     <div className="text-center py-16">
                         <div className="text-6xl mb-4">😔</div>
-                        <h3 className="text-xl font-semibold text-white mb-2">Akkauntlar topilmadi</h3>
+                        <h3 className="text-xl font-semibold text-gray-800 mb-2">Akkauntlar topilmadi</h3>
                         <p className="text-gray-400">Bu o'yin uchun hozircha akkauntlar mavjud emas</p>
                     </div>
                 )}

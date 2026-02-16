@@ -4,8 +4,10 @@ import { Search, Filter, ChevronDown, Grid, List } from 'lucide-react';
 import GameCard from '../components/GameCard';
 import AccountCard from '../components/AccountCard';
 import { games, accounts } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 
 const ProductsPage = () => {
+    const { t } = useLanguage();
     const [viewMode, setViewMode] = useState('grid');
     const [selectedGame, setSelectedGame] = useState('all');
     const [sortBy, setSortBy] = useState('newest');
@@ -90,30 +92,30 @@ const ProductsPage = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-bold text-white mb-2">Barcha mahsulotlar</h1>
-                    <p className="text-gray-400">Bu yerda barcha o'yin akkauntlari va raqamli mahsulotlar mavjud</p>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('products.title')}</h1>
+                    <p className="text-gray-500">{t('products.subtitle')}</p>
                 </div>
 
                 {/* Games Filter */}
                 <div className="mb-8">
-                    <h2 className="text-lg font-semibold text-white mb-4 md">O'yinlar bo'yicha</h2>
-                    <div className="flex flex-wrap gap-2">
+                    <h2 className="text-lg font-semibold text-gray-800 mb-4 md">{t('products.by_game')}</h2>
+                    <div className="flex flex-wrap gap-3">
                         <button
                             onClick={() => setSelectedGame('all')}
-                            className={` wd px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGame === 'all'
-                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a] '
+                            className={` wd px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${selectedGame === 'all'
+                                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'
+                                : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
                                 }`}
                         >
-                            Barchasi
+                            {t('products.all')}
                         </button>
                         {allGames.map((game) => (
                             <button
                                 key={game.id}
                                 onClick={() => setSelectedGame(game.id)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGame === game.id
-                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                    : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a]'
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${selectedGame === game.id
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'
+                                    : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
                                     }`}
                             >
                                 <span>{game.icon}</span>
@@ -131,8 +133,8 @@ const ProductsPage = () => {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Akkauntlarni qidirish..."
-                            className="w-full pl-5 pr-12 py-4 bg-[#1e1e32] border border-white/10 rounded-xl text-white text-base placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors h-14 leading-tight"
+                            placeholder={t('products.search')}
+                            className="w-full pl-5 pr-12 py-4 bg-white border border-slate-200 rounded-xl text-gray-800 text-base placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors h-14 leading-tight"
                         />
                         <Search className="st absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                     </div>
@@ -142,28 +144,28 @@ const ProductsPage = () => {
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="appearance-none w-full lg:w-56 px-5 pr-12 bg-[#1e1e32] border border-white/10 rounded-xl text-white text-base focus:outline-none focus:border-purple-500/50 cursor-pointer transition-colors h-14 flex items-center"
+                            className="appearance-none w-full lg:w-56 px-5 pr-12 bg-white border border-slate-200 rounded-xl text-gray-800 text-base focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 cursor-pointer transition-colors h-14 flex items-center"
                         >
-                            <option value="newest">Eng yangilari</option>
-                            <option value="price-low">Narx: arzon</option>
-                            <option value="price-high">Narx: qimmat</option>
-                            <option value="rating">Reyting bo'yicha</option>
+                            <option value="newest">{t('products.sort_newest')}</option>
+                            <option value="price-low">{t('products.sort_cheap')}</option>
+                            <option value="price-high">{t('products.sort_expensive')}</option>
+                            <option value="rating">{t('products.sort_rating')}</option>
                         </select>
                         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                     </div>
 
                     {/* View Mode */}
-                    <div className="flex bg-[#1e1e32] rounded-xl p-1 h-14 items-center">
+                    <div className="flex bg-white border border-slate-200 rounded-xl p-1 h-14 items-center">
                         <button
                             onClick={() => setViewMode('grid')}
-                            className={`p-3 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'
+                            className={`p-3 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-blue-600'
                                 }`}
                         >
                             <Grid className="w-5 h-5" />
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`p-3 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-purple-500 text-white' : 'text-gray-400 hover:text-white'
+                            className={`p-3 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-blue-600'
                                 }`}
                         >
                             <List className="w-5 h-5" />
@@ -172,8 +174,8 @@ const ProductsPage = () => {
                 </div>
 
                 {/* Results Count */}
-                <div className="text-gray-400 text-sm mb-6">
-                    {finalAccounts.length} ta akkaunt topildi
+                <div className="text-gray-500 text-sm mb-6">
+                    {finalAccounts.length} {t('products.found')}
                 </div>
 
                 {/* Accounts Grid/List */}
@@ -189,8 +191,8 @@ const ProductsPage = () => {
                 ) : (
                     <div className="text-center py-16">
                         <div className="text-6xl mb-4">🔍</div>
-                        <h3 className="text-xl font-semibold text-white mb-2">Akkauntlar topilmadi</h3>
-                        <p className="text-gray-400">Qidiruv so'rovingizni o'zgartiring</p>
+                        <h3 className="text-xl font-semibold text-gray-800 mb-2">{t('products.not_found')}</h3>
+                        <p className="text-gray-500">{t('products.change_search')}</p>
                     </div>
                 )}
             </div>

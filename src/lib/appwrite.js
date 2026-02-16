@@ -1,11 +1,11 @@
 import { Client, Account } from 'appwrite';
 
-// Appwrite configuration
+// Appwrite configuration from environment variables
 const client = new Client();
 
 client
-    .setEndpoint('https://fra.cloud.appwrite.io/v1')
-    .setProject('697b13ea0001d79ebd81');
+    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT)
+    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID);
 
 export const account = new Account(client);
 
@@ -17,9 +17,9 @@ export const loginWithGoogle = async () => {
             window.location.origin + '/', // Success redirect
             window.location.origin + '/login' // Failure redirect
         );
-    } catch (error) {
-        console.error('Google OAuth error:', error);
-        throw error;
+    } catch (err) {
+        console.error('Google OAuth error:', err);
+        throw err;
     }
 };
 
@@ -27,7 +27,7 @@ export const loginWithGoogle = async () => {
 export const getCurrentUser = async () => {
     try {
         return await account.get();
-    } catch (error) {
+    } catch {
         return null;
     }
 };
@@ -36,8 +36,8 @@ export const getCurrentUser = async () => {
 export const logoutAppwrite = async () => {
     try {
         await account.deleteSession('current');
-    } catch (error) {
-        console.error('Logout error:', error);
+    } catch (err) {
+        console.error('Logout error:', err);
     }
 };
 

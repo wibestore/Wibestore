@@ -11,17 +11,17 @@ const AdminAccounts = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    // Load listings from localStorage
-    useEffect(() => {
-        loadListings();
-    }, []);
-
     const loadListings = () => {
         const savedListings = localStorage.getItem('wibeListings');
         if (savedListings) {
             setListings(JSON.parse(savedListings));
         }
     };
+
+    // Load listings from localStorage
+    useEffect(() => {
+        loadListings();
+    }, []);
 
     const statusFilters = [
         { value: 'all', label: 'Barchasi' },
