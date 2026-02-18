@@ -35,9 +35,9 @@ const ReviewList = ({ userId, type = 'received' }) => {
 
     if (reviews.length === 0) {
         return (
-            <div className="text-center py-12">
-                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">
+            <div className="empty-state">
+                <MessageSquare className="empty-state-icon" />
+                <p className="empty-state-description">
                     {type === 'received'
                         ? 'Hali baholashlar yo\'q'
                         : 'Siz hali hech kimni baholamadingiz'
@@ -48,49 +48,96 @@ const ReviewList = ({ userId, type = 'received' }) => {
     }
 
     return (
-        <div className="space-y-6">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Summary */}
-            <div className="flex items-center gap-6 p-4 bg-slate-50 rounded-xl">
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '24px',
+                    padding: 'var(--space-4)',
+                    backgroundColor: 'var(--color-bg-secondary)',
+                    borderRadius: 'var(--radius-xl)',
+                    border: '1px solid var(--color-border-muted)',
+                }}
+            >
                 <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-800">{getAverageRating()}</div>
-                    <div className="flex items-center gap-1 mt-1">
+                    <div
+                        style={{
+                            fontSize: 'var(--font-size-3xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            color: 'var(--color-text-primary)',
+                        }}
+                    >
+                        {getAverageRating()}
+                    </div>
+                    <div className="flex items-center gap-1" style={{ marginTop: '4px' }}>
                         {[1, 2, 3, 4, 5].map((star) => (
                             <Star
                                 key={star}
-                                className={`w-4 h-4 ${star <= Math.round(getAverageRating())
-                                    ? 'text-yellow-400 fill-current'
-                                    : 'text-gray-600'
-                                    }`}
+                                className="w-4 h-4"
+                                style={{
+                                    color: star <= Math.round(getAverageRating())
+                                        ? 'var(--color-premium-gold-light)'
+                                        : 'var(--color-text-muted)',
+                                    fill: star <= Math.round(getAverageRating()) ? 'currentColor' : 'none',
+                                }}
                             />
                         ))}
                     </div>
                 </div>
-                <div className="text-gray-400">
-                    <span className="text-gray-800 font-medium">{reviews.length}</span> ta baholash
+                <div style={{ color: 'var(--color-text-muted)' }}>
+                    <span style={{ color: 'var(--color-text-primary)', fontWeight: 'var(--font-weight-medium)' }}>
+                        {reviews.length}
+                    </span>{' '}
+                    ta baholash
                 </div>
             </div>
 
             {/* Reviews List */}
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {reviews.map((review) => (
                     <div
                         key={review.id}
-                        className="p-4 bg-slate-50 rounded-xl border border-slate-200"
+                        style={{
+                            padding: 'var(--space-4)',
+                            backgroundColor: 'var(--color-bg-secondary)',
+                            borderRadius: 'var(--radius-xl)',
+                            border: '1px solid var(--color-border-muted)',
+                        }}
                     >
                         <div className="flex items-start gap-4">
                             {/* Avatar */}
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                            <div
+                                className="avatar avatar-lg"
+                                style={{
+                                    backgroundColor: 'var(--color-accent-blue)',
+                                    color: '#fff',
+                                    flexShrink: 0,
+                                }}
+                            >
                                 {review.reviewerName?.charAt(0) || 'U'}
                             </div>
 
                             {/* Content */}
                             <div className="flex-1 min-w-0">
-                                <div className="flex items-center justify-between gap-4 mb-2">
+                                <div className="flex items-center justify-between gap-4" style={{ marginBottom: '8px' }}>
                                     <div>
-                                        <span className="font-medium text-gray-800">
+                                        <span
+                                            style={{
+                                                fontWeight: 'var(--font-weight-medium)',
+                                                color: 'var(--color-text-primary)',
+                                            }}
+                                        >
                                             {review.reviewerName}
                                         </span>
-                                        <span className="text-sm text-gray-500 ml-2">
+                                        <span
+                                            style={{
+                                                fontSize: 'var(--font-size-sm)',
+                                                color: 'var(--color-text-muted)',
+                                                marginLeft: '8px',
+                                            }}
+                                        >
                                             {formatDate(review.createdAt)}
                                         </span>
                                     </div>
@@ -98,10 +145,13 @@ const ReviewList = ({ userId, type = 'received' }) => {
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <Star
                                                 key={star}
-                                                className={`w-4 h-4 ${star <= review.rating
-                                                    ? 'text-yellow-400 fill-current'
-                                                    : 'text-gray-600'
-                                                    }`}
+                                                className="w-4 h-4"
+                                                style={{
+                                                    color: star <= review.rating
+                                                        ? 'var(--color-premium-gold-light)'
+                                                        : 'var(--color-text-muted)',
+                                                    fill: star <= review.rating ? 'currentColor' : 'none',
+                                                }}
                                             />
                                         ))}
                                     </div>
@@ -109,14 +159,26 @@ const ReviewList = ({ userId, type = 'received' }) => {
 
                                 {/* Account Info */}
                                 {review.accountTitle && (
-                                    <p className="text-sm text-gray-500 mb-2">
-                                        Akkaunt: <span className="text-gray-400">{review.accountTitle}</span>
+                                    <p style={{
+                                        fontSize: 'var(--font-size-sm)',
+                                        color: 'var(--color-text-muted)',
+                                        marginBottom: '8px',
+                                    }}>
+                                        Akkaunt:{' '}
+                                        <span style={{ color: 'var(--color-text-secondary)' }}>
+                                            {review.accountTitle}
+                                        </span>
                                     </p>
                                 )}
 
                                 {/* Comment */}
                                 {review.comment && (
-                                    <p className="text-gray-600">{review.comment}</p>
+                                    <p style={{
+                                        color: 'var(--color-text-secondary)',
+                                        lineHeight: 'var(--line-height-base)',
+                                    }}>
+                                        {review.comment}
+                                    </p>
                                 )}
                             </div>
                         </div>

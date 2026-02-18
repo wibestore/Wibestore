@@ -39,11 +39,28 @@ const NotificationWidget = () => {
             {/* Bell Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative p-2 rounded-xl hover:bg-slate-50 transition-colors"
+                className="btn btn-ghost btn-sm"
+                style={{ position: 'relative', padding: '8px', borderRadius: 'var(--radius-xl)' }}
             >
-                <Bell className="w-5 h-5 text-gray-500 hover:text-blue-600" />
+                <Bell className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 rounded-full text-xs font-bold text-white flex items-center justify-center">
+                    <span
+                        style={{
+                            position: 'absolute',
+                            top: '-2px',
+                            right: '-2px',
+                            width: '20px',
+                            height: '20px',
+                            backgroundColor: 'var(--color-accent-red)',
+                            borderRadius: '50%',
+                            fontSize: 'var(--font-size-xs)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            color: '#fff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
                         {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                 )}
@@ -52,17 +69,45 @@ const NotificationWidget = () => {
             {/* Dropdown */}
             {isOpen && (
                 <div
-                    className="fixed sm:absolute left-4 right-4 sm:left-auto sm:right-0 top-16 sm:top-full sm:mt-2 bg-white rounded-2xl border border-slate-200 shadow-2xl z-50 overflow-hidden"
-                    style={{ minWidth: '320px', maxWidth: '400px' }}
+                    className="dropdown-menu"
+                    style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 'calc(100% + 8px)',
+                        minWidth: '340px',
+                        maxWidth: '400px',
+                        maxHeight: '480px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
                 >
                     {/* Header */}
-                    <div className="flex items-center justify-between p-4 border-b border-slate-200">
-                        <h3 className="font-semibold text-gray-800">Bildirishnomalar</h3>
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: 'var(--space-4)',
+                            borderBottom: '1px solid var(--color-border-muted)',
+                        }}
+                    >
+                        <h3 style={{
+                            fontWeight: 'var(--font-weight-semibold)',
+                            color: 'var(--color-text-primary)',
+                            fontSize: 'var(--font-size-base)',
+                        }}>
+                            Bildirishnomalar
+                        </h3>
                         <div className="flex items-center gap-2">
                             {unreadCount > 0 && (
                                 <button
                                     onClick={markAllAsRead}
-                                    className="text-xs text-blue-500 hover:text-purple-300 flex items-center gap-1"
+                                    className="btn btn-ghost btn-sm"
+                                    style={{
+                                        fontSize: 'var(--font-size-xs)',
+                                        color: 'var(--color-text-accent)',
+                                        gap: '4px',
+                                    }}
                                 >
                                     <Check className="w-3 h-3" />
                                     Barchasini o'qish
@@ -72,23 +117,60 @@ const NotificationWidget = () => {
                     </div>
 
                     {/* Notifications List */}
-                    <div className="max-h-96 overflow-y-auto">
+                    <div style={{ flex: 1, overflowY: 'auto', maxHeight: '320px' }}>
                         {notifications.length > 0 ? (
                             notifications.map((notification) => (
                                 <div
                                     key={notification.id}
-                                    className={`p-4 border-b border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer ${!notification.read ? 'bg-blue-500/5' : ''
-                                        }`}
+                                    style={{
+                                        padding: 'var(--space-4)',
+                                        borderBottom: '1px solid var(--color-border-muted)',
+                                        cursor: 'pointer',
+                                        transition: 'background-color 0.15s ease',
+                                        backgroundColor: !notification.read
+                                            ? 'var(--color-info-bg)'
+                                            : 'transparent',
+                                    }}
                                     onClick={() => markAsRead(notification.id)}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'var(--color-bg-tertiary)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.backgroundColor = !notification.read
+                                            ? 'var(--color-info-bg)'
+                                            : 'transparent';
+                                    }}
                                 >
                                     <div className="flex items-start gap-3">
-                                        <div className="w-10 h-10 flex-shrink-0 bg-slate-50 rounded-xl flex items-center justify-center text-xl">
+                                        <div
+                                            style={{
+                                                width: '40px',
+                                                height: '40px',
+                                                flexShrink: 0,
+                                                backgroundColor: 'var(--color-bg-tertiary)',
+                                                borderRadius: 'var(--radius-xl)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '20px',
+                                            }}
+                                        >
                                             {notification.icon}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between gap-2">
-                                                <p className={`font-medium truncate ${!notification.read ? 'text-gray-800' : 'text-gray-600'
-                                                    }`}>
+                                                <p
+                                                    className="truncate"
+                                                    style={{
+                                                        fontWeight: !notification.read
+                                                            ? 'var(--font-weight-medium)'
+                                                            : 'var(--font-weight-normal)',
+                                                        color: !notification.read
+                                                            ? 'var(--color-text-primary)'
+                                                            : 'var(--color-text-secondary)',
+                                                        fontSize: 'var(--font-size-base)',
+                                                    }}
+                                                >
                                                     {notification.title}
                                                 </p>
                                                 <button
@@ -96,38 +178,77 @@ const NotificationWidget = () => {
                                                         e.stopPropagation();
                                                         deleteNotification(notification.id);
                                                     }}
-                                                    className="text-gray-500 hover:text-red-400 transition-colors"
+                                                    className="btn btn-ghost btn-sm"
+                                                    style={{
+                                                        padding: '4px',
+                                                        color: 'var(--color-text-muted)',
+                                                        flexShrink: 0,
+                                                    }}
                                                 >
                                                     <X className="w-4 h-4" />
                                                 </button>
                                             </div>
-                                            <p className="text-sm text-gray-400 line-clamp-2 mt-1">
+                                            <p
+                                                className="line-clamp-2"
+                                                style={{
+                                                    fontSize: 'var(--font-size-sm)',
+                                                    color: 'var(--color-text-muted)',
+                                                    marginTop: '4px',
+                                                }}
+                                            >
                                                 {notification.message}
                                             </p>
-                                            <p className="text-xs text-gray-500 mt-2">
+                                            <p style={{
+                                                fontSize: 'var(--font-size-xs)',
+                                                color: 'var(--color-text-muted)',
+                                                marginTop: '8px',
+                                            }}>
                                                 {formatTime(notification.time)}
                                             </p>
                                         </div>
                                         {!notification.read && (
-                                            <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
+                                            <div
+                                                style={{
+                                                    width: '8px',
+                                                    height: '8px',
+                                                    backgroundColor: 'var(--color-accent-blue)',
+                                                    borderRadius: '50%',
+                                                    flexShrink: 0,
+                                                    marginTop: '8px',
+                                                }}
+                                            />
                                         )}
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <div className="p-8 text-center">
-                                <Bell className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                                <p className="text-gray-400">Bildirishnomalar yo'q</p>
+                            <div className="empty-state" style={{ padding: '32px 16px' }}>
+                                <Bell
+                                    className="empty-state-icon"
+                                    style={{ width: '48px', height: '48px' }}
+                                />
+                                <p className="empty-state-description">Bildirishnomalar yo'q</p>
                             </div>
                         )}
                     </div>
 
                     {/* Footer */}
                     {notifications.length > 0 && (
-                        <div className="p-3 border-t border-slate-200">
+                        <div
+                            style={{
+                                padding: 'var(--space-3)',
+                                borderTop: '1px solid var(--color-border-muted)',
+                            }}
+                        >
                             <button
                                 onClick={clearAll}
-                                className="w-full flex items-center justify-center gap-2 py-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
+                                className="btn btn-ghost btn-sm w-full"
+                                style={{
+                                    gap: '8px',
+                                    color: 'var(--color-text-muted)',
+                                    fontSize: 'var(--font-size-sm)',
+                                    justifyContent: 'center',
+                                }}
                             >
                                 <Trash2 className="w-4 h-4" />
                                 Barchasini tozalash

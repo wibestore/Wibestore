@@ -1,70 +1,121 @@
 import { Link } from 'react-router-dom';
 import { Home, ArrowLeft, Search, Gamepad2 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const NotFoundPage = () => {
+    const { t } = useLanguage();
+
     return (
-        <div className="min-h-screen pt-24 pb-16 flex items-center justify-center page-enter">
-            <div className="max-w-2xl mx-auto px-4 text-center">
-                {/* 404 Animation */}
-                <div className="relative mb-8">
-                    <div className="text-[150px] sm:text-[200px] font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-500 leading-none select-none animate-pulse">
-                        404
-                    </div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                        <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-blue-400/20 rounded-full blur-2xl animate-pulse" />
-                    </div>
+        <div
+            className="page-enter flex items-center justify-center"
+            style={{ minHeight: 'calc(100vh - 64px)', padding: '32px 16px' }}
+        >
+            <div className="text-center" style={{ maxWidth: '500px' }}>
+                {/* 404 */}
+                <div
+                    style={{
+                        fontSize: 'clamp(100px, 20vw, 180px)',
+                        fontWeight: 'var(--font-weight-bold)',
+                        lineHeight: 1,
+                        color: 'var(--color-text-muted)',
+                        opacity: 0.2,
+                        userSelect: 'none',
+                        marginBottom: '16px',
+                    }}
+                >
+                    404
                 </div>
 
                 {/* Icon */}
-                <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-500/10 to-blue-400/10 rounded-2xl flex items-center justify-center border border-slate-200">
-                    <Gamepad2 className="w-10 h-10 text-purple-400" />
+                <div
+                    className="flex items-center justify-center mx-auto"
+                    style={{
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: 'var(--radius-xl)',
+                        backgroundColor: 'var(--color-bg-tertiary)',
+                        border: '1px solid var(--color-border-default)',
+                        marginBottom: '24px',
+                        marginTop: '-40px',
+                    }}
+                >
+                    <Gamepad2 className="w-8 h-8" style={{ color: 'var(--color-text-muted)' }} />
                 </div>
 
                 {/* Text */}
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-                    Sahifa topilmadi
+                <h1
+                    style={{
+                        fontSize: 'var(--font-size-2xl)',
+                        fontWeight: 'var(--font-weight-bold)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '8px',
+                    }}
+                >
+                    {t('not_found.title') || 'Page not found'}
                 </h1>
-                <p className="text-gray-400 text-lg mb-8 max-w-md mx-auto">
-                    Kechirasiz, siz izlayotgan sahifa mavjud emas yoki ko'chirilgan bo'lishi mumkin.
+                <p
+                    style={{
+                        color: 'var(--color-text-secondary)',
+                        marginBottom: '32px',
+                        lineHeight: 'var(--line-height-lg)',
+                    }}
+                >
+                    {t('not_found.description') || "Sorry, the page you're looking for doesn't exist or has been moved."}
                 </p>
 
                 {/* Buttons */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3" style={{ marginBottom: '32px' }}>
                     <Link
                         to="/"
-                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all"
+                        className="btn btn-primary btn-lg flex items-center gap-2"
+                        style={{ textDecoration: 'none' }}
                     >
-                        <Home className="w-5 h-5" />
-                        Bosh sahifa
+                        <Home className="w-4 h-4" />
+                        {t('not_found.home') || 'Go home'}
                     </Link>
                     <button
                         onClick={() => window.history.back()}
-                        className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-gray-600 font-semibold rounded-xl border border-slate-200 hover:bg-slate-200 transition-all"
+                        className="btn btn-secondary btn-lg flex items-center gap-2"
                     >
-                        <ArrowLeft className="w-5 h-5" />
-                        Orqaga qaytish
+                        <ArrowLeft className="w-4 h-4" />
+                        {t('not_found.back') || 'Go back'}
                     </button>
                 </div>
 
-                {/* Search suggestion */}
-                <div className="mt-12 p-6 bg-white rounded-2xl border border-slate-200">
-                    <div className="flex items-center gap-3 mb-4">
-                        <Search className="w-5 h-5 text-gray-500" />
-                        <span className="text-gray-400">Quyidagi sahifalarni ko'rishingiz mumkin:</span>
+                {/* Suggested links */}
+                <div
+                    style={{
+                        padding: '20px 24px',
+                        borderRadius: 'var(--radius-lg)',
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border-default)',
+                    }}
+                >
+                    <div className="flex items-center gap-2" style={{ marginBottom: '12px' }}>
+                        <Search className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                        <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                            {t('not_found.suggestions') || 'You might want to check:'}
+                        </span>
                     </div>
                     <div className="flex flex-wrap justify-center gap-2">
-                        <Link to="/products" className="px-4 py-2 bg-slate-100 text-gray-600 rounded-lg hover:bg-slate-200 transition-colors">
-                            Mahsulotlar
-                        </Link>
-                        <Link to="/premium" className="px-4 py-2 bg-slate-100 text-gray-600 rounded-lg hover:bg-slate-200 transition-colors">
-                            Premium
-                        </Link>
-                        <Link to="/top" className="px-4 py-2 bg-slate-100 text-gray-600 rounded-lg hover:bg-slate-200 transition-colors">
-                            Top akkauntlar
-                        </Link>
-                        <Link to="/faq" className="px-4 py-2 bg-slate-100 text-gray-600 rounded-lg hover:bg-slate-200 transition-colors">
-                            FAQ
-                        </Link>
+                        {[
+                            { to: '/products', label: t('nav.products') || 'Products' },
+                            { to: '/premium', label: t('nav.premium') || 'Premium' },
+                            { to: '/top', label: t('nav.top') || 'Top' },
+                            { to: '/faq', label: 'FAQ' },
+                        ].map(link => (
+                            <Link
+                                key={link.to}
+                                to={link.to}
+                                className="btn btn-ghost btn-sm"
+                                style={{
+                                    textDecoration: 'none',
+                                    border: '1px solid var(--color-border-default)',
+                                }}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>

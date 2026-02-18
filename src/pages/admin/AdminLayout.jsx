@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard, Users, Package, AlertTriangle, Star,
-    DollarSign, Settings, LogOut, Menu, X, Gamepad2, Bell, Search
+    DollarSign, Settings, LogOut, Menu, X, Gamepad2, Bell, Search, ChevronLeft
 } from 'lucide-react';
+import './admin.css';
 
 const AdminLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Check authentication on mount
     useEffect(() => {
         const authData = localStorage.getItem('adminAuth');
         if (!authData) {
@@ -42,7 +43,6 @@ const AdminLayout = ({ children }) => {
         { icon: Settings, label: 'Sozlamalar', to: '/admin/settings' },
     ];
 
-    // Get admin username
     const getAdminName = () => {
         try {
             const authData = localStorage.getItem('adminAuth');
@@ -56,108 +56,288 @@ const AdminLayout = ({ children }) => {
         return 'Admin';
     };
 
-    return (
-        <div className="min-h-screen bg-slate-50 flex">
-            {/* Sidebar */}
-            <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#0f172a] border-r border-slate-700 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-                }`}>
-                <div className="h-full flex flex-col">
-                    {/* Logo */}
-                    <div className="p-6 border-b border-slate-700">
-                        <Link to="/admin" className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                                <Gamepad2 className="w-6 h-6 text-white" />
-                            </div>
-                            <div>
-                                <span className="text-lg font-bold text-white">WibeStore</span>
-                                <span className="block text-xs text-slate-400">Admin Panel</span>
-                            </div>
-                        </Link>
-                    </div>
+    const sidebarWidth = sidebarCollapsed ? '64px' : '260px';
 
-                    {/* Menu */}
-                    <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-                        {menuItems.map((item) => (
+    return (
+        <div style={{ minHeight: '100vh', display: 'flex', backgroundColor: 'var(--color-bg-primary)' }}>
+            {/* Sidebar */}
+            <aside
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    width: sidebarWidth,
+                    backgroundColor: 'var(--color-bg-secondary)',
+                    borderRight: '1px solid var(--color-border-default)',
+                    zIndex: 50,
+                    transition: 'all 0.3s ease',
+                    transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                }}
+            >
+                {/* Logo */}
+                <div
+                    style={{
+                        padding: sidebarCollapsed ? '20px 12px' : '20px 24px',
+                        borderBottom: '1px solid var(--color-border-default)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: sidebarCollapsed ? 'center' : 'space-between',
+                    }}
+                >
+                    <Link
+                        to="/admin"
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: '36px',
+                                height: '36px',
+                                background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-blue-hover))',
+                                borderRadius: 'var(--radius-lg)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                            }}
+                        >
+                            <Gamepad2 style={{ width: '20px', height: '20px', color: '#ffffff' }} />
+                        </div>
+                        {!sidebarCollapsed && (
+                            <div>
+                                <span style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
+                                    WibeStore
+                                </span>
+                                <span style={{ display: 'block', fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+                                    Admin Panel
+                                </span>
+                            </div>
+                        )}
+                    </Link>
+                    {!sidebarCollapsed && (
+                        <button
+                            onClick={() => setSidebarCollapsed(true)}
+                            className="hidden lg:flex items-center justify-center"
+                            style={{
+                                padding: '6px',
+                                borderRadius: 'var(--radius-md)',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: 'var(--color-text-muted)',
+                            }}
+                            aria-label="Collapse sidebar"
+                        >
+                            <ChevronLeft style={{ width: '16px', height: '16px' }} />
+                        </button>
+                    )}
+                </div>
+
+                {/* Menu */}
+                <nav style={{ flex: 1, padding: '12px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    {menuItems.map((item) => {
+                        const isActive = location.pathname === item.to;
+                        return (
                             <Link
                                 key={item.to}
                                 to={item.to}
-                                className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${location.pathname === item.to
-                                    ? 'bg-blue-600/20 text-white border border-blue-500/30'
-                                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                                    }`}
+                                className={`admin-sidebar-link ${isActive ? 'admin-sidebar-link-active' : ''}`}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '12px',
+                                    padding: sidebarCollapsed ? '12px' : '10px 16px',
+                                    borderRadius: 'var(--radius-lg)',
+                                    textDecoration: 'none',
+                                    justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                                    backgroundColor: isActive ? 'var(--color-info-bg)' : 'transparent',
+                                    color: isActive ? 'var(--color-text-accent)' : 'var(--color-text-secondary)',
+                                    fontWeight: isActive ? 'var(--font-weight-semibold)' : 'var(--font-weight-medium)',
+                                    fontSize: 'var(--font-size-base)',
+                                    border: isActive ? '1px solid var(--color-border-accent)' : '1px solid transparent',
+                                }}
+                                title={sidebarCollapsed ? item.label : undefined}
                             >
-                                <item.icon className="w-5 h-5" />
-                                {item.label}
+                                <item.icon style={{ width: '18px', height: '18px', flexShrink: 0 }} />
+                                {!sidebarCollapsed && <span>{item.label}</span>}
                             </Link>
-                        ))}
-                    </nav>
+                        );
+                    })}
+                </nav>
 
-                    {/* Logout */}
-                    <div className="p-4 border-t border-slate-700">
-                        <button
-                            onClick={handleLogout}
-                            className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all"
-                        >
-                            <LogOut className="w-5 h-5" />
-                            Chiqish
-                        </button>
-                    </div>
+                {/* Logout */}
+                <div style={{ padding: '12px', borderTop: '1px solid var(--color-border-default)' }}>
+                    <button
+                        onClick={handleLogout}
+                        className="admin-logout-btn"
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: sidebarCollapsed ? '12px' : '10px 16px',
+                            borderRadius: 'var(--radius-lg)',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: 'var(--color-text-secondary)',
+                            fontSize: 'var(--font-size-base)',
+                            fontWeight: 'var(--font-weight-medium)',
+                            justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                        }}
+                        title={sidebarCollapsed ? 'Chiqish' : undefined}
+                    >
+                        <LogOut style={{ width: '18px', height: '18px', flexShrink: 0 }} />
+                        {!sidebarCollapsed && <span>Chiqish</span>}
+                    </button>
                 </div>
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col min-h-screen">
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', marginLeft: sidebarWidth, transition: 'margin-left 0.3s ease' }}>
                 {/* Header */}
-                <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm">
-                    <div className="flex items-center gap-4">
+                <header
+                    style={{
+                        height: '64px',
+                        backgroundColor: 'var(--color-bg-primary)',
+                        borderBottom: '1px solid var(--color-border-default)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0 24px',
+                        position: 'sticky',
+                        top: 0,
+                        zIndex: 40,
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <button
                             onClick={() => setSidebarOpen(!sidebarOpen)}
-                            className="lg:hidden p-2 text-gray-500 hover:text-gray-800"
+                            className="lg:hidden"
+                            style={{
+                                padding: '8px',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: 'var(--color-text-secondary)',
+                                borderRadius: 'var(--radius-md)',
+                            }}
+                            aria-label="Toggle sidebar"
                         >
-                            {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                            {sidebarOpen ? <X style={{ width: '20px', height: '20px' }} /> : <Menu style={{ width: '20px', height: '20px' }} />}
                         </button>
 
                         {/* Search */}
-                        <div className="relative hidden sm:block">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                        <div style={{ position: 'relative' }} className="hidden sm:block">
+                            <Search
+                                style={{
+                                    position: 'absolute',
+                                    left: '12px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    width: '16px',
+                                    height: '16px',
+                                    color: 'var(--color-text-muted)',
+                                }}
+                            />
                             <input
                                 type="text"
                                 placeholder="Qidirish..."
-                                className="w-64 pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                                className="input input-md"
+                                style={{
+                                    width: '280px',
+                                    paddingLeft: '36px',
+                                }}
                             />
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         {/* Notifications */}
-                        <button className="relative p-2.5 text-gray-500 hover:text-gray-800 hover:bg-slate-100 rounded-xl transition-colors">
-                            <Bell className="w-5 h-5" />
-                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                        <button
+                            className="admin-notification-btn"
+                            style={{
+                                position: 'relative',
+                                padding: '8px',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: 'var(--color-text-secondary)',
+                                borderRadius: 'var(--radius-md)',
+                            }}
+                            aria-label="Notifications"
+                        >
+                            <Bell style={{ width: '18px', height: '18px' }} />
+                            <span
+                                style={{
+                                    position: 'absolute',
+                                    top: '4px',
+                                    right: '4px',
+                                    width: '8px',
+                                    height: '8px',
+                                    backgroundColor: 'var(--color-accent-red)',
+                                    borderRadius: 'var(--radius-full)',
+                                }}
+                            />
                         </button>
 
+                        {/* Divider */}
+                        <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--color-border-default)' }} />
+
                         {/* Admin Avatar */}
-                        <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
-                            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <div
+                                style={{
+                                    width: '32px',
+                                    height: '32px',
+                                    background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-blue-hover))',
+                                    borderRadius: 'var(--radius-full)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: '#ffffff',
+                                    fontSize: 'var(--font-size-sm)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                }}
+                            >
                                 {getAdminName().charAt(0).toUpperCase()}
                             </div>
                             <div className="hidden sm:block">
-                                <div className="text-sm font-medium text-gray-800">{getAdminName()}</div>
-                                <div className="text-xs text-gray-500">Super Admin</div>
+                                <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>
+                                    {getAdminName()}
+                                </div>
+                                <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+                                    Super Admin
+                                </div>
                             </div>
                         </div>
                     </div>
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 p-8 overflow-y-auto">
+                <main style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
                     {children}
                 </main>
             </div>
 
-            {/* Overlay for mobile */}
+            {/* Mobile Overlay */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 lg:hidden z-40"
+                    className="lg:hidden"
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        backgroundColor: 'var(--color-bg-overlay)',
+                        zIndex: 40,
+                    }}
                     onClick={() => setSidebarOpen(false)}
                 />
             )}

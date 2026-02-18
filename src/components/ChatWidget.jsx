@@ -50,11 +50,51 @@ const ChatWidget = () => {
             {!isOpen && (
                 <button
                     onClick={() => openChat()}
-                    className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-110 transition-all z-50"
+                    style={{
+                        position: 'fixed',
+                        bottom: '24px',
+                        right: '24px',
+                        width: '56px',
+                        height: '56px',
+                        backgroundColor: 'var(--color-accent-blue)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: 'var(--shadow-lg)',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        zIndex: 50,
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                    }}
                 >
-                    <MessageCircle className="w-6 h-6 text-white" />
+                    <MessageCircle className="w-6 h-6" style={{ color: 'var(--color-text-on-accent)' }} />
                     {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center font-bold">
+                        <span
+                            style={{
+                                position: 'absolute',
+                                top: '-4px',
+                                right: '-4px',
+                                width: '20px',
+                                height: '20px',
+                                backgroundColor: 'var(--color-accent-red)',
+                                borderRadius: '50%',
+                                fontSize: 'var(--font-size-xs)',
+                                color: '#fff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 'var(--font-weight-bold)',
+                            }}
+                        >
                             {unreadCount}
                         </span>
                     )}
@@ -63,77 +103,177 @@ const ChatWidget = () => {
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-6 right-6 w-96 h-[500px] bg-white rounded-2xl shadow-2xl shadow-black/20 border border-slate-200 flex flex-col z-50 overflow-hidden">
+                <div
+                    style={{
+                        position: 'fixed',
+                        bottom: '24px',
+                        right: '24px',
+                        width: '384px',
+                        height: '500px',
+                        backgroundColor: 'var(--color-bg-primary)',
+                        borderRadius: 'var(--radius-2xl)',
+                        boxShadow: 'var(--shadow-xl)',
+                        border: '1px solid var(--color-border-default)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        zIndex: 50,
+                        overflow: 'hidden',
+                    }}
+                >
                     {/* Header */}
-                    <div className="p-4 bg-gradient-to-r from-blue-500/10 to-blue-600/10 border-b border-slate-200 flex items-center justify-between">
+                    <div
+                        style={{
+                            padding: 'var(--space-4)',
+                            backgroundColor: 'var(--color-bg-secondary)',
+                            borderBottom: '1px solid var(--color-border-muted)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}
+                    >
                         {activeChat ? (
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => setActiveChat(null)}
-                                    className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                                    className="btn btn-ghost btn-sm"
+                                    style={{ padding: '4px' }}
                                 >
-                                    <ArrowLeft className="w-5 h-5 text-gray-400" />
+                                    <ArrowLeft className="w-5 h-5" />
                                 </button>
                                 <div>
-                                    <h3 className="font-semibold text-gray-800 text-sm">{activeChat.sellerName}</h3>
-                                    <p className="text-xs text-gray-400">{activeChat.accountTitle}</p>
+                                    <h3 style={{
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        color: 'var(--color-text-primary)',
+                                        fontSize: 'var(--font-size-sm)',
+                                    }}>
+                                        {activeChat.sellerName}
+                                    </h3>
+                                    <p style={{
+                                        fontSize: 'var(--font-size-xs)',
+                                        color: 'var(--color-text-muted)',
+                                    }}>
+                                        {activeChat.accountTitle}
+                                    </p>
                                 </div>
                             </div>
                         ) : (
                             <div>
-                                <h3 className="font-semibold text-gray-800">Xabarlar</h3>
-                                <p className="text-xs text-gray-400">{conversations.length} suhbat</p>
+                                <h3 style={{
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                    color: 'var(--color-text-primary)',
+                                }}>
+                                    Xabarlar
+                                </h3>
+                                <p style={{
+                                    fontSize: 'var(--font-size-xs)',
+                                    color: 'var(--color-text-muted)',
+                                }}>
+                                    {conversations.length} suhbat
+                                </p>
                             </div>
                         )}
                         <button
                             onClick={closeChat}
-                            className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                            className="btn btn-ghost btn-sm"
+                            style={{ padding: '4px' }}
                         >
-                            <X className="w-5 h-5 text-gray-400" />
+                            <X className="w-5 h-5" />
                         </button>
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 overflow-y-auto">
+                    <div style={{ flex: 1, overflowY: 'auto' }}>
                         {activeChat ? (
                             // Messages View
-                            <div className="p-4 space-y-3">
+                            <div style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                 {/* Account Info */}
-                                <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3 mb-4">
+                                <div
+                                    className="flex items-center gap-3"
+                                    style={{
+                                        backgroundColor: 'var(--color-info-bg)',
+                                        borderRadius: 'var(--radius-xl)',
+                                        padding: 'var(--space-3)',
+                                        marginBottom: 'var(--space-4)',
+                                    }}
+                                >
                                     <img
                                         src={activeChat.accountImage || '/placeholder.jpg'}
                                         alt=""
-                                        className="w-12 h-12 rounded-lg object-cover"
+                                        style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: 'var(--radius-lg)',
+                                            objectFit: 'cover',
+                                        }}
                                     />
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm text-gray-800 truncate">{activeChat.accountTitle}</p>
-                                        <div className="flex items-center gap-1 text-yellow-400">
-                                            <Star className="w-3 h-3 fill-current" />
-                                            <span className="text-xs">{activeChat.sellerRating}</span>
+                                        <p className="truncate" style={{
+                                            fontSize: 'var(--font-size-sm)',
+                                            color: 'var(--color-text-primary)',
+                                        }}>
+                                            {activeChat.accountTitle}
+                                        </p>
+                                        <div className="flex items-center gap-1" style={{ color: 'var(--color-premium-gold-light)' }}>
+                                            <Star className="w-3 h-3" style={{ fill: 'currentColor' }} />
+                                            <span style={{ fontSize: 'var(--font-size-xs)' }}>{activeChat.sellerRating}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Messages */}
                                 {activeChat.messages.length === 0 ? (
-                                    <div className="text-center py-8">
-                                        <MessageCircle className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                                        <p className="text-gray-400 text-sm">Xabar yo'q</p>
-                                        <p className="text-gray-500 text-xs mt-1">Suhbatni boshlang!</p>
+                                    <div className="empty-state" style={{ padding: '32px 16px' }}>
+                                        <MessageCircle
+                                            className="empty-state-icon"
+                                            style={{ width: '48px', height: '48px' }}
+                                        />
+                                        <p className="empty-state-description" style={{ fontSize: 'var(--font-size-sm)' }}>
+                                            Xabar yo'q
+                                        </p>
+                                        <p style={{
+                                            fontSize: 'var(--font-size-xs)',
+                                            color: 'var(--color-text-muted)',
+                                            marginTop: '4px',
+                                        }}>
+                                            Suhbatni boshlang!
+                                        </p>
                                     </div>
                                 ) : (
                                     activeChat.messages.map((msg) => (
                                         <div
                                             key={msg.id}
-                                            className={`flex ${msg.senderId === user.id ? 'justify-end' : 'justify-start'}`}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: msg.senderId === user.id ? 'flex-end' : 'flex-start',
+                                            }}
                                         >
-                                            <div className={`max-w-[80%] p-3 rounded-2xl ${msg.senderId === user.id
-                                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-sm'
-                                                : 'bg-slate-100 text-gray-800 rounded-bl-sm'
-                                                }`}>
-                                                <p className="text-sm">{msg.text}</p>
-                                                <p className={`text-xs mt-1 ${msg.senderId === user.id ? 'text-white/70' : 'text-gray-500'
-                                                    }`}>
+                                            <div
+                                                style={{
+                                                    maxWidth: '80%',
+                                                    padding: 'var(--space-3)',
+                                                    borderRadius: 'var(--radius-2xl)',
+                                                    ...(msg.senderId === user.id
+                                                        ? {
+                                                            backgroundColor: 'var(--color-accent-blue)',
+                                                            color: 'var(--color-text-on-accent)',
+                                                            borderBottomRightRadius: 'var(--radius-sm)',
+                                                        }
+                                                        : {
+                                                            backgroundColor: 'var(--color-bg-tertiary)',
+                                                            color: 'var(--color-text-primary)',
+                                                            borderBottomLeftRadius: 'var(--radius-sm)',
+                                                        }),
+                                                }}
+                                            >
+                                                <p style={{ fontSize: 'var(--font-size-sm)' }}>{msg.text}</p>
+                                                <p style={{
+                                                    fontSize: 'var(--font-size-xs)',
+                                                    marginTop: '4px',
+                                                    opacity: msg.senderId === user.id ? 0.7 : 1,
+                                                    color: msg.senderId === user.id
+                                                        ? 'inherit'
+                                                        : 'var(--color-text-muted)',
+                                                }}>
                                                     {formatTime(msg.timestamp)}
                                                 </p>
                                             </div>
@@ -144,12 +284,20 @@ const ChatWidget = () => {
                             </div>
                         ) : (
                             // Conversations List
-                            <div className="p-2">
+                            <div style={{ padding: 'var(--space-2)' }}>
                                 {conversations.length === 0 ? (
-                                    <div className="text-center py-12">
-                                        <MessageCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                                        <p className="text-gray-400">Suhbatlar yo'q</p>
-                                        <p className="text-gray-500 text-sm mt-2">
+                                    <div className="empty-state">
+                                        <MessageCircle
+                                            className="empty-state-icon"
+                                            style={{ width: '64px', height: '64px' }}
+                                        />
+                                        <p className="empty-state-description">Suhbatlar yo'q</p>
+                                        <p style={{
+                                            fontSize: 'var(--font-size-sm)',
+                                            color: 'var(--color-text-muted)',
+                                            marginTop: '8px',
+                                            textAlign: 'center',
+                                        }}>
                                             Akkaunt sahifasidan sotuvchi bilan <br />bog'laning
                                         </p>
                                     </div>
@@ -158,18 +306,56 @@ const ChatWidget = () => {
                                         <button
                                             key={conv.id}
                                             onClick={() => setActiveChat(conv)}
-                                            className="w-full p-3 flex items-center gap-3 hover:bg-white/5 rounded-xl transition-colors"
+                                            style={{
+                                                width: '100%',
+                                                padding: 'var(--space-3)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '12px',
+                                                borderRadius: 'var(--radius-xl)',
+                                                background: 'none',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                transition: 'background-color 0.15s ease',
+                                                textAlign: 'left',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'var(--color-bg-tertiary)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'transparent';
+                                            }}
                                         >
                                             <img
                                                 src={conv.accountImage || '/placeholder.jpg'}
                                                 alt=""
-                                                className="w-12 h-12 rounded-lg object-cover"
+                                                style={{
+                                                    width: '48px',
+                                                    height: '48px',
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    objectFit: 'cover',
+                                                }}
                                             />
-                                            <div className="flex-1 min-w-0 text-left">
-                                                <p className="text-sm font-medium text-gray-800 truncate">{conv.sellerName}</p>
-                                                <p className="text-xs text-gray-400 truncate">{conv.accountTitle}</p>
+                                            <div className="flex-1 min-w-0" style={{ textAlign: 'left' }}>
+                                                <p className="truncate" style={{
+                                                    fontSize: 'var(--font-size-sm)',
+                                                    fontWeight: 'var(--font-weight-medium)',
+                                                    color: 'var(--color-text-primary)',
+                                                }}>
+                                                    {conv.sellerName}
+                                                </p>
+                                                <p className="truncate" style={{
+                                                    fontSize: 'var(--font-size-xs)',
+                                                    color: 'var(--color-text-muted)',
+                                                }}>
+                                                    {conv.accountTitle}
+                                                </p>
                                                 {conv.lastMessage && (
-                                                    <p className="text-xs text-gray-500 truncate mt-0.5">
+                                                    <p className="truncate" style={{
+                                                        fontSize: 'var(--font-size-xs)',
+                                                        color: 'var(--color-text-muted)',
+                                                        marginTop: '2px',
+                                                    }}>
                                                         {conv.lastMessage.text}
                                                     </p>
                                                 )}
@@ -183,19 +369,27 @@ const ChatWidget = () => {
 
                     {/* Input (only when in chat) */}
                     {activeChat && (
-                        <form onSubmit={handleSend} className="p-4 border-t border-slate-200">
+                        <form
+                            onSubmit={handleSend}
+                            style={{
+                                padding: 'var(--space-4)',
+                                borderTop: '1px solid var(--color-border-muted)',
+                            }}
+                        >
                             <div className="flex gap-2">
                                 <input
                                     type="text"
                                     value={messageText}
                                     onChange={(e) => setMessageText(e.target.value)}
                                     placeholder="Xabar yozing..."
-                                    className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50"
+                                    className="input input-md"
+                                    style={{ flex: 1 }}
                                 />
                                 <button
                                     type="submit"
                                     disabled={!messageText.trim()}
-                                    className="p-2.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/30 transition-all"
+                                    className="btn btn-primary btn-md"
+                                    style={{ padding: '10px', flexShrink: 0 }}
                                 >
                                     <Send className="w-5 h-5" />
                                 </button>

@@ -4,32 +4,79 @@ const GameCard = ({ game }) => {
     return (
         <Link
             to={`/game/${game.id}`}
-            className="group relative bg-white border border-blue-100 rounded-2xl p-6 text-center cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10 overflow-hidden"
+            className="group block card-hover-lift"
+            style={{
+                backgroundColor: 'var(--color-bg-primary)',
+                border: '1px solid var(--color-border-default)',
+                borderRadius: 'var(--radius-lg)',
+                overflow: 'hidden',
+                textDecoration: 'none',
+            }}
         >
-            {/* Top accent line */}
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-
-            {/* Game Icon */}
-            <div className="w-20 h-20 mx-auto mb-4 bg-blue-50 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-blue-500/20 transition-all duration-300 overflow-hidden">
-                {game.image ? (
-                    <img src={game.image} alt={game.name} className="w-full h-full object-cover" />
+            {/* Image */}
+            <div
+                className="relative flex items-center justify-center overflow-hidden"
+                style={{
+                    height: '120px',
+                    backgroundColor: 'var(--color-bg-tertiary)',
+                }}
+            >
+                {game.image && !game.image.includes('placeholder') ? (
+                    <img
+                        src={game.image}
+                        alt={game.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                 ) : (
-                    <span>{game.icon}</span>
+                    <span className="text-4xl opacity-40">{game.icon}</span>
+                )}
+
+                {/* Account count badge */}
+                {game.accountCount > 0 && (
+                    <div
+                        className="absolute rounded-full"
+                        style={{
+                            bottom: '8px',
+                            right: '8px',
+                            padding: '2px 8px',
+                            backgroundColor: 'var(--color-accent-blue)',
+                            color: '#ffffff',
+                            fontSize: 'var(--font-size-xs)',
+                            fontWeight: 'var(--font-weight-semibold)',
+                        }}
+                    >
+                        {game.accountCount}
+                    </div>
                 )}
             </div>
 
-            {/* Game Name */}
-            <h3 className="text-lg font-semibold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors">
-                {game.name}
-            </h3>
-
-            {/* Account Count */}
-            <p className="text-sm text-gray-500">
-                <span className="text-blue-500 font-semibold">{game.accountCount}+</span> akkauntlar
-            </p>
-
-            {/* Hover glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            {/* Content */}
+            <div
+                className="flex items-center gap-3"
+                style={{ padding: 'var(--space-3) var(--space-4)' }}
+            >
+                <span className="text-lg flex-shrink-0">{game.icon}</span>
+                <div className="min-w-0">
+                    <h3
+                        className="font-semibold truncate"
+                        style={{
+                            fontSize: 'var(--font-size-base)',
+                            color: 'var(--color-text-primary)',
+                            lineHeight: 'var(--line-height-base)',
+                        }}
+                    >
+                        {game.name}
+                    </h3>
+                    {game.accountCount > 0 && (
+                        <p style={{
+                            fontSize: 'var(--font-size-sm)',
+                            color: 'var(--color-text-muted)',
+                        }}>
+                            {game.accountCount} accounts
+                        </p>
+                    )}
+                </div>
+            </div>
         </Link>
     );
 };

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Crown, Ban, Eye, Mail, MoreVertical, Shield, UserCheck, UserX } from 'lucide-react';
+import { Search, Crown, Ban, Eye, Mail, MoreVertical, UserCheck } from 'lucide-react';
 
 const AdminUsers = () => {
     const [selectedRole, setSelectedRole] = useState('all');
@@ -24,33 +24,28 @@ const AdminUsers = () => {
     ];
 
     const getStatusBadge = (status) => {
-        const styles = {
-            active: 'bg-green-500/20 text-green-400',
-            blocked: 'bg-red-500/20 text-red-400',
+        const config = {
+            active: { bg: 'var(--color-success-bg)', color: 'var(--color-accent-green)', label: 'Faol' },
+            blocked: { bg: 'var(--color-error-bg)', color: 'var(--color-accent-red)', label: 'Bloklangan' },
         };
-        const labels = {
-            active: 'Faol',
-            blocked: 'Bloklangan',
-        };
-        return (
-            <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
-                {labels[status]}
-            </span>
-        );
+        const s = config[status] || config.active;
+        return <span className="badge" style={{ backgroundColor: s.bg, color: s.color }}>{s.label}</span>;
     };
 
     const getRoleBadge = (role, isPremium) => {
         if (isPremium) {
             return (
-                <span className="flex items-center gap-1 px-2.5 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">
-                    <Crown className="w-3 h-3" />
+                <span className="badge" style={{ backgroundColor: 'var(--color-warning-bg)', color: 'var(--color-premium-gold-light)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <Crown style={{ width: '12px', height: '12px' }} />
                     Premium {role === 'seller' ? 'Sotuvchi' : 'Xaridor'}
                 </span>
             );
         }
         return (
-            <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${role === 'seller' ? 'bg-purple-500/20 text-purple-400' : 'bg-blue-500/20 text-blue-400'
-                }`}>
+            <span className="badge" style={{
+                backgroundColor: role === 'seller' ? 'var(--color-info-bg)' : 'var(--color-bg-tertiary)',
+                color: role === 'seller' ? 'var(--color-accent-blue)' : 'var(--color-text-muted)',
+            }}>
                 {role === 'seller' ? 'Sotuvchi' : 'Xaridor'}
             </span>
         );
@@ -62,51 +57,53 @@ const AdminUsers = () => {
         if (selectedRole === 'buyer') matchesRole = user.role === 'buyer';
         if (selectedRole === 'premium') matchesRole = user.isPremium;
         if (selectedRole === 'blocked') matchesRole = user.status === 'blocked';
-
         const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             user.email.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesRole && matchesSearch;
     });
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between" style={{ gap: '16px' }}>
                 <div>
-                    <h1 className="text-2xl font-bold text-white mb-1">Foydalanuvchilar</h1>
-                    <p className="text-gray-400 text-sm">Barcha foydalanuvchilarni boshqaring</p>
+                    <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '4px' }}>
+                        Foydalanuvchilar
+                    </h1>
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+                        Barcha foydalanuvchilarni boshqaring
+                    </p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <span className="px-3 py-1.5 bg-purple-500/20 text-purple-400 rounded-full text-sm font-medium">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="badge" style={{ backgroundColor: 'var(--color-info-bg)', color: 'var(--color-accent-blue)', padding: '6px 12px' }}>
                         {users.filter(u => u.role === 'seller').length} ta sotuvchi
                     </span>
-                    <span className="px-3 py-1.5 bg-yellow-500/20 text-yellow-400 rounded-full text-sm font-medium">
+                    <span className="badge" style={{ backgroundColor: 'var(--color-warning-bg)', color: 'var(--color-premium-gold-light)', padding: '6px 12px' }}>
                         {users.filter(u => u.isPremium).length} ta premium
                     </span>
                 </div>
             </div>
 
             {/* Filters */}
-            <div className="flex flex-col lg:flex-row gap-4">
-                <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <div className="flex flex-col lg:flex-row" style={{ gap: '12px' }}>
+                <div style={{ position: 'relative', flex: 1 }}>
+                    <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: 'var(--color-text-muted)' }} />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Ism yoki email qidirish..."
-                        className="w-full pl-12 pr-4 py-3 bg-[#1e1e32] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50"
+                        className="input input-lg"
+                        style={{ paddingLeft: '36px' }}
                     />
                 </div>
-
-                <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0">
+                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto' }}>
                     {roleFilters.map((filter) => (
                         <button
                             key={filter.value}
                             onClick={() => setSelectedRole(filter.value)}
-                            className={`px-4 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${selectedRole === filter.value
-                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                    : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a]'
-                                }`}
+                            className={`btn ${selectedRole === filter.value ? 'btn-primary' : 'btn-secondary'} btn-md`}
+                            style={{ whiteSpace: 'nowrap' }}
                         >
                             {filter.label}
                         </button>
@@ -115,64 +112,76 @@ const AdminUsers = () => {
             </div>
 
             {/* Table */}
-            <div className="bg-[#1e1e32] rounded-2xl border border-white/5 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
+            <div style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderRadius: 'var(--radius-xl)',
+                border: '1px solid var(--color-border-default)',
+                overflow: 'hidden',
+            }}>
+                <div style={{ overflowX: 'auto' }}>
+                    <table className="gh-table">
                         <thead>
-                            <tr className="border-b border-white/5">
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Foydalanuvchi</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Email</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Rol</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Faoliyat</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Status</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Qo'shilgan</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Amallar</th>
+                            <tr>
+                                <th>Foydalanuvchi</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Faoliyat</th>
+                                <th>Status</th>
+                                <th>Qo&apos;shilgan</th>
+                                <th>Amallar</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredUsers.map((user) => (
-                                <tr key={user.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02]">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                                <tr key={user.id}>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <div style={{
+                                                width: '36px',
+                                                height: '36px',
+                                                background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-blue-hover))',
+                                                borderRadius: 'var(--radius-full)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                color: '#ffffff',
+                                                fontWeight: 'var(--font-weight-bold)',
+                                                fontSize: 'var(--font-size-sm)',
+                                                flexShrink: 0,
+                                            }}>
                                                 {user.name.charAt(0)}
                                             </div>
-                                            <div className="font-medium text-white text-sm">{user.name}</div>
+                                            <span style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', fontSize: 'var(--font-size-sm)' }}>
+                                                {user.name}
+                                            </span>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-gray-400 text-sm">{user.email}</td>
-                                    <td className="p-4">
-                                        {getRoleBadge(user.role, user.isPremium)}
+                                    <td style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{user.email}</td>
+                                    <td>{getRoleBadge(user.role, user.isPremium)}</td>
+                                    <td style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                                        {user.role === 'seller' ? `${user.sales} ta sotuvlar` : `${user.purchases} ta xaridlar`}
                                     </td>
-                                    <td className="p-4 text-gray-400 text-sm">
-                                        {user.role === 'seller'
-                                            ? `${user.sales} ta sotuvlar`
-                                            : `${user.purchases} ta xaridlar`
-                                        }
-                                    </td>
-                                    <td className="p-4">
-                                        {getStatusBadge(user.status)}
-                                    </td>
-                                    <td className="p-4 text-gray-500 text-sm">{user.joined}</td>
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-1">
-                                            <button className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors" title="Ko'rish">
-                                                <Eye className="w-4 h-4" />
+                                    <td>{getStatusBadge(user.status)}</td>
+                                    <td style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>{user.joined}</td>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <button className="btn btn-ghost btn-sm" style={{ padding: '6px' }} title="Ko'rish" aria-label="View">
+                                                <Eye style={{ width: '14px', height: '14px' }} />
                                             </button>
-                                            <button className="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors" title="Email yuborish">
-                                                <Mail className="w-4 h-4" />
+                                            <button className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-accent-blue)' }} title="Email" aria-label="Email">
+                                                <Mail style={{ width: '14px', height: '14px' }} />
                                             </button>
                                             {user.status === 'active' ? (
-                                                <button className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors" title="Bloklash">
-                                                    <Ban className="w-4 h-4" />
+                                                <button className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-accent-red)' }} title="Bloklash" aria-label="Block">
+                                                    <Ban style={{ width: '14px', height: '14px' }} />
                                                 </button>
                                             ) : (
-                                                <button className="p-2 text-green-400 hover:bg-green-500/20 rounded-lg transition-colors" title="Blokdan chiqarish">
-                                                    <UserCheck className="w-4 h-4" />
+                                                <button className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-accent-green)' }} title="Blokdan chiqarish" aria-label="Unblock">
+                                                    <UserCheck style={{ width: '14px', height: '14px' }} />
                                                 </button>
                                             )}
-                                            <button className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                                                <MoreVertical className="w-4 h-4" />
+                                            <button className="btn btn-ghost btn-sm" style={{ padding: '6px' }} aria-label="More">
+                                                <MoreVertical style={{ width: '14px', height: '14px' }} />
                                             </button>
                                         </div>
                                     </td>
@@ -183,20 +192,20 @@ const AdminUsers = () => {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex items-center justify-between p-4 border-t border-white/5">
-                    <div className="text-sm text-gray-500">
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: 'var(--space-4)',
+                    borderTop: '1px solid var(--color-border-muted)',
+                }}>
+                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
                         {filteredUsers.length} ta foydalanuvchi topildi
                     </div>
-                    <div className="flex items-center gap-2">
-                        <button className="px-4 py-2 bg-[#25253a] text-gray-400 rounded-lg hover:text-white transition-colors">
-                            Oldingi
-                        </button>
-                        <button className="px-4 py-2 bg-purple-500 text-white rounded-lg">
-                            1
-                        </button>
-                        <button className="px-4 py-2 bg-[#25253a] text-gray-400 rounded-lg hover:text-white transition-colors">
-                            Keyingi
-                        </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <button className="btn btn-secondary btn-sm">Oldingi</button>
+                        <button className="btn btn-primary btn-sm">1</button>
+                        <button className="btn btn-secondary btn-sm">Keyingi</button>
                     </div>
                 </div>
             </div>

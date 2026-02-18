@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package, MessageSquare, Clock, CheckCircle, XCircle, Eye, Trash2, PlusCircle } from 'lucide-react';
+import { User, ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package, MessageSquare, Clock, CheckCircle, XCircle, Trash2, PlusCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import AccountCard from '../components/AccountCard';
 import ReviewList from '../components/ReviewList';
 import { accounts, games, formatPrice } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 
 const ProfilePage = () => {
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const { user, isAuthenticated, logout } = useAuth();
     const [activeTab, setActiveTab] = useState('purchases');
@@ -17,396 +19,337 @@ const ProfilePage = () => {
     const [reviewCount, setReviewCount] = useState(0);
     const [averageRating, setAverageRating] = useState(5.0);
 
-    // Redirect if not logged in
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login');
-        }
+        if (!isAuthenticated) navigate('/login');
     }, [isAuthenticated, navigate]);
 
-    // Load user data from localStorage
     useEffect(() => {
         if (user) {
-            // Load liked accounts
             const savedLikes = localStorage.getItem(`wibeLikes_${user.id}`);
             if (savedLikes) {
                 const likedIds = JSON.parse(savedLikes);
                 setLikedAccounts(accounts.filter(acc => likedIds.includes(acc.id)));
             }
 
-            // Load purchases
             const savedPurchases = localStorage.getItem(`wibePurchases_${user.id}`);
             if (savedPurchases) {
-                const purchaseIds = JSON.parse(savedPurchases);
-                setPurchases(accounts.filter(acc => purchaseIds.includes(acc.id)));
+                setPurchases(accounts.filter(acc => JSON.parse(savedPurchases).includes(acc.id)));
             } else {
                 const demoPurchases = accounts.slice(0, 2);
                 setPurchases(demoPurchases);
                 localStorage.setItem(`wibePurchases_${user.id}`, JSON.stringify(demoPurchases.map(a => a.id)));
             }
 
-            // Load sales
             const savedSales = localStorage.getItem(`wibeSales_${user.id}`);
-            if (savedSales) {
-                const saleIds = JSON.parse(savedSales);
-                setSales(accounts.filter(acc => saleIds.includes(acc.id)));
-            } else {
-                setSales([]);
-            }
+            if (savedSales) setSales(accounts.filter(acc => JSON.parse(savedSales).includes(acc.id)));
 
-            // Load reviews received
             const savedReviews = localStorage.getItem('wibeReviews');
             if (savedReviews) {
-                const allReviews = JSON.parse(savedReviews);
-                const userReviews = allReviews.filter(r => r.sellerId === user.id);
+                const userReviews = JSON.parse(savedReviews).filter(r => r.sellerId === user.id);
                 setReviewCount(userReviews.length);
                 if (userReviews.length > 0) {
-                    const avg = userReviews.reduce((sum, r) => sum + r.rating, 0) / userReviews.length;
-                    setAverageRating(avg.toFixed(1));
+                    setAverageRating((userReviews.reduce((sum, r) => sum + r.rating, 0) / userReviews.length).toFixed(1));
                 }
             }
 
-            // Load my listings (e'lonlar)
             const savedListings = localStorage.getItem('wibeListings');
             if (savedListings) {
-                const allListings = JSON.parse(savedListings);
-                const userListings = allListings.filter(l => l.sellerId === user.id);
-                setMyListings(userListings);
+                setMyListings(JSON.parse(savedListings).filter(l => l.sellerId === user.id));
             }
         }
     }, [user]);
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
-
-    const tabs = [
-        { id: 'mylistings', label: 'Mening mahsulotlarim', icon: Package, count: myListings.length },
-        { id: 'purchases', label: 'Sotib olganlarim', icon: ShoppingBag, count: purchases.length },
-        { id: 'sales', label: 'Sotganlarim', icon: Tag, count: sales.length },
-        { id: 'likes', label: 'Yoqtirganlarim', icon: Heart, count: likedAccounts.length },
-        { id: 'reviews', label: 'Baholashlarim', icon: MessageSquare, count: reviewCount },
-    ];
+    const handleLogout = () => { logout(); navigate('/'); };
 
     const getStatusBadge = (status) => {
-        switch (status) {
-            case 'pending':
-                return { icon: Clock, text: 'Tekshirilmoqda', color: 'text-yellow-400 bg-yellow-400/10' };
-            case 'approved':
-                return { icon: CheckCircle, text: 'Tasdiqlangan', color: 'text-green-400 bg-green-400/10' };
-            case 'rejected':
-                return { icon: XCircle, text: 'Rad etilgan', color: 'text-red-400 bg-red-400/10' };
-            case 'sold':
-                return { icon: CheckCircle, text: 'Sotilgan', color: 'text-cyan-400 bg-cyan-400/10' };
-            default:
-                return { icon: Clock, text: 'Kutilmoqda', color: 'text-gray-400 bg-gray-400/10' };
-        }
+        const map = {
+            pending: { icon: Clock, text: t('status.pending') || 'Pending', color: 'var(--color-accent-orange)', bg: 'var(--color-warning-bg)' },
+            approved: { icon: CheckCircle, text: t('status.approved') || 'Approved', color: 'var(--color-accent-green)', bg: 'var(--color-success-bg)' },
+            rejected: { icon: XCircle, text: t('status.rejected') || 'Rejected', color: 'var(--color-error)', bg: 'var(--color-error-bg)' },
+            sold: { icon: CheckCircle, text: t('status.sold') || 'Sold', color: 'var(--color-accent-blue)', bg: 'var(--color-info-bg)' },
+        };
+        return map[status] || map.pending;
     };
 
-    const getGameName = (gameId) => {
-        const game = games.find(g => g.id === gameId);
-        return game?.name || 'Noma\'lum';
-    };
-
-    const getGameImage = (gameId) => {
-        const game = games.find(g => g.id === gameId);
-        return game?.image || '';
-    };
+    const getGameName = (gameId) => games.find(g => g.id === gameId)?.name || 'Unknown';
+    const getGameImage = (gameId) => games.find(g => g.id === gameId)?.image || '';
 
     const deleteListing = (listingId) => {
-        if (window.confirm('Bu e\'lonni o\'chirishni xohlaysizmi?')) {
-            const savedListings = JSON.parse(localStorage.getItem('wibeListings') || '[]');
-            const updated = savedListings.filter(l => l.id !== listingId);
-            localStorage.setItem('wibeListings', JSON.stringify(updated));
+        if (window.confirm(t('profile.delete_confirm') || 'Delete this listing?')) {
+            const saved = JSON.parse(localStorage.getItem('wibeListings') || '[]');
+            localStorage.setItem('wibeListings', JSON.stringify(saved.filter(l => l.id !== listingId)));
             setMyListings(myListings.filter(l => l.id !== listingId));
         }
     };
 
-    if (!user) {
-        return null;
-    }
+    const tabs = [
+        { id: 'mylistings', label: t('profile.my_listings') || 'My Listings', icon: Package, count: myListings.length },
+        { id: 'purchases', label: t('profile.purchases') || 'Purchases', icon: ShoppingBag, count: purchases.length },
+        { id: 'sales', label: t('profile.sales') || 'Sales', icon: Tag, count: sales.length },
+        { id: 'likes', label: t('profile.likes') || 'Liked', icon: Heart, count: likedAccounts.length },
+        { id: 'reviews', label: t('profile.reviews') || 'Reviews', icon: MessageSquare, count: reviewCount },
+    ];
+
+    if (!user) return null;
+
+    const EmptyState = ({ icon: Icon, text, actionLabel, actionTo }) => (
+        <div className="text-center" style={{ padding: '64px 16px' }}>
+            <Icon className="mx-auto" style={{ width: '48px', height: '48px', color: 'var(--color-text-muted)', marginBottom: '16px' }} />
+            <p style={{ color: 'var(--color-text-secondary)', marginBottom: '16px' }}>{text}</p>
+            {actionTo && (
+                <Link to={actionTo} className="btn btn-primary btn-md" style={{ textDecoration: 'none' }}>
+                    {actionLabel}
+                </Link>
+            )}
+        </div>
+    );
 
     return (
-        <div className="min-h-screen" style={{ paddingTop: '140px', paddingBottom: '64px' }}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
+            <div className="gh-container">
+                {/* Breadcrumbs */}
+                <div className="breadcrumbs">
+                    <Link to="/">Home</Link>
+                    <span className="breadcrumb-separator">/</span>
+                    <span className="breadcrumb-current">{t('nav.profile') || 'Profile'}</span>
+                </div>
+
                 {/* Profile Header */}
-                <div className="bg-white rounded-3xl p-6 lg:p-8 border border-slate-200 mb-8 shadow-sm">
-                    <div className="flex flex-col md:flex-row items-center gap-6">
+                <div
+                    style={{
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border-default)',
+                        borderRadius: 'var(--radius-xl)',
+                        padding: '24px',
+                        marginTop: '16px',
+                        marginBottom: '24px',
+                    }}
+                >
+                    <div className="flex flex-col md:flex-row items-center gap-5">
                         {/* Avatar */}
                         <div className="relative">
-                            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-4xl font-bold shadow-lg shadow-blue-500/30" style={{ color: '#ffffff' }}>
+                            <div
+                                className="avatar"
+                                style={{
+                                    width: '80px', height: '80px',
+                                    background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                                    fontSize: '32px', fontWeight: 'var(--font-weight-bold)',
+                                    color: '#ffffff',
+                                    borderRadius: 'var(--radius-full)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                }}
+                            >
                                 {user.name?.charAt(0) || 'U'}
                             </div>
-                            <button className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white hover:bg-blue-600 transition-colors">
-                                <Edit2 className="w-4 h-4" style={{ color: '#ffffff' }} />
+                            <button
+                                style={{
+                                    position: 'absolute', bottom: 0, right: 0,
+                                    width: '28px', height: '28px',
+                                    backgroundColor: 'var(--color-accent-blue)',
+                                    borderRadius: 'var(--radius-full)',
+                                    border: '2px solid var(--color-bg-secondary)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    cursor: 'pointer', color: '#fff',
+                                }}
+                            >
+                                <Edit2 className="w-3 h-3" />
                             </button>
                         </div>
 
-                        {/* User Info */}
+                        {/* Info */}
                         <div className="flex-1 text-center md:text-left">
-                            <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">{user.name}</h1>
-                            <p className="text-gray-500 mb-3">{user.email}</p>
-                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm">
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
-                                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                    <span className="text-gray-800">{averageRating}</span>
-                                    <span className="text-gray-500">({reviewCount})</span>
-                                </div>
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
-                                    <Package className="w-4 h-4 text-cyan-400" />
-                                    <span className="text-gray-600">{sales.length} ta sotuvlar</span>
-                                </div>
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full">
-                                    <ShoppingBag className="w-4 h-4 text-blue-500" />
-                                    <span className="text-gray-600">{purchases.length} ta xaridlar</span>
-                                </div>
+                            <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '4px' }}>
+                                {user.name}
+                            </h1>
+                            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginBottom: '12px' }}>
+                                {user.email}
+                            </p>
+                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                                <span className="badge badge-yellow" style={{ fontSize: '12px' }}>
+                                    <Star className="w-3 h-3 fill-current" /> {averageRating} ({reviewCount})
+                                </span>
+                                <span className="badge badge-green" style={{ fontSize: '12px' }}>
+                                    <Tag className="w-3 h-3" /> {sales.length} {t('profile.sales_count') || 'sales'}
+                                </span>
+                                <span className="badge badge-blue" style={{ fontSize: '12px' }}>
+                                    <ShoppingBag className="w-3 h-3" /> {purchases.length} {t('profile.purchases_count') || 'purchases'}
+                                </span>
                             </div>
                         </div>
 
                         {/* Actions */}
-                        <div className="flex items-center gap-3">
-                            <Link
-                                to="/settings"
-                                className="p-3 bg-slate-100 rounded-xl text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                            >
-                                <Settings className="w-5 h-5" />
+                        <div className="flex items-center gap-2">
+                            <Link to="/settings" className="btn btn-secondary btn-md" style={{ textDecoration: 'none' }}>
+                                <Settings className="w-4 h-4" />
                             </Link>
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center gap-2 px-4 py-3 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-colors"
-                            >
-                                <LogOut className="w-5 h-5" />
-                                <span className="hidden sm:inline">Chiqish</span>
+                            <button onClick={handleLogout} className="btn btn-md" style={{
+                                backgroundColor: 'var(--color-error-bg)',
+                                color: 'var(--color-error)',
+                                border: '1px solid transparent',
+                            }}>
+                                <LogOut className="w-4 h-4" />
+                                <span className="hidden sm:inline">{t('auth.logout') || 'Logout'}</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex flex-wrap gap-2 mb-8">
+                <div className="tabs" style={{ marginBottom: '0' }}>
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
+                            className={`tab ${activeTab === tab.id ? 'tab-active' : ''}`}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all ${activeTab === tab.id
-                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25'
-                                : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
-                                }`}
-                            style={activeTab === tab.id ? { color: '#ffffff' } : {}}
                         >
-                            <tab.icon className="w-5 h-5" />
-                            {tab.label}
-                            <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === tab.id ? 'bg-white/20' : 'bg-white/10'
-                                }`}>
-                                {tab.count}
-                            </span>
+                            <tab.icon className="w-4 h-4" />
+                            <span className="hidden sm:inline">{tab.label}</span>
+                            <span className="badge badge-count" style={{ fontSize: '10px', padding: '0 5px', minWidth: '18px' }}>{tab.count}</span>
                         </button>
                     ))}
                 </div>
 
                 {/* Tab Content */}
-                <div className="bg-white rounded-2xl p-6 border border-slate-200 min-h-[400px] shadow-sm">
+                <div
+                    style={{
+                        backgroundColor: 'var(--color-bg-primary)',
+                        border: '1px solid var(--color-border-default)',
+                        borderTop: 'none',
+                        borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
+                        padding: '24px',
+                        minHeight: '400px',
+                    }}
+                >
                     {activeTab === 'mylistings' && (
                         <>
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-gray-800">Mening mahsulotlarim</h2>
-                                <Link
-                                    to="/sell"
-                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl text-white text-sm font-medium"
-                                >
-                                    <PlusCircle className="w-4 h-4" />
-                                    Yangi e'lon
+                            <div className="flex items-center justify-between" style={{ marginBottom: '20px' }}>
+                                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
+                                    {t('profile.my_listings') || 'My Listings'}
+                                </h2>
+                                <Link to="/sell" className="btn btn-primary btn-sm" style={{ textDecoration: 'none' }}>
+                                    <PlusCircle className="w-3.5 h-3.5" /> {t('profile.new_listing') || 'New listing'}
                                 </Link>
                             </div>
                             {myListings.length > 0 ? (
-                                <div className="space-y-4">
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     {myListings.map((listing) => {
                                         const status = getStatusBadge(listing.status);
                                         const StatusIcon = status.icon;
                                         return (
-                                            <div key={listing.id} className="flex flex-col sm:flex-row gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                                {/* Image */}
-                                                <div className="w-full sm:w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-slate-100">
-                                                    {listing.images && listing.images.length > 0 ? (
-                                                        <img
-                                                            src={listing.images[0]}
-                                                            alt={listing.title}
-                                                            className="w-full h-full object-cover"
-                                                        />
+                                            <div
+                                                key={listing.id}
+                                                className="flex flex-col sm:flex-row gap-4"
+                                                style={{
+                                                    padding: '16px',
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    backgroundColor: 'var(--color-bg-secondary)',
+                                                    border: '1px solid var(--color-border-muted)',
+                                                }}
+                                            >
+                                                <div
+                                                    style={{
+                                                        width: '100%', maxWidth: '120px', height: '100px',
+                                                        borderRadius: 'var(--radius-md)',
+                                                        overflow: 'hidden', flexShrink: 0,
+                                                        backgroundColor: 'var(--color-bg-tertiary)',
+                                                    }}
+                                                >
+                                                    {listing.images?.[0] ? (
+                                                        <img src={listing.images[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center">
-                                                            <img
-                                                                src={getGameImage(listing.gameId)}
-                                                                alt={getGameName(listing.gameId)}
-                                                                className="w-16 h-16 object-cover rounded-lg opacity-50"
-                                                            />
+                                                        <div className="flex items-center justify-center" style={{ width: '100%', height: '100%' }}>
+                                                            <img src={getGameImage(listing.gameId)} alt="" style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: 'var(--radius-md)', opacity: 0.5 }} />
                                                         </div>
                                                     )}
                                                 </div>
-
-                                                {/* Info */}
                                                 <div className="flex-1">
-                                                    <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                                                    <div className="flex flex-wrap items-start justify-between gap-2" style={{ marginBottom: '8px' }}>
                                                         <div>
-                                                            <h3 className="text-lg font-semibold text-gray-800">{listing.title}</h3>
-                                                            <p className="text-sm text-gray-400">{getGameName(listing.gameId)}</p>
+                                                            <h3 style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '2px' }}>{listing.title}</h3>
+                                                            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{getGameName(listing.gameId)}</p>
                                                         </div>
-                                                        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm ${status.color}`}>
-                                                            <StatusIcon className="w-4 h-4" />
-                                                            {status.text}
-                                                        </div>
+                                                        <span className="flex items-center gap-1" style={{ fontSize: 'var(--font-size-xs)', padding: '2px 8px', borderRadius: 'var(--radius-full)', backgroundColor: status.bg, color: status.color }}>
+                                                            <StatusIcon className="w-3 h-3" /> {status.text}
+                                                        </span>
                                                     </div>
-
-                                                    <div className="flex flex-wrap gap-2 mb-3">
-                                                        {listing.level && (
-                                                            <span className="px-2 py-1 bg-slate-100 rounded text-xs text-gray-600">Level: {listing.level}</span>
-                                                        )}
-                                                        {listing.rank && (
-                                                            <span className="px-2 py-1 bg-slate-100 rounded text-xs text-gray-600">Rank: {listing.rank}</span>
-                                                        )}
-                                                        {listing.skins && (
-                                                            <span className="px-2 py-1 bg-slate-100 rounded text-xs text-gray-600">Skinlar: {listing.skins}</span>
-                                                        )}
-                                                    </div>
-
                                                     <div className="flex items-center justify-between">
-                                                        <p className="text-xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-                                                            {formatPrice(listing.price)} so'm
-                                                        </p>
+                                                        <span style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-accent)' }}>
+                                                            {formatPrice(listing.price)}
+                                                        </span>
                                                         <div className="flex items-center gap-2">
-                                                            <span className="text-xs text-gray-500">
-                                                                {new Date(listing.createdAt).toLocaleDateString('uz-UZ')}
+                                                            <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+                                                                {new Date(listing.createdAt).toLocaleDateString()}
                                                             </span>
                                                             <button
                                                                 onClick={() => deleteListing(listing.id)}
-                                                                className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                                style={{ padding: '6px', borderRadius: 'var(--radius-md)', color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+                                                                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-error)'}
+                                                                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-muted)'}
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
                                                             </button>
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                {/* Images preview */}
-                                                {listing.images && listing.images.length > 1 && (
-                                                    <div className="flex sm:flex-col gap-2">
-                                                        {listing.images.slice(1, 4).map((img, idx) => (
-                                                            <div key={idx} className="w-12 h-12 rounded-lg overflow-hidden border border-white/10">
-                                                                <img src={img} alt="" className="w-full h-full object-cover" />
-                                                            </div>
-                                                        ))}
-                                                        {listing.images.length > 4 && (
-                                                            <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-xs text-gray-400">
-                                                                +{listing.images.length - 4}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )}
                                             </div>
                                         );
                                     })}
                                 </div>
                             ) : (
-                                <div className="text-center py-12">
-                                    <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                                    <p className="text-gray-400 mb-4">Hali e'lon bermadingiz</p>
-                                    <Link
-                                        to="/sell"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
-                                    >
-                                        <PlusCircle className="w-5 h-5" />
-                                        E'lon berish
-                                    </Link>
-                                </div>
+                                <EmptyState icon={Package} text={t('profile.no_listings') || 'No listings yet'} actionLabel={t('profile.create_listing') || 'Create listing'} actionTo="/sell" />
                             )}
                         </>
                     )}
 
                     {activeTab === 'purchases' && (
                         <>
-                            <h2 className="text-xl font-bold text-gray-800 mb-6">Sotib olgan akkauntlarim</h2>
+                            <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                {t('profile.my_purchases') || 'My Purchases'}
+                            </h2>
                             {purchases.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                    {purchases.map((account) => (
-                                        <AccountCard key={account.id} account={account} />
-                                    ))}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ gap: '16px' }}>
+                                    {purchases.map((account) => <AccountCard key={account.id} account={account} />)}
                                 </div>
-                            ) : (
-                                <div className="text-center py-12">
-                                    <ShoppingBag className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                                    <p className="text-gray-400 mb-4">Hali hech narsa sotib olmadingiz</p>
-                                    <Link
-                                        to="/"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
-                                    >
-                                        Xarid qilish
-                                    </Link>
-                                </div>
-                            )}
+                            ) : <EmptyState icon={ShoppingBag} text={t('profile.no_purchases') || 'No purchases yet'} actionLabel={t('profile.browse') || 'Browse accounts'} actionTo="/" />}
                         </>
                     )}
 
                     {activeTab === 'sales' && (
                         <>
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-gray-800">Sotgan akkauntlarim</h2>
-                                <Link
-                                    to="/sell"
-                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white text-sm font-medium"
-                                >
-                                    <Tag className="w-4 h-4" />
-                                    Yangi e'lon
+                            <div className="flex items-center justify-between" style={{ marginBottom: '20px' }}>
+                                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
+                                    {t('profile.my_sales') || 'My Sales'}
+                                </h2>
+                                <Link to="/sell" className="btn btn-primary btn-sm" style={{ textDecoration: 'none' }}>
+                                    <Tag className="w-3.5 h-3.5" /> {t('profile.new_listing') || 'New listing'}
                                 </Link>
                             </div>
                             {sales.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                    {sales.map((account) => (
-                                        <AccountCard key={account.id} account={account} />
-                                    ))}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ gap: '16px' }}>
+                                    {sales.map((account) => <AccountCard key={account.id} account={account} />)}
                                 </div>
-                            ) : (
-                                <div className="text-center py-12">
-                                    <Tag className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                                    <p className="text-gray-400 mb-4">Hali hech narsa sotmadingiz</p>
-                                    <Link
-                                        to="/sell"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
-                                    >
-                                        E'lon berish
-                                    </Link>
-                                </div>
-                            )}
+                            ) : <EmptyState icon={Tag} text={t('profile.no_sales') || 'No sales yet'} actionLabel={t('profile.create_listing') || 'Create listing'} actionTo="/sell" />}
                         </>
                     )}
 
                     {activeTab === 'likes' && (
                         <>
-                            <h2 className="text-xl font-bold text-gray-800 mb-6">Yoqtirgan akkauntlarim</h2>
+                            <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                {t('profile.liked_accounts') || 'Liked Accounts'}
+                            </h2>
                             {likedAccounts.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                    {likedAccounts.map((account) => (
-                                        <AccountCard key={account.id} account={account} />
-                                    ))}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ gap: '16px' }}>
+                                    {likedAccounts.map((account) => <AccountCard key={account.id} account={account} />)}
                                 </div>
-                            ) : (
-                                <div className="text-center py-12">
-                                    <Heart className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                                    <p className="text-gray-400 mb-4">Hali yoqtirgan akkauntlar yo'q</p>
-                                    <Link
-                                        to="/"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white font-medium"
-                                    >
-                                        Akkauntlarni ko'rish
-                                    </Link>
-                                </div>
-                            )}
+                            ) : <EmptyState icon={Heart} text={t('profile.no_likes') || 'No liked accounts'} actionLabel={t('profile.browse') || 'Browse accounts'} actionTo="/" />}
                         </>
                     )}
 
                     {activeTab === 'reviews' && (
                         <>
-                            <h2 className="text-xl font-bold text-gray-800 mb-6">Mening baholashlarim</h2>
+                            <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                {t('profile.my_reviews') || 'My Reviews'}
+                            </h2>
                             <ReviewList userId={user.id} type="received" />
                         </>
                     )}

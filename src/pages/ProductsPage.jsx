@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, ChevronDown, Grid, List } from 'lucide-react';
+import { Search, Filter, ChevronDown, Grid, List, X } from 'lucide-react';
 import GameCard from '../components/GameCard';
 import AccountCard from '../components/AccountCard';
 import { games, accounts } from '../data/mockData';
@@ -8,191 +8,248 @@ import { useLanguage } from '../context/LanguageContext';
 
 const ProductsPage = () => {
     const { t } = useLanguage();
-    const [viewMode, setViewMode] = useState('grid');
+    const [searchQuery, setSearchQuery] = useState('');
     const [selectedGame, setSelectedGame] = useState('all');
     const [sortBy, setSortBy] = useState('newest');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [userListings, setUserListings] = useState([]);
+    const [viewMode, setViewMode] = useState('grid');
+    const [showFilters, setShowFilters] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 12;
 
-    // Load approved listings from localStorage
-    useEffect(() => {
-        const savedListings = localStorage.getItem('wibeListings');
-        if (savedListings) {
-            const allListings = JSON.parse(savedListings);
-            // Only show active (approved) listings
-            const approvedListings = allListings
-                .filter(l => l.status === 'active')
-                .map(l => ({
-                    id: `user-${l.id}`,
-                    title: l.title,
-                    description: l.description,
-                    gameId: l.gameId,
-                    price: Number(l.price),
-                    level: l.level,
-                    rank: l.rank,
-                    isPremium: false,
-                    images: l.images || [],
-                    features: l.features || [],
-                    seller: {
-                        name: l.sellerName,
-                        rating: 5.0,
-                        sales: 0
-                    },
-                    createdAt: l.createdAt
-                }));
-            setUserListings(approvedListings);
+    const sortOptions = [
+        { value: 'newest', label: t('products.sort_newest') || 'Newest' },
+        { value: 'price-low', label: t('products.sort_price_low') || 'Price: Low to High' },
+        { value: 'price-high', label: t('products.sort_price_high') || 'Price: High to Low' },
+        { value: 'rating', label: t('products.sort_rating') || 'Best Rating' },
+    ];
+
+    const filteredAccounts = useMemo(() => {
+        let result = [...accounts];
+
+        if (selectedGame !== 'all') {
+            result = result.filter(acc => acc.gameId === selectedGame);
         }
-    }, []);
 
-    // Other games (additional games can be added here)
-    const otherGames = [
-        { id: 'valorant', name: 'Valorant', icon: '🎯', accountCount: 180 },
-        { id: 'fortnite', name: 'Fortnite', icon: '🏝️', accountCount: 320 },
-        { id: 'minecraft', name: 'Minecraft', icon: '⛏️', accountCount: 290 },
-        { id: 'genshin', name: 'Genshin Impact', icon: '⚡', accountCount: 410 },
-        { id: 'lol', name: 'League of Legends', icon: '🏆', accountCount: 560 },
-        { id: 'apex', name: 'Apex Legends', icon: '🔷', accountCount: 230 },
-    ];
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            result = result.filter(acc =>
+                acc.title.toLowerCase().includes(q) ||
+                acc.description.toLowerCase().includes(q) ||
+                acc.gameName.toLowerCase().includes(q)
+            );
+        }
 
-    const allGames = [...games, ...otherGames];
+        switch (sortBy) {
+            case 'price-low': result.sort((a, b) => a.price - b.price); break;
+            case 'price-high': result.sort((a, b) => b.price - a.price); break;
+            case 'rating': result.sort((a, b) => b.seller.rating - a.seller.rating); break;
+            default: break;
+        }
 
-    // Combine mock accounts with user listings
-    const allAccounts = [...accounts, ...userListings];
+        return result;
+    }, [selectedGame, searchQuery, sortBy]);
 
-    // Filter and sort accounts
-    let filteredAccounts = [...allAccounts];
-
-    if (selectedGame !== 'all') {
-        filteredAccounts = filteredAccounts.filter(acc => acc.gameId === selectedGame);
-    }
-
-    if (searchQuery) {
-        filteredAccounts = filteredAccounts.filter(acc =>
-            acc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            acc.description.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }
-
-    // Sort
-    filteredAccounts.sort((a, b) => {
-        if (sortBy === 'price-low') return a.price - b.price;
-        if (sortBy === 'price-high') return b.price - a.price;
-        if (sortBy === 'rating') return b.seller.rating - a.seller.rating;
-        return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-
-    // Premium accounts first
-    const finalAccounts = [
-        ...filteredAccounts.filter(acc => acc.isPremium),
-        ...filteredAccounts.filter(acc => !acc.isPremium)
-    ];
+    const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
+    const paginatedAccounts = filteredAccounts.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     return (
-        <div className="min-h-screen pt-24 pb-16 cl page-enter">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header */}
-                <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('products.title')}</h1>
-                    <p className="text-gray-500">{t('products.subtitle')}</p>
+        <div className="page-enter" style={{ minHeight: '100vh' }}>
+            {/* Page Header */}
+            <div className="gh-container">
+                {/* Breadcrumbs */}
+                <div className="breadcrumbs">
+                    <Link to="/">Home</Link>
+                    <span className="breadcrumb-separator">/</span>
+                    <span className="breadcrumb-current">{t('nav.products') || 'Products'}</span>
                 </div>
 
-                {/* Games Filter */}
-                <div className="mb-8">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-4 md">{t('products.by_game')}</h2>
-                    <div className="flex flex-wrap gap-3">
-                        <button
-                            onClick={() => setSelectedGame('all')}
-                            className={` wd px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${selectedGame === 'all'
-                                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'
-                                : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
-                                }`}
-                        >
-                            {t('products.all')}
-                        </button>
-                        {allGames.map((game) => (
-                            <button
-                                key={game.id}
-                                onClick={() => setSelectedGame(game.id)}
-                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${selectedGame === game.id
-                                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'
-                                    : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
-                                    }`}
-                            >
-                                <span>{game.icon}</span>
-                                {game.name}
-                            </button>
-                        ))}
-                    </div>
+                <div className="page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+                    <h1>{t('products.title') || 'All Products'}</h1>
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+                        {filteredAccounts.length} {t('products.found') || 'accounts found'}
+                    </p>
                 </div>
+            </div>
 
+            <div className="gh-container">
                 {/* Search & Filters Bar */}
-                <div className="flex flex-col lg:flex-row items-center gap-4 mb-8">
+                <div
+                    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+                    style={{ marginBottom: '24px' }}
+                >
                     {/* Search */}
-                    <div className="relative flex-1 w-full">
+                    <div className="relative flex-1">
+                        <Search
+                            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                            style={{ color: 'var(--color-text-muted)' }}
+                        />
                         <input
                             type="text"
+                            placeholder={t('products.search_placeholder') || 'Search accounts...'}
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder={t('products.search')}
-                            className="w-full pl-5 pr-12 py-4 bg-white border border-slate-200 rounded-xl text-gray-800 text-base placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors h-14 leading-tight"
+                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            className="input input-md w-full"
+                            style={{ paddingLeft: '36px' }}
                         />
-                        <Search className="st absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2"
+                                style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        )}
                     </div>
+
+                    {/* Game Filter */}
+                    <select
+                        value={selectedGame}
+                        onChange={(e) => { setSelectedGame(e.target.value); setCurrentPage(1); }}
+                        className="select select-md"
+                        style={{ maxWidth: '200px' }}
+                        aria-label="Filter by game"
+                    >
+                        <option value="all">{t('products.all_games') || 'All Games'}</option>
+                        {games.filter(g => g.accountCount > 0).map(game => (
+                            <option key={game.id} value={game.id}>{game.name}</option>
+                        ))}
+                    </select>
 
                     {/* Sort */}
-                    <div className="relative w-full lg:w-auto">
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="appearance-none w-full lg:w-56 px-5 pr-12 bg-white border border-slate-200 rounded-xl text-gray-800 text-base focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 cursor-pointer transition-colors h-14 flex items-center"
-                        >
-                            <option value="newest">{t('products.sort_newest')}</option>
-                            <option value="price-low">{t('products.sort_cheap')}</option>
-                            <option value="price-high">{t('products.sort_expensive')}</option>
-                            <option value="rating">{t('products.sort_rating')}</option>
-                        </select>
-                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
-                    </div>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="select select-md"
+                        style={{ maxWidth: '180px' }}
+                        aria-label="Sort by"
+                    >
+                        {sortOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                    </select>
 
-                    {/* View Mode */}
-                    <div className="flex bg-white border border-slate-200 rounded-xl p-1 h-14 items-center">
+                    {/* View toggle */}
+                    <div className="flex items-center gap-1">
                         <button
                             onClick={() => setViewMode('grid')}
-                            className={`p-3 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-blue-600'
-                                }`}
+                            className={`btn btn-sm ${viewMode === 'grid' ? 'btn-secondary' : 'btn-ghost'}`}
+                            style={{ padding: '0 8px' }}
+                            aria-label="Grid view"
                         >
-                            <Grid className="w-5 h-5" />
+                            <Grid className="w-4 h-4" />
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`p-3 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-blue-600'
-                                }`}
+                            className={`btn btn-sm ${viewMode === 'list' ? 'btn-secondary' : 'btn-ghost'}`}
+                            style={{ padding: '0 8px' }}
+                            aria-label="List view"
                         >
-                            <List className="w-5 h-5" />
+                            <List className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
 
-                {/* Results Count */}
-                <div className="text-gray-500 text-sm mb-6">
-                    {finalAccounts.length} {t('products.found')}
-                </div>
-
-                {/* Accounts Grid/List */}
-                {finalAccounts.length > 0 ? (
-                    <div className={`grid gap-6 ${viewMode === 'grid'
-                        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                        : 'grid-cols-1'
-                        }`}>
-                        {finalAccounts.map((account) => (
-                            <AccountCard key={account.id} account={account} />
-                        ))}
+                {/* Active filters */}
+                {(selectedGame !== 'all' || searchQuery) && (
+                    <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: '16px' }}>
+                        {selectedGame !== 'all' && (
+                            <span className="badge badge-blue flex items-center gap-1" style={{ padding: '4px 10px' }}>
+                                {games.find(g => g.id === selectedGame)?.name}
+                                <button
+                                    onClick={() => setSelectedGame('all')}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}
+                                >
+                                    <X className="w-3 h-3" />
+                                </button>
+                            </span>
+                        )}
+                        {searchQuery && (
+                            <span className="badge badge-blue flex items-center gap-1" style={{ padding: '4px 10px' }}>
+                                "{searchQuery}"
+                                <button
+                                    onClick={() => setSearchQuery('')}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}
+                                >
+                                    <X className="w-3 h-3" />
+                                </button>
+                            </span>
+                        )}
+                        <button
+                            onClick={() => { setSelectedGame('all'); setSearchQuery(''); }}
+                            className="text-sm"
+                            style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+                        >
+                            {t('products.clear_all') || 'Clear all'}
+                        </button>
                     </div>
+                )}
+
+                {/* Results */}
+                {paginatedAccounts.length > 0 ? (
+                    <>
+                        <div
+                            className={`grid animate-stagger ${viewMode === 'grid'
+                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                                : 'grid-cols-1'
+                                }`}
+                            style={{ gap: '16px' }}
+                        >
+                            {paginatedAccounts.map((account) => (
+                                <AccountCard key={account.id} account={account} />
+                            ))}
+                        </div>
+
+                        {/* Pagination */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-2" style={{ marginTop: '32px', paddingBottom: '32px' }}>
+                                <div className="pagination">
+                                    <button
+                                        className="pagination-btn"
+                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                        disabled={currentPage === 1}
+                                    >
+                                        ←
+                                    </button>
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                        <button
+                                            key={page}
+                                            className={`pagination-btn ${currentPage === page ? 'pagination-active' : ''}`}
+                                            onClick={() => setCurrentPage(page)}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                    <button
+                                        className="pagination-btn"
+                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 ) : (
-                    <div className="text-center py-16">
-                        <div className="text-6xl mb-4">🔍</div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2">{t('products.not_found')}</h3>
-                        <p className="text-gray-500">{t('products.change_search')}</p>
+                    /* Empty State */
+                    <div className="empty-state">
+                        <Search className="empty-state-icon" />
+                        <h3 className="empty-state-title">
+                            {t('products.no_results') || 'No accounts found'}
+                        </h3>
+                        <p className="empty-state-description">
+                            {t('products.no_results_desc') || 'Try adjusting your search or filters'}
+                        </p>
+                        <button
+                            onClick={() => { setSearchQuery(''); setSelectedGame('all'); }}
+                            className="btn btn-primary btn-md"
+                        >
+                            {t('products.clear_filters') || 'Clear filters'}
+                        </button>
                     </div>
                 )}
             </div>

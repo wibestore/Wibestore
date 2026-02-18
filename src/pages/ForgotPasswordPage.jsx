@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle, Gamepad2, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const ForgotPasswordPage = () => {
+    const { t } = useLanguage();
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -13,123 +15,169 @@ const ForgotPasswordPage = () => {
         setError('');
 
         if (!email) {
-            setError('Email manzilini kiriting');
+            setError(t('auth.enter_email') || 'Please enter your email');
             return;
         }
-
         if (!/\S+@\S+\.\S+/.test(email)) {
-            setError('To\'g\'ri email manzilini kiriting');
+            setError(t('auth.valid_email') || 'Please enter a valid email');
             return;
         }
 
         setIsLoading(true);
-
-        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
-
         setIsLoading(false);
         setIsSubmitted(true);
     };
 
     if (isSubmitted) {
         return (
-            <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
-                <div className="w-full max-w-md px-4 text-center">
-                    <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle className="w-10 h-10 text-green-400" />
+            <div
+                className="page-enter flex items-center justify-center"
+                style={{ minHeight: 'calc(100vh - 64px)', padding: '32px 16px' }}
+            >
+                <div className="text-center" style={{ maxWidth: '400px' }}>
+                    <div
+                        className="flex items-center justify-center mx-auto"
+                        style={{
+                            width: '64px',
+                            height: '64px',
+                            borderRadius: 'var(--radius-full)',
+                            backgroundColor: 'var(--color-success-bg)',
+                            marginBottom: '24px',
+                        }}
+                    >
+                        <CheckCircle className="w-8 h-8" style={{ color: 'var(--color-accent-green)' }} />
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Email yuborildi!</h1>
-                    <p className="text-gray-400 mb-8">
-                        Parolni tiklash havolasi <span className="text-gray-800 font-semibold">{email}</span> manziliga yuborildi.
-                        Iltimos, pochta qutingizni tekshiring.
+                    <h1 style={{
+                        fontSize: 'var(--font-size-2xl)',
+                        fontWeight: 'var(--font-weight-bold)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '12px',
+                    }}>
+                        {t('auth.email_sent') || 'Email sent!'}
+                    </h1>
+                    <p style={{
+                        color: 'var(--color-text-secondary)',
+                        marginBottom: '32px',
+                        lineHeight: 'var(--line-height-lg)',
+                    }}>
+                        {t('auth.reset_link_sent') || 'A password reset link has been sent to'}{' '}
+                        <strong style={{ color: 'var(--color-text-primary)' }}>{email}</strong>
                     </p>
                     <div className="space-y-3">
-                        <Link
-                            to="/login"
-                            className="block w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 text-center"
-                        >
-                            Login sahifasiga qaytish
+                        <Link to="/login" className="btn btn-primary btn-lg w-full" style={{ textDecoration: 'none' }}>
+                            {t('auth.back_to_login') || 'Back to Sign in'}
                         </Link>
                         <button
-                            onClick={() => {
-                                setIsSubmitted(false);
-                                setEmail('');
-                            }}
-                            className="block w-full py-4 rounded-xl font-semibold text-gray-500 hover:text-blue-600 transition-colors"
+                            onClick={() => { setIsSubmitted(false); setEmail(''); }}
+                            className="btn btn-ghost btn-lg w-full"
                         >
-                            Boshqa email kiritish
+                            {t('auth.try_another') || 'Try another email'}
                         </button>
                     </div>
-                    <p className="text-sm text-gray-500 mt-8">
-                        Email kelmadimi? Spam papkasini tekshiring yoki 5 daqiqadan keyin qayta urinib ko'ring.
-                    </p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
-            <div className="w-full max-w-md px-4">
-                {/* Logo */}
-                <div className="text-center mb-8">
-                    <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                            <Gamepad2 className="w-7 h-7 text-white" />
-                        </div>
-                        <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            wibestore.uz
-                        </span>
-                    </Link>
-                    <h1 className="text-2xl font-bold text-gray-800 mb-2">Parolni tiklash</h1>
-                    <p className="text-gray-400">Email manzilingizni kiriting va biz sizga parolni tiklash havolasini yuboramiz</p>
+        <div
+            className="page-enter flex items-center justify-center"
+            style={{ minHeight: 'calc(100vh - 64px)', padding: '32px 16px' }}
+        >
+            <div style={{ width: '100%', maxWidth: '400px' }}>
+                {/* Header */}
+                <div className="text-center" style={{ marginBottom: '32px' }}>
+                    <div
+                        className="flex items-center justify-center mx-auto"
+                        style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: 'var(--radius-xl)',
+                            background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                            marginBottom: '20px',
+                        }}
+                    >
+                        <Gamepad2 className="w-6 h-6" style={{ color: '#ffffff' }} />
+                    </div>
+                    <h1 style={{
+                        fontSize: 'var(--font-size-2xl)',
+                        fontWeight: 'var(--font-weight-bold)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '8px',
+                    }}>
+                        {t('auth.reset_title') || 'Reset your password'}
+                    </h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)' }}>
+                        {t('auth.reset_subtitle') || "Enter your email and we'll send you a reset link"}
+                    </p>
                 </div>
 
-                {/* Form */}
-                <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Error */}
-                        {error && (
-                            <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400">
-                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                                <span className="text-sm">{error}</span>
-                            </div>
-                        )}
+                {/* Form Card */}
+                <div
+                    style={{
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border-default)',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: '24px',
+                    }}
+                >
+                    {error && (
+                        <div
+                            className="flex items-center gap-2"
+                            style={{
+                                padding: '12px',
+                                borderRadius: 'var(--radius-md)',
+                                backgroundColor: 'var(--color-error-bg)',
+                                color: 'var(--color-error)',
+                                fontSize: 'var(--font-size-sm)',
+                                marginBottom: '16px',
+                            }}
+                        >
+                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                            <span>{error}</span>
+                        </div>
+                    )}
 
-                        {/* Email */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Email manzili
-                            </label>
+                    <form onSubmit={handleSubmit}>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label className="input-label">{t('auth.email') || 'Email'}</label>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="email@example.com"
-                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
+                                    placeholder="you@example.com"
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px' }}
+                                    required
                                 />
                             </div>
                         </div>
 
-                        {/* Submit */}
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="btn btn-primary btn-lg w-full"
                         >
-                            {isLoading ? 'Yuborilmoqda...' : 'Havola yuborish'}
+                            {isLoading && <span className="spinner" />}
+                            {t('auth.send_link') || 'Send reset link'}
                         </button>
                     </form>
 
-                    {/* Back to Login */}
+                    {/* Back to login */}
                     <Link
                         to="/login"
-                        className="flex items-center justify-center gap-2 mt-6 text-gray-400 hover:text-blue-500 transition-colors"
+                        className="flex items-center justify-center gap-2 text-sm"
+                        style={{
+                            marginTop: '20px',
+                            color: 'var(--color-text-secondary)',
+                            textDecoration: 'none',
+                        }}
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        Login sahifasiga qaytish
+                        {t('auth.back_to_login') || 'Back to Sign in'}
                     </Link>
                 </div>
             </div>

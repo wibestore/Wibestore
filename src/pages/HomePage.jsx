@@ -1,81 +1,191 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Shield, Zap, Users, TrendingUp, Star, Crown } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Users, TrendingUp, Star, Crown, ChevronRight } from 'lucide-react';
 import GameCard from '../components/GameCard';
 import AccountCard from '../components/AccountCard';
 import { games, accounts } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
+
+// Animated counter hook
+function useCounter(target, duration = 2000) {
+    const [value, setValue] = useState('0');
+    const [started, setStarted] = useState(false);
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting && !started) {
+                setStarted(true);
+                const num = parseFloat(String(target).replace(/[^0-9.]/g, ''));
+                const suffix = String(target).replace(/[0-9,.]/g, '');
+                const hasComma = String(target).includes(',');
+                const start = performance.now();
+                const animate = (now) => {
+                    const p = Math.min((now - start) / duration, 1);
+                    const eased = 1 - Math.pow(1 - p, 3);
+                    const cur = Math.floor(eased * num);
+                    setValue((hasComma ? cur.toLocaleString() : String(cur)) + suffix);
+                    if (p < 1) requestAnimationFrame(animate);
+                    else setValue((hasComma ? num.toLocaleString() : String(num)) + suffix);
+                };
+                requestAnimationFrame(animate);
+            }
+        }, { threshold: 0.3 });
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, [target, duration, started]);
+
+    return { ref, value };
+}
 
 const HomePage = () => {
     const { t } = useLanguage();
     const premiumAccounts = accounts.filter(acc => acc.isPremium).slice(0, 6);
     const recommendedAccounts = accounts.slice(0, 8);
 
-    const stats = [
-        { value: '12,500+', label: t('stats.accounts'), icon: TrendingUp },
-        { value: '5,000+', label: t('stats.sellers'), icon: Users },
-        { value: '98%', label: t('stats.success'), icon: Zap },
+    const statsData = [
+        { target: '12,500+', label: t('stats.accounts'), icon: TrendingUp },
+        { target: '5,000+', label: t('stats.sellers'), icon: Users },
+        { target: '98%', label: t('stats.success'), icon: Zap },
     ];
 
+    // Create counter hooks for each stat
+    const counter1 = useCounter(statsData[0].target);
+    const counter2 = useCounter(statsData[1].target);
+    const counter3 = useCounter(statsData[2].target);
+    const counters = [counter1, counter2, counter3];
+
     return (
-        <div className="min-h-screen cons page-enter">
+        <div className="page-enter" style={{ minHeight: '100vh' }}>
             {/* Hero Section */}
-            <section className="relative pt-32 pb-20 overflow-hidden">
-                {/* Background effect */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-blue-500/10 to-transparent rounded-full blur-3xl animate-float" />
+            <section style={{ paddingTop: '80px', paddingBottom: '64px', position: 'relative', overflow: 'hidden' }}>
+                {/* Subtle background accents */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '600px',
+                        height: '600px',
+                        background: 'radial-gradient(circle, var(--color-accent-blue) 0%, transparent 70%)',
+                        opacity: 0.04,
+                        pointerEvents: 'none',
+                    }}
+                />
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '30%',
+                        right: '-10%',
+                        width: '400px',
+                        height: '400px',
+                        background: 'radial-gradient(circle, var(--color-accent-purple) 0%, transparent 70%)',
+                        opacity: 0.03,
+                        pointerEvents: 'none',
+                    }}
+                />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative ">
-
-                    <div className="text-center cons">
+                <div className="gh-container" style={{ position: 'relative' }}>
+                    <div className="text-center" style={{ maxWidth: '720px', margin: '0 auto' }}>
                         {/* Badge */}
-                        <div className="za inline-flex items-center px-5 py-2.5 bg-blue-50 border border-blue-200 rounded-full text-blue-600 text-sm font-medium animate-fadeInUp" style={{ gap: '10px', marginBottom: '28px' }}>
-                            <Shield className="w-4 h-4 flex-shrink-0" />
+                        <div
+                            className="badge badge-blue inline-flex items-center gap-2 animate-fadeInUp"
+                            style={{ padding: '6px 14px', marginBottom: '24px', fontSize: '13px' }}
+                        >
+                            <Shield className="w-3.5 h-3.5" />
                             <span>{t('hero.badge')}</span>
                         </div>
 
                         {/* Heading */}
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-                            {t('hero.title1')} <br />
-                            <span className="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 bg-clip-text text-transparent">
+                        <h1
+                            className="animate-fadeInUp"
+                            style={{
+                                fontSize: 'clamp(32px, 5vw, 48px)',
+                                lineHeight: 1.15,
+                                fontWeight: 'var(--font-weight-bold)',
+                                color: 'var(--color-text-primary)',
+                                marginBottom: '20px',
+                                animationDelay: '0.1s',
+                            }}
+                        >
+                            {t('hero.title1')}{' '}
+                            <span className="text-gradient">
                                 {t('hero.title2')}
                             </span>
                         </h1>
 
                         {/* Subtitle */}
-                        <div className="bad">
-
-                            <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                                {t('hero.subtitle')}
-                            </p>
-                        </div>
+                        <p
+                            className="animate-fadeInUp"
+                            style={{
+                                fontSize: 'var(--font-size-lg)',
+                                lineHeight: 'var(--line-height-lg)',
+                                color: 'var(--color-text-secondary)',
+                                maxWidth: '560px',
+                                margin: '0 auto 32px',
+                                animationDelay: '0.2s',
+                            }}
+                        >
+                            {t('hero.subtitle')}
+                        </p>
 
                         {/* CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
+                        <div
+                            className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-fadeInUp"
+                            style={{ animationDelay: '0.3s' }}
+                        >
                             <Link
                                 to="/products"
-                                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-1 transition-all duration-300"
+                                className="btn btn-primary btn-xl"
+                                style={{
+                                    width: 'auto',
+                                    minWidth: '160px',
+                                    textDecoration: 'none',
+                                    gap: '8px',
+                                }}
                             >
                                 {t('hero.cta_browse')}
-                                <ArrowRight className="w-5 h-5" />
+                                <ArrowRight className="w-4 h-4" />
                             </Link>
                             <Link
                                 to="/signup"
-                                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-blue-600 bg-blue-50 border border-blue-200 hover:border-blue-400 hover:bg-blue-100 transition-all duration-300"
+                                className="btn btn-secondary btn-xl"
+                                style={{
+                                    width: 'auto',
+                                    minWidth: '160px',
+                                    textDecoration: 'none',
+                                }}
                             >
                                 {t('hero.cta_sell')}
                             </Link>
                         </div>
 
-                        {/* Stats */}
-                        <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16 mt-16 animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
-                            {stats.map((stat, index) => (
-                                <div key={index} className="text-center">
+                        {/* Animated Stats */}
+                        <div
+                            className="flex flex-wrap items-center justify-center gap-8 lg:gap-16 animate-fadeInUp"
+                            style={{ marginTop: '48px', animationDelay: '0.4s' }}
+                        >
+                            {statsData.map((stat, index) => (
+                                <div key={index} className="text-center" ref={counters[index].ref}>
                                     <div className="flex items-center justify-center gap-2 mb-1">
-                                        <stat.icon className="w-5 h-5 text-blue-500" />
-                                        <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                                            {stat.value}
+                                        <stat.icon className="w-4 h-4" style={{ color: 'var(--color-text-accent)' }} />
+                                        <span
+                                            className="font-bold animate-countUp"
+                                            style={{
+                                                fontSize: 'var(--font-size-2xl)',
+                                                color: 'var(--color-text-primary)',
+                                                fontVariantNumeric: 'tabular-nums',
+                                            }}
+                                        >
+                                            {counters[index].value}
                                         </span>
                                     </div>
-                                    <span className="text-sm text-gray-400">{stat.label}</span>
+                                    <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+                                        {stat.label}
+                                    </span>
                                 </div>
                             ))}
                         </div>
@@ -84,20 +194,34 @@ const HomePage = () => {
             </section>
 
             {/* Games Grid Section */}
-            <section className="py-16 c2">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="flex items-center gap-3 text-2xl font-bold text-gray-800">
-                            <span className="text-2xl">🎮</span>
+            <section style={{ paddingTop: '48px', paddingBottom: '48px' }}>
+                <div className="gh-container">
+                    <div className="flex items-center justify-between" style={{ marginBottom: '24px' }}>
+                        <h2
+                            className="flex items-center gap-2"
+                            style={{
+                                fontSize: 'var(--font-size-xl)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-text-primary)',
+                            }}
+                        >
+                            <span>🎮</span>
                             {t('sections.popular_games')}
                         </h2>
-                        <Link to="/products" className="flex items-center gap-1 text-blue-500 hover:text-blue-600 font-medium transition-colors">
+                        <Link
+                            to="/products"
+                            className="flex items-center gap-1 text-sm font-medium transition-colors"
+                            style={{ color: 'var(--color-text-accent)', textDecoration: 'none' }}
+                        >
                             {t('sections.all')}
-                            <ArrowRight className="w-4 h-4" />
+                            <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+                    <div
+                        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 animate-stagger"
+                        style={{ gap: '16px' }}
+                    >
                         {games.slice(0, 8).map((game) => (
                             <GameCard key={game.id} game={game} />
                         ))}
@@ -106,25 +230,54 @@ const HomePage = () => {
             </section>
 
             {/* Premium Accounts Section */}
-            <section className="py-16 relative">
-                {/* Premium gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-500/[0.02] to-transparent pointer-events-none" />
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent" />
+            <section
+                style={{
+                    paddingTop: '48px',
+                    paddingBottom: '48px',
+                    position: 'relative',
+                }}
+            >
+                {/* Subtle premium line */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '1px',
+                        background: 'linear-gradient(90deg, transparent, var(--color-premium-gold-light), transparent)',
+                        opacity: 0.3,
+                    }}
+                />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="flex items-center gap-3 text-2xl font-bold text-gray-800">
-                            <Crown className="w-6 h-6 text-yellow-400" />
+                <div className="gh-container">
+                    <div className="flex items-center justify-between" style={{ marginBottom: '24px' }}>
+                        <h2
+                            className="flex items-center gap-2"
+                            style={{
+                                fontSize: 'var(--font-size-xl)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-text-primary)',
+                            }}
+                        >
+                            <Crown className="w-5 h-5" style={{ color: 'var(--color-premium-gold-light)' }} />
                             {t('sections.premium_accounts')}
                         </h2>
-                        <Link to="/top" className="flex items-center gap-1 text-yellow-500 hover:text-yellow-600 font-medium transition-colors">
+                        <Link
+                            to="/top"
+                            className="flex items-center gap-1 text-sm font-medium"
+                            style={{ color: 'var(--color-premium-gold-light)', textDecoration: 'none' }}
+                        >
                             {t('sections.all')}
-                            <ArrowRight className="w-4 h-4" />
+                            <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
 
                     {/* Horizontal scroll slider */}
-                    <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+                    <div
+                        className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+                        style={{ margin: '0 -16px', padding: '0 16px 16px' }}
+                    >
                         {premiumAccounts.map((account) => (
                             <AccountCard key={account.id} account={account} featured />
                         ))}
@@ -133,20 +286,34 @@ const HomePage = () => {
             </section>
 
             {/* Recommended Accounts Section */}
-            <section className="py-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="flex items-center gap-3 text-2xl font-bold text-gray-800">
-                            <Star className="w-6 h-6 text-blue-500" />
+            <section style={{ paddingTop: '48px', paddingBottom: '48px' }}>
+                <div className="gh-container">
+                    <div className="flex items-center justify-between" style={{ marginBottom: '24px' }}>
+                        <h2
+                            className="flex items-center gap-2"
+                            style={{
+                                fontSize: 'var(--font-size-xl)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-text-primary)',
+                            }}
+                        >
+                            <Star className="w-5 h-5" style={{ color: 'var(--color-text-accent)' }} />
                             {t('sections.recommended')}
                         </h2>
-                        <Link to="/products" className="flex items-center gap-1 text-blue-500 hover:text-blue-600 font-medium transition-colors">
+                        <Link
+                            to="/products"
+                            className="flex items-center gap-1 text-sm font-medium"
+                            style={{ color: 'var(--color-text-accent)', textDecoration: 'none' }}
+                        >
                             {t('sections.more')}
-                            <ArrowRight className="w-4 h-4" />
+                            <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-stagger"
+                        style={{ gap: '16px' }}
+                    >
                         {recommendedAccounts.map((account) => (
                             <AccountCard key={account.id} account={account} />
                         ))}
@@ -155,48 +322,104 @@ const HomePage = () => {
             </section>
 
             {/* Trust Section */}
-            <section className="py-16 pag">
-                <div className=" max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="trust-section rounded-3xl p-8 lg:p-12 border transition-colors duration-300">
-                        <div className=" text-center mb-12">
-                            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                                {t('trust.title')} <span className="text-blue-500">{t('trust.brand')}</span>?
+            <section style={{ paddingTop: '48px', paddingBottom: '48px' }}>
+                <div className="gh-container">
+                    <div
+                        style={{
+                            borderRadius: 'var(--radius-xl)',
+                            border: '1px solid var(--color-border-default)',
+                            backgroundColor: 'var(--color-bg-secondary)',
+                            padding: '48px 32px',
+                        }}
+                    >
+                        <div className="text-center" style={{ marginBottom: '40px' }}>
+                            <h2
+                                style={{
+                                    fontSize: 'var(--font-size-2xl)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                    color: 'var(--color-text-primary)',
+                                    marginBottom: '12px',
+                                }}
+                            >
+                                {t('trust.title')}{' '}
+                                <span style={{ color: 'var(--color-text-accent)' }}>{t('trust.brand')}</span>?
                             </h2>
-                            <div className='c1'>
-                                <p className="text-gray-500 max-w-2xl mx-auto text-center">
-                                    {t('trust.subtitle')}
-                                </p>
-
-                            </div>
+                            <p
+                                style={{
+                                    color: 'var(--color-text-secondary)',
+                                    maxWidth: '480px',
+                                    margin: '0 auto',
+                                    fontSize: 'var(--font-size-base)',
+                                }}
+                            >
+                                {t('trust.subtitle')}
+                            </p>
                         </div>
-                        <br />
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: '24px' }}>
                             {[
                                 {
                                     icon: Shield,
                                     title: t('trust.secure_payment'),
                                     description: t('trust.secure_desc'),
-                                    color: 'from-green-500 to-emerald-500'
+                                    color: 'var(--color-accent-green)',
                                 },
                                 {
                                     icon: Zap,
                                     title: t('trust.fast_delivery'),
                                     description: t('trust.fast_desc'),
-                                    color: 'from-blue-500 to-blue-400'
+                                    color: 'var(--color-accent-blue)',
                                 },
                                 {
                                     icon: Users,
                                     title: t('trust.support'),
                                     description: t('trust.support_desc'),
-                                    color: 'from-cyan-500 to-blue-500'
+                                    color: 'var(--color-accent-purple)',
                                 }
                             ].map((feature, index) => (
-                                <div key={index} className="flex flex-col items-center text-center p-8 lg:p-10 rounded-2xl bg-white hover:bg-blue-50/50 transition-colors">
-                                    <div className={`w-14 h-14 mb-5 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-lg`}>
-                                        <feature.icon className="w-7 h-7 text-white" />
+                                <div
+                                    key={index}
+                                    className="text-center card-hover-lift"
+                                    style={{
+                                        padding: '32px 24px',
+                                        borderRadius: 'var(--radius-lg)',
+                                        backgroundColor: 'var(--color-bg-primary)',
+                                        border: '1px solid var(--color-border-muted)',
+                                    }}
+                                >
+                                    <div
+                                        className="flex items-center justify-center mx-auto"
+                                        style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: 'var(--radius-lg)',
+                                            backgroundColor: feature.color,
+                                            marginBottom: '16px',
+                                        }}
+                                    >
+                                        <feature.icon className="w-5 h-5" style={{ color: '#ffffff' }} />
                                     </div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">{feature.title}</h3>
-                                    <p className="text-sm text-gray-500 leading-relaxed max-w-xs">{feature.description}</p>
+                                    <h3
+                                        style={{
+                                            fontSize: 'var(--font-size-lg)',
+                                            fontWeight: 'var(--font-weight-semibold)',
+                                            color: 'var(--color-text-primary)',
+                                            marginBottom: '8px',
+                                        }}
+                                    >
+                                        {feature.title}
+                                    </h3>
+                                    <p
+                                        style={{
+                                            fontSize: 'var(--font-size-sm)',
+                                            color: 'var(--color-text-muted)',
+                                            lineHeight: 'var(--line-height-base)',
+                                            maxWidth: '280px',
+                                            margin: '0 auto',
+                                        }}
+                                    >
+                                        {feature.description}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -205,38 +428,71 @@ const HomePage = () => {
             </section>
 
             {/* CTA Section */}
-            <section className="py-16 c3">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="gr relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-blue-500 p-8 lg:p-12">
+            <section style={{ paddingTop: '32px', paddingBottom: '64px' }}>
+                <div className="gh-container">
+                    <div
+                        className="text-center"
+                        style={{
+                            borderRadius: 'var(--radius-xl)',
+                            backgroundColor: 'var(--color-accent-blue)',
+                            padding: '64px 32px',
+                            position: 'relative',
+                            overflow: 'hidden',
+                        }}
+                    >
                         {/* Background pattern */}
-                        <div className="absolute inset-0 opacity-10">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl" />
-                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl" />
+                        <div style={{ position: 'absolute', inset: 0, opacity: 0.08, pointerEvents: 'none' }}>
+                            <div style={{ position: 'absolute', top: '-20%', right: '-5%', width: '300px', height: '300px', background: '#fff', borderRadius: '50%', filter: 'blur(60px)' }} />
+                            <div style={{ position: 'absolute', bottom: '-20%', left: '-5%', width: '300px', height: '300px', background: '#fff', borderRadius: '50%', filter: 'blur(60px)' }} />
                         </div>
 
-                        <div className="relative text-center">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-white-force mb-4" style={{ color: '#ffffff' }}>
+                        <div style={{ position: 'relative' }}>
+                            <h2
+                                style={{
+                                    fontSize: 'clamp(24px, 4vw, 32px)',
+                                    fontWeight: 'var(--font-weight-bold)',
+                                    color: '#ffffff',
+                                    marginBottom: '12px',
+                                }}
+                            >
                                 {t('cta.title')}
                             </h2>
-                            <div className="c4">
-                                <p className="max-w-2xl mx-auto mb-8" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                                    {t('cta.subtitle')}
-                                </p>
-                            </div>
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <p
+                                style={{
+                                    color: 'rgba(255,255,255,0.85)',
+                                    maxWidth: '480px',
+                                    margin: '0 auto 32px',
+                                    fontSize: 'var(--font-size-lg)',
+                                }}
+                            >
+                                {t('cta.subtitle')}
+                            </p>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                                 <Link
                                     to="/signup"
-                                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-white/30 hover:bg-white/10 transition-colors"
-                                    style={{ color: '#ffffff' }}
+                                    className="btn btn-lg"
+                                    style={{
+                                        backgroundColor: '#ffffff',
+                                        color: 'var(--color-accent-blue)',
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        textDecoration: 'none',
+                                        minWidth: '140px',
+                                    }}
                                 >
                                     {t('cta.start')}
                                 </Link>
                                 <Link
                                     to="/premium"
-                                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-white/30 hover:bg-white/10 transition-colors"
-                                    style={{ color: '#ffffff' }}
+                                    className="btn btn-lg flex items-center gap-2"
+                                    style={{
+                                        backgroundColor: 'transparent',
+                                        color: '#ffffff',
+                                        border: '1px solid rgba(255,255,255,0.3)',
+                                        textDecoration: 'none',
+                                        minWidth: '140px',
+                                    }}
                                 >
-                                    <Crown className="w-5 h-5" />
+                                    <Crown className="w-4 h-4" />
                                     {t('cta.get_premium')}
                                 </Link>
                             </div>

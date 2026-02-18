@@ -8,7 +8,6 @@ const AccountCard = ({ account, featured = false }) => {
     const { user, isAuthenticated } = useAuth();
     const [isLiked, setIsLiked] = useState(false);
 
-    // Check if account is liked
     useEffect(() => {
         if (user) {
             const savedLikes = localStorage.getItem(`wibeLikes_${user.id}`);
@@ -22,7 +21,6 @@ const AccountCard = ({ account, featured = false }) => {
     const handleLike = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
         if (!isAuthenticated || !user) return;
 
         const savedLikes = localStorage.getItem(`wibeLikes_${user.id}`);
@@ -41,26 +39,47 @@ const AccountCard = ({ account, featured = false }) => {
     return (
         <Link
             to={`/account/${account.id}`}
-            className={`group relative bg-white border rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${account.isPremium
-                ? 'border-yellow-400/50 hover:border-yellow-500 hover:shadow-yellow-500/10'
-                : 'border-blue-100 hover:border-blue-300 hover:shadow-blue-500/10'
-                } ${featured ? 'flex-shrink-0 w-72 snap-start' : ''}`}
+            className={`group relative account-card-hover block ${account.isPremium ? 'account-card-premium' : ''} ${featured ? 'flex-shrink-0 snap-start' : ''}`}
+            style={{
+                backgroundColor: 'var(--color-bg-primary)',
+                border: `1px solid ${account.isPremium ? 'var(--color-premium-gold-light)' : 'var(--color-border-default)'}`,
+                borderRadius: 'var(--radius-lg)',
+                overflow: 'hidden',
+                width: featured ? '280px' : 'auto',
+                textDecoration: 'none',
+            }}
         >
             {/* Premium top accent */}
             {account.isPremium && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-500" />
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '2px',
+                        background: `linear-gradient(90deg, var(--color-premium-gold), var(--color-premium-gold-light))`,
+                        zIndex: 2,
+                    }}
+                />
             )}
 
             {/* Image */}
-            <div className="relative h-44 bg-blue-50 overflow-hidden">
+            <div
+                className="relative overflow-hidden"
+                style={{
+                    height: '164px',
+                    backgroundColor: 'var(--color-bg-tertiary)',
+                }}
+            >
                 {account.image ? (
                     <img
                         src={account.image}
                         alt={account.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center text-6xl opacity-50">
+                    <div className="w-full h-full flex items-center justify-center text-5xl opacity-30">
                         🎮
                     </div>
                 )}
@@ -69,56 +88,107 @@ const AccountCard = ({ account, featured = false }) => {
                 {isAuthenticated && (
                     <button
                         onClick={handleLike}
-                        className={`absolute top-3 left-3 w-9 h-9 rounded-full flex items-center justify-center transition-all ${isLiked
-                            ? 'bg-red-500 text-white'
-                            : 'bg-black/40 backdrop-blur-sm text-white/70 hover:bg-black/60 hover:text-white'
-                            }`}
+                        className="absolute flex items-center justify-center rounded-full transition-all"
+                        style={{
+                            top: '12px',
+                            left: '12px',
+                            width: '32px',
+                            height: '32px',
+                            backgroundColor: isLiked ? 'var(--color-accent-red)' : 'rgba(0,0,0,0.5)',
+                            backdropFilter: 'blur(4px)',
+                            color: '#fff',
+                            border: 'none',
+                            cursor: 'pointer',
+                        }}
+                        aria-label={isLiked ? 'Unlike' : 'Like'}
                     >
-                        <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+                        <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-current' : ''}`} />
                     </button>
                 )}
 
                 {/* Premium Badge */}
                 {account.isPremium && (
-                    <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full text-xs font-bold text-black">
+                    <div
+                        className="badge badge-premium absolute flex items-center gap-1"
+                        style={{ top: '12px', right: '12px', padding: '4px 8px', fontSize: '11px' }}
+                    >
                         <Crown className="w-3 h-3" />
                         Premium
                     </div>
                 )}
 
                 {/* Game Badge */}
-                <div className="absolute bottom-3 left-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-full text-xs text-white">
+                <div
+                    className="absolute rounded-full text-xs"
+                    style={{
+                        bottom: '12px',
+                        left: '12px',
+                        padding: '4px 10px',
+                        backgroundColor: 'rgba(0,0,0,0.65)',
+                        backdropFilter: 'blur(4px)',
+                        color: '#ffffff',
+                        fontWeight: 500,
+                    }}
+                >
                     {account.gameName}
                 </div>
             </div>
 
             {/* Content */}
-            <div className="p-4">
+            <div style={{ padding: 'var(--space-4)' }}>
                 {/* Title */}
-                <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h3
+                    className="font-semibold mb-2 line-clamp-2 transition-colors"
+                    style={{
+                        fontSize: 'var(--font-size-base)',
+                        lineHeight: 'var(--line-height-base)',
+                        color: 'var(--color-text-primary)',
+                    }}
+                >
                     {account.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-gray-500 mb-4 line-clamp-2">
+                <p
+                    className="line-clamp-2 mb-4"
+                    style={{
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-muted)',
+                        lineHeight: 'var(--line-height-sm)',
+                    }}
+                >
                     {account.description}
                 </p>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-3 border-t border-blue-100">
+                <div
+                    className="flex items-center justify-between"
+                    style={{
+                        paddingTop: 'var(--space-3)',
+                        borderTop: '1px solid var(--color-border-muted)',
+                    }}
+                >
                     {/* Price */}
-                    <span className="text-lg font-bold text-blue-600">
+                    <span
+                        className="font-bold"
+                        style={{
+                            fontSize: 'var(--font-size-lg)',
+                            color: 'var(--color-text-accent)',
+                        }}
+                    >
                         {formatPrice(account.price)}
                     </span>
 
                     {/* Seller Info */}
                     <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1 text-yellow-500">
-                            <Star className="w-3.5 h-3.5 fill-current" />
-                            <span className="text-xs font-medium text-gray-600">{account.seller.rating}</span>
+                        <div className="flex items-center gap-1">
+                            <Star className="w-3.5 h-3.5 fill-current" style={{ color: 'var(--color-premium-gold-light)' }} />
+                            <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                                {account.seller.rating}
+                            </span>
                         </div>
                         {account.seller.isPremium && (
-                            <Crown className="w-3.5 h-3.5 text-yellow-500" />
+                            <Crown className="w-3.5 h-3.5" style={{ color: 'var(--color-premium-gold-light)' }} />
                         )}
                     </div>
                 </div>

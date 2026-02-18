@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Settings, User, Lock, Bell, Globe, CreditCard, Shield, Trash2, Camera, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage, languages as langList } from '../context/LanguageContext';
@@ -26,23 +26,14 @@ const SettingsPage = () => {
     });
 
     const [notifications, setNotifications] = useState({
-        email: true,
-        push: true,
-        sales: true,
-        messages: true,
-        updates: false
+        email: true, push: true, sales: true, messages: true, updates: false
     });
 
-    // Redirect to login if not authenticated
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login');
-        }
+        if (!isAuthenticated) navigate('/login');
     }, [isAuthenticated, navigate]);
 
-    if (!isAuthenticated) {
-        return null;
-    }
+    if (!isAuthenticated) return null;
 
     const tabs = [
         { id: 'profile', label: t('settings.profile'), icon: User },
@@ -55,9 +46,7 @@ const SettingsPage = () => {
     const handleProfileSave = async () => {
         setIsSaving(true);
         setMessage({ type: '', text: '' });
-
         await new Promise(resolve => setTimeout(resolve, 1000));
-
         updateProfile(profileData);
         setMessage({ type: 'success', text: t('settings.profile_updated') });
         setIsSaving(false);
@@ -65,35 +54,24 @@ const SettingsPage = () => {
 
     const handlePasswordChange = async () => {
         setMessage({ type: '', text: '' });
-
         if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
-            setMessage({ type: 'error', text: t('settings.fill_all') });
-            return;
+            setMessage({ type: 'error', text: t('settings.fill_all') }); return;
         }
-
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            setMessage({ type: 'error', text: t('settings.passwords_mismatch') });
-            return;
+            setMessage({ type: 'error', text: t('settings.passwords_mismatch') }); return;
         }
-
         if (passwordData.newPassword.length < 6) {
-            setMessage({ type: 'error', text: t('settings.password_short') });
-            return;
+            setMessage({ type: 'error', text: t('settings.password_short') }); return;
         }
-
         setIsSaving(true);
         await new Promise(resolve => setTimeout(resolve, 1000));
-
         setMessage({ type: 'success', text: t('settings.password_changed') });
         setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
         setIsSaving(false);
     };
 
     const handleDeleteAccount = () => {
-        if (window.confirm(t('settings.delete_confirm'))) {
-            logout();
-            navigate('/');
-        }
+        if (window.confirm(t('settings.delete_confirm'))) { logout(); navigate('/'); }
     };
 
     const notificationItems = [
@@ -104,36 +82,59 @@ const SettingsPage = () => {
         { key: 'updates', label: t('settings.updates_notif'), desc: t('settings.updates_notif_desc') },
     ];
 
+    const cardStyle = {
+        backgroundColor: 'var(--color-bg-primary)',
+        border: '1px solid var(--color-border-default)',
+        borderRadius: 'var(--radius-xl)',
+        padding: '24px',
+    };
+
+    const inputStyle = 'input input-lg';
+
     return (
-        <div className="min-h-screen" style={{ paddingTop: '140px', paddingBottom: '64px' }}>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-                        <Settings className="w-7 h-7 text-blue-500" />
-                        {t('settings.title')}
-                    </h1>
-                    <p className="text-gray-500 mt-1">{t('settings.subtitle')}</p>
+        <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
+            <div className="gh-container" style={{ maxWidth: '960px' }}>
+                {/* Breadcrumbs */}
+                <div className="breadcrumbs">
+                    <Link to="/">Home</Link>
+                    <span className="breadcrumb-separator">/</span>
+                    <Link to="/profile">{t('nav.profile') || 'Profile'}</Link>
+                    <span className="breadcrumb-separator">/</span>
+                    <span className="breadcrumb-current">{t('settings.title')}</span>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-6">
+                {/* Header */}
+                <div style={{ paddingTop: '16px', marginBottom: '24px' }}>
+                    <h1 className="flex items-center gap-3" style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)' }}>
+                        <Settings className="w-6 h-6" style={{ color: 'var(--color-text-accent)' }} />
+                        {t('settings.title')}
+                    </h1>
+                    <p style={{ color: 'var(--color-text-secondary)', marginTop: '4px' }}>{t('settings.subtitle')}</p>
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-5">
                     {/* Sidebar */}
-                    <div className="lg:w-64 flex-shrink-0">
-                        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-                            <nav className="space-y-1">
+                    <div style={{ width: '240px', flexShrink: 0 }}>
+                        <div style={{ ...cardStyle, padding: '8px' }}>
+                            <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab.id}
-                                        onClick={() => {
-                                            setActiveTab(tab.id);
-                                            setMessage({ type: '', text: '' });
+                                        onClick={() => { setActiveTab(tab.id); setMessage({ type: '', text: '' }); }}
+                                        className="w-full flex items-center gap-3 text-left"
+                                        style={{
+                                            padding: '10px 12px',
+                                            borderRadius: 'var(--radius-md)',
+                                            fontSize: 'var(--font-size-base)',
+                                            fontWeight: activeTab === tab.id ? 'var(--font-weight-semibold)' : 'var(--font-weight-regular)',
+                                            color: activeTab === tab.id ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                                            backgroundColor: activeTab === tab.id ? 'var(--color-bg-tertiary)' : 'transparent',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease',
                                         }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors ${activeTab === tab.id
-                                            ? 'bg-blue-50 text-blue-600'
-                                            : 'text-gray-500 hover:bg-slate-50 hover:text-gray-800'
-                                            }`}
                                     >
-                                        <tab.icon className="w-5 h-5" />
+                                        <tab.icon className="w-4 h-4" />
                                         {tab.label}
                                     </button>
                                 ))}
@@ -143,91 +144,90 @@ const SettingsPage = () => {
 
                     {/* Content */}
                     <div className="flex-1">
-                        <div className="bg-white rounded-2xl p-6 lg:p-8 border border-slate-200 shadow-sm">
+                        <div style={cardStyle}>
                             {/* Message */}
                             {message.text && (
-                                <div className={`flex items-center gap-3 p-4 rounded-xl mb-6 ${message.type === 'success'
-                                    ? 'bg-green-50 border border-green-200 text-green-600'
-                                    : 'bg-red-50 border border-red-200 text-red-500'
-                                    }`}>
-                                    {message.type === 'success' ? (
-                                        <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                                    ) : (
-                                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                                    )}
+                                <div
+                                    className="flex items-center gap-3"
+                                    style={{
+                                        padding: '12px 16px',
+                                        borderRadius: 'var(--radius-md)',
+                                        marginBottom: '20px',
+                                        backgroundColor: message.type === 'success' ? 'var(--color-success-bg)' : 'var(--color-error-bg)',
+                                        border: `1px solid ${message.type === 'success' ? 'var(--color-accent-green)' : 'var(--color-error)'}`,
+                                        color: message.type === 'success' ? 'var(--color-accent-green)' : 'var(--color-error)',
+                                        fontSize: 'var(--font-size-sm)',
+                                    }}
+                                >
+                                    {message.type === 'success' ? <CheckCircle className="w-4 h-4 flex-shrink-0" /> : <AlertCircle className="w-4 h-4 flex-shrink-0" />}
                                     <span>{message.text}</span>
                                 </div>
                             )}
 
                             {/* Profile Tab */}
                             {activeTab === 'profile' && (
-                                <div className="space-y-6">
-                                    <h2 className="text-xl font-bold text-gray-800">{t('settings.profile_info')}</h2>
+                                <div>
+                                    <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                        {t('settings.profile_info')}
+                                    </h2>
 
                                     {/* Avatar */}
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-4" style={{ marginBottom: '24px' }}>
                                         <div className="relative">
-                                            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-3xl font-bold" style={{ color: '#ffffff' }}>
+                                            <div style={{
+                                                width: '64px', height: '64px',
+                                                background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                                                borderRadius: 'var(--radius-xl)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                fontSize: '24px', fontWeight: 'var(--font-weight-bold)', color: '#fff',
+                                            }}>
                                                 {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                                             </div>
-                                            <button className="absolute -bottom-1 -right-1 w-8 h-8 bg-blue-500 rounded-xl flex items-center justify-center hover:bg-blue-600 transition-colors">
-                                                <Camera className="w-4 h-4" style={{ color: '#ffffff' }} />
+                                            <button style={{
+                                                position: 'absolute', bottom: '-4px', right: '-4px',
+                                                width: '24px', height: '24px',
+                                                backgroundColor: 'var(--color-accent-blue)',
+                                                borderRadius: 'var(--radius-md)', border: '2px solid var(--color-bg-primary)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                cursor: 'pointer', color: '#fff',
+                                            }}>
+                                                <Camera className="w-3 h-3" />
                                             </button>
                                         </div>
                                         <div>
-                                            <p className="text-gray-800 font-medium">{user?.name}</p>
-                                            <p className="text-sm text-gray-500">{user?.email}</p>
+                                            <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{user?.name}</p>
+                                            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{user?.email}</p>
                                         </div>
                                     </div>
 
                                     {/* Form */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: '16px', marginBottom: '24px' }}>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">{t('settings.name')}</label>
-                                            <input
-                                                type="text"
-                                                value={profileData.name}
-                                                onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                                            />
+                                            <label className="input-label">{t('settings.name')}</label>
+                                            <input type="text" value={profileData.name} onChange={(e) => setProfileData({ ...profileData, name: e.target.value })} className={inputStyle} />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">{t('settings.email')}</label>
-                                            <input
-                                                type="email"
-                                                value={profileData.email}
-                                                onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                                            />
+                                            <label className="input-label">{t('settings.email')}</label>
+                                            <input type="email" value={profileData.email} onChange={(e) => setProfileData({ ...profileData, email: e.target.value })} className={inputStyle} />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">{t('settings.phone')}</label>
-                                            <input
-                                                type="tel"
-                                                value={profileData.phone}
-                                                onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                                                placeholder="+998 90 123 45 67"
-                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                                            />
+                                            <label className="input-label">{t('settings.phone')}</label>
+                                            <input type="tel" value={profileData.phone} onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })} placeholder="+998 90 123 45 67" className={inputStyle} />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">{t('settings.bio')}</label>
+                                            <label className="input-label">{t('settings.bio')}</label>
                                             <textarea
                                                 value={profileData.bio}
                                                 onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                                                 placeholder={t('settings.bio_placeholder')}
                                                 rows={3}
-                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 resize-none"
+                                                className="input"
+                                                style={{ height: 'auto', padding: '12px 16px', resize: 'none' }}
                                             />
                                         </div>
                                     </div>
 
-                                    <button
-                                        onClick={handleProfileSave}
-                                        disabled={isSaving}
-                                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                                        style={{ color: '#ffffff' }}
-                                    >
+                                    <button onClick={handleProfileSave} disabled={isSaving} className="btn btn-primary btn-lg">
                                         <Save className="w-4 h-4" />
                                         {isSaving ? t('settings.saving') : t('settings.save')}
                                     </button>
@@ -236,70 +236,47 @@ const SettingsPage = () => {
 
                             {/* Security Tab */}
                             {activeTab === 'security' && (
-                                <div className="space-y-6">
-                                    <h2 className="text-xl font-bold text-gray-800">{t('settings.security')}</h2>
+                                <div>
+                                    <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                        {t('settings.security')}
+                                    </h2>
 
-                                    <div className="space-y-4">
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">{t('settings.current_password')}</label>
-                                            <input
-                                                type="password"
-                                                value={passwordData.currentPassword}
-                                                onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                                            />
+                                            <label className="input-label">{t('settings.current_password')}</label>
+                                            <input type="password" value={passwordData.currentPassword} onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })} className={inputStyle} />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">{t('settings.new_password')}</label>
-                                            <input
-                                                type="password"
-                                                value={passwordData.newPassword}
-                                                onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                                            />
+                                            <label className="input-label">{t('settings.new_password')}</label>
+                                            <input type="password" value={passwordData.newPassword} onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })} className={inputStyle} />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-600 mb-2">{t('settings.confirm_password')}</label>
-                                            <input
-                                                type="password"
-                                                value={passwordData.confirmPassword}
-                                                onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                                            />
+                                            <label className="input-label">{t('settings.confirm_password')}</label>
+                                            <input type="password" value={passwordData.confirmPassword} onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })} className={inputStyle} />
                                         </div>
                                     </div>
 
-                                    <button
-                                        onClick={handlePasswordChange}
-                                        disabled={isSaving}
-                                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                                        style={{ color: '#ffffff' }}
-                                    >
+                                    <button onClick={handlePasswordChange} disabled={isSaving} className="btn btn-primary btn-lg">
                                         <Lock className="w-4 h-4" />
                                         {isSaving ? t('settings.changing_password') : t('settings.change_password')}
                                     </button>
 
                                     {/* 2FA */}
-                                    <div className="mt-8 pt-6 border-t border-slate-200">
+                                    <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--color-border-muted)' }}>
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <h3 className="text-gray-800 font-medium">{t('settings.twofa')}</h3>
-                                                <p className="text-sm text-gray-500 mt-1">{t('settings.twofa_desc')}</p>
+                                                <h3 style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{t('settings.twofa')}</h3>
+                                                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginTop: '4px' }}>{t('settings.twofa_desc')}</p>
                                             </div>
-                                            <button className="px-4 py-2 bg-slate-100 rounded-xl text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                                                {t('settings.enable')}
-                                            </button>
+                                            <button className="btn btn-secondary btn-sm">{t('settings.enable')}</button>
                                         </div>
                                     </div>
 
                                     {/* Delete Account */}
-                                    <div className="mt-8 pt-6 border-t border-slate-200">
-                                        <h3 className="text-red-500 font-medium mb-2">{t('settings.danger_zone')}</h3>
-                                        <p className="text-sm text-gray-500 mb-4">{t('settings.delete_warning')}</p>
-                                        <button
-                                            onClick={handleDeleteAccount}
-                                            className="flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-200 rounded-xl text-red-500 hover:bg-red-100 transition-colors"
-                                        >
+                                    <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--color-border-muted)' }}>
+                                        <h3 style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-error)', marginBottom: '8px' }}>{t('settings.danger_zone')}</h3>
+                                        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', marginBottom: '16px' }}>{t('settings.delete_warning')}</p>
+                                        <button onClick={handleDeleteAccount} className="btn btn-danger btn-md">
                                             <Trash2 className="w-4 h-4" />
                                             {t('settings.delete_account')}
                                         </button>
@@ -309,23 +286,48 @@ const SettingsPage = () => {
 
                             {/* Notifications Tab */}
                             {activeTab === 'notifications' && (
-                                <div className="space-y-6">
-                                    <h2 className="text-xl font-bold text-gray-800">{t('settings.notifications')}</h2>
-
-                                    <div className="space-y-4">
+                                <div>
+                                    <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                        {t('settings.notifications')}
+                                    </h2>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                         {notificationItems.map((item) => (
-                                            <div key={item.key} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                            <div
+                                                key={item.key}
+                                                className="flex items-center justify-between"
+                                                style={{
+                                                    padding: '14px 16px',
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    backgroundColor: 'var(--color-bg-secondary)',
+                                                    border: '1px solid var(--color-border-muted)',
+                                                }}
+                                            >
                                                 <div>
-                                                    <p className="text-gray-800 font-medium">{item.label}</p>
-                                                    <p className="text-sm text-gray-500">{item.desc}</p>
+                                                    <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{item.label}</p>
+                                                    <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{item.desc}</p>
                                                 </div>
                                                 <button
                                                     onClick={() => setNotifications({ ...notifications, [item.key]: !notifications[item.key] })}
-                                                    className={`w-12 h-6 rounded-full transition-colors ${notifications[item.key] ? 'bg-blue-500' : 'bg-gray-300'
-                                                        }`}
+                                                    style={{
+                                                        width: '44px', height: '24px',
+                                                        borderRadius: 'var(--radius-full)',
+                                                        backgroundColor: notifications[item.key] ? 'var(--color-accent-blue)' : 'var(--color-bg-tertiary)',
+                                                        border: `1px solid ${notifications[item.key] ? 'var(--color-accent-blue)' : 'var(--color-border-default)'}`,
+                                                        cursor: 'pointer',
+                                                        position: 'relative',
+                                                        transition: 'all 0.2s ease',
+                                                        flexShrink: 0,
+                                                    }}
                                                 >
-                                                    <div className={`w-5 h-5 bg-white rounded-full transition-transform ${notifications[item.key] ? 'translate-x-6' : 'translate-x-0.5'
-                                                        }`} />
+                                                    <div style={{
+                                                        width: '18px', height: '18px',
+                                                        borderRadius: 'var(--radius-full)',
+                                                        backgroundColor: '#ffffff',
+                                                        position: 'absolute', top: '2px',
+                                                        left: notifications[item.key] ? '22px' : '2px',
+                                                        transition: 'left 0.2s ease',
+                                                        boxShadow: 'var(--shadow-xs)',
+                                                    }} />
                                                 </button>
                                             </div>
                                         ))}
@@ -335,59 +337,103 @@ const SettingsPage = () => {
 
                             {/* Language Tab */}
                             {activeTab === 'language' && (
-                                <div className="space-y-6">
-                                    <h2 className="text-xl font-bold text-gray-800">{t('settings.choose_language')}</h2>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                        {t('settings.choose_language')}
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: '12px', marginBottom: '16px' }}>
                                         {langList.map((lang) => (
                                             <button
                                                 key={lang.code}
                                                 onClick={() => setLanguage(lang.code)}
-                                                className={`p-4 rounded-xl border-2 transition-all ${language === lang.code
-                                                    ? 'border-blue-500 bg-blue-50'
-                                                    : 'border-slate-200 hover:border-blue-300'
-                                                    }`}
+                                                style={{
+                                                    padding: '16px',
+                                                    borderRadius: 'var(--radius-lg)',
+                                                    border: `2px solid ${language === lang.code ? 'var(--color-accent-blue)' : 'var(--color-border-default)'}`,
+                                                    backgroundColor: language === lang.code ? 'var(--color-info-bg)' : 'var(--color-bg-secondary)',
+                                                    cursor: 'pointer',
+                                                    textAlign: 'center',
+                                                    transition: 'all 0.15s ease',
+                                                }}
                                             >
-                                                <div className="text-3xl mb-2">{lang.flag}</div>
-                                                <p className="text-gray-800 font-medium">{lang.name}</p>
+                                                <div style={{ fontSize: '28px', marginBottom: '8px' }}>{lang.flag}</div>
+                                                <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{lang.name}</p>
                                             </button>
                                         ))}
                                     </div>
-
-                                    <p className="text-sm text-gray-500">{t('settings.language_note')}</p>
+                                    <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{t('settings.language_note')}</p>
                                 </div>
                             )}
 
                             {/* Wallet Tab */}
                             {activeTab === 'wallet' && (
-                                <div className="space-y-6">
-                                    <h2 className="text-xl font-bold text-gray-800">{t('settings.wallet')}</h2>
+                                <div>
+                                    <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '20px' }}>
+                                        {t('settings.wallet')}
+                                    </h2>
 
                                     {/* Balance */}
-                                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg shadow-blue-500/20">
-                                        <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{t('settings.balance')}</p>
-                                        <p className="text-3xl font-bold" style={{ color: '#ffffff' }}>{t('settings.balance_amount')}</p>
+                                    <div
+                                        style={{
+                                            padding: '24px',
+                                            borderRadius: 'var(--radius-xl)',
+                                            backgroundColor: 'var(--color-accent-blue)',
+                                            marginBottom: '20px',
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                        }}
+                                    >
+                                        <div style={{ position: 'absolute', inset: 0, opacity: 0.06, pointerEvents: 'none' }}>
+                                            <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: '200px', height: '200px', background: '#fff', borderRadius: '50%', filter: 'blur(60px)' }} />
+                                        </div>
+                                        <p style={{ fontSize: 'var(--font-size-sm)', color: 'rgba(255,255,255,0.7)', marginBottom: '4px' }}>{t('settings.balance')}</p>
+                                        <p style={{ fontSize: 'var(--font-size-3xl)', fontWeight: 'var(--font-weight-bold)', color: '#ffffff' }}>{t('settings.balance_amount')}</p>
                                     </div>
 
                                     {/* Actions */}
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <button className="p-4 bg-slate-50 rounded-xl text-center hover:bg-blue-50 transition-colors border border-slate-200">
-                                            <CreditCard className="w-6 h-6 text-green-500 mx-auto mb-2" />
-                                            <p className="text-gray-800 font-medium">{t('settings.add_money')}</p>
+                                    <div className="grid grid-cols-2" style={{ gap: '12px', marginBottom: '24px' }}>
+                                        <button
+                                            className="text-center"
+                                            style={{
+                                                padding: '16px',
+                                                borderRadius: 'var(--radius-lg)',
+                                                backgroundColor: 'var(--color-bg-secondary)',
+                                                border: '1px solid var(--color-border-default)',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease',
+                                            }}
+                                        >
+                                            <CreditCard className="mx-auto" style={{ width: '24px', height: '24px', color: 'var(--color-accent-green)', marginBottom: '8px' }} />
+                                            <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{t('settings.add_money')}</p>
                                         </button>
-                                        <button className="p-4 bg-slate-50 rounded-xl text-center hover:bg-blue-50 transition-colors border border-slate-200">
-                                            <Shield className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-                                            <p className="text-gray-800 font-medium">{t('settings.withdraw')}</p>
+                                        <button
+                                            className="text-center"
+                                            style={{
+                                                padding: '16px',
+                                                borderRadius: 'var(--radius-lg)',
+                                                backgroundColor: 'var(--color-bg-secondary)',
+                                                border: '1px solid var(--color-border-default)',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease',
+                                            }}
+                                        >
+                                            <Shield className="mx-auto" style={{ width: '24px', height: '24px', color: 'var(--color-accent-blue)', marginBottom: '8px' }} />
+                                            <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{t('settings.withdraw')}</p>
                                         </button>
                                     </div>
 
                                     {/* Cards */}
                                     <div>
-                                        <h3 className="text-gray-800 font-medium mb-3">{t('settings.linked_cards')}</h3>
-                                        <div className="text-center py-8 bg-slate-50 rounded-xl border border-slate-200">
-                                            <CreditCard className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                                            <p className="text-gray-500">{t('settings.no_cards')}</p>
-                                            <button className="mt-3 text-blue-500 text-sm hover:underline">
+                                        <h3 style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', marginBottom: '12px' }}>{t('settings.linked_cards')}</h3>
+                                        <div className="text-center" style={{
+                                            padding: '32px 16px',
+                                            borderRadius: 'var(--radius-lg)',
+                                            backgroundColor: 'var(--color-bg-secondary)',
+                                            border: '1px solid var(--color-border-default)',
+                                        }}>
+                                            <CreditCard className="mx-auto" style={{ width: '40px', height: '40px', color: 'var(--color-text-muted)', marginBottom: '12px' }} />
+                                            <p style={{ color: 'var(--color-text-secondary)' }}>{t('settings.no_cards')}</p>
+                                            <button style={{ marginTop: '12px', color: 'var(--color-text-accent)', fontSize: 'var(--font-size-sm)', background: 'none', border: 'none', cursor: 'pointer' }}>
                                                 {t('settings.add_card')}
                                             </button>
                                         </div>

@@ -1,90 +1,37 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { HelpCircle, ChevronDown, Search, ShoppingBag, CreditCard, Shield, User, MessageCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const FAQPage = () => {
+    const { t } = useLanguage();
     const [openIndex, setOpenIndex] = useState(null);
     const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 
     const categories = [
-        { id: 'all', label: 'Barchasi', icon: HelpCircle },
-        { id: 'buying', label: 'Xarid qilish', icon: ShoppingBag },
-        { id: 'selling', label: 'Sotish', icon: CreditCard },
-        { id: 'security', label: 'Xavfsizlik', icon: Shield },
-        { id: 'account', label: 'Hisob', icon: User },
+        { id: 'all', label: t('faq.all') || 'All', icon: HelpCircle },
+        { id: 'buying', label: t('faq.buying') || 'Buying', icon: ShoppingBag },
+        { id: 'selling', label: t('faq.selling') || 'Selling', icon: CreditCard },
+        { id: 'security', label: t('faq.security') || 'Security', icon: Shield },
+        { id: 'account', label: t('faq.account') || 'Account', icon: User },
     ];
 
     const faqs = [
-        {
-            category: 'buying',
-            question: 'Akkauntni qanday sotib olaman?',
-            answer: 'Akkauntni tanlang, "Sotib olish" tugmasini bosing, to\'lov usulini tanlang va to\'lovni amalga oshiring. To\'lov tasdiqlangandan so\'ng akkaunt ma\'lumotlari sizga yuboriladi.'
-        },
-        {
-            category: 'buying',
-            question: 'To\'lov qanday amalga oshiriladi?',
-            answer: 'Biz Payme, Click, Paynet, Uzcard va Humo orqali to\'lovlarni qabul qilamiz. Barcha to\'lovlar xavfsiz va shifrlangan.'
-        },
-        {
-            category: 'buying',
-            question: 'Akkaunt ishlamasa nima qilaman?',
-            answer: '48 soat ichida "Shikoyat qilish" tugmasini bosing. Bizning moderatorlar tekshiradi va muammo tasdiqlansa, pul to\'liq qaytariladi.'
-        },
-        {
-            category: 'buying',
-            question: 'Akkauntni tekshirish uchun qancha vaqt bor?',
-            answer: 'Xarid qilganidan keyin 48 soat ichida akkauntni tekshirishingiz va tasdiqlashingiz kerak. Bu vaqt ichida muammo bo\'lsa, pul qaytariladi.'
-        },
-        {
-            category: 'selling',
-            question: 'Akkauntimni qanday sotaman?',
-            answer: 'Profilingizga kiring, "Sotish" sahifasiga o\'ting, akkaunt haqida ma\'lumotlarni to\'ldiring va e\'lon joylashtiring. Moderatsiyadan o\'tgandan keyin akkauntingiz saytda paydo bo\'ladi.'
-        },
-        {
-            category: 'selling',
-            question: 'Komissiya qancha?',
-            answer: 'Free rejada 10%, Premium rejada 8%, Pro rejada 5% komissiya. Pro reja eng foydali variant!'
-        },
-        {
-            category: 'selling',
-            question: 'Pulni qachon olaman?',
-            answer: 'Xaridor akkauntni tasdiqlaganidan keyin 1-3 ish kuni ichida pul sizning hamyoningizga o\'tkaziladi. Keyin bank kartangizga yechib olishingiz mumkin.'
-        },
-        {
-            category: 'selling',
-            question: 'E\'lonim nima uchun rad etildi?',
-            answer: 'E\'lon qoidalarga mos kelmasa rad etiladi: noto\'g\'ri ma\'lumotlar, sifatsiz rasmlar, taqiqlangan kontent. Xatolikni tuzatib qayta yuborishingiz mumkin.'
-        },
-        {
-            category: 'security',
-            question: 'Escrow tizimi nima?',
-            answer: 'Escrow - bu xavfsiz to\'lov tizimi. Xaridor to\'laganda pul bizda saqlanadi. Faqat xaridor akkauntni tasdiqlaganidan keyin pul sotuvchiga o\'tkaziladi.'
-        },
-        {
-            category: 'security',
-            question: 'Firibgarlikdan qanday himoyalanaman?',
-            answer: 'Faqat platforma orqali savdo qiling, hech qachon platformadan tashqarida to\'lov qilmang. Shubhali e\'lonlarni xabar bering. Bizning moderatorlar 24/7 ishlaydi.'
-        },
-        {
-            category: 'security',
-            question: 'Ma\'lumotlarim xavfsizmi?',
-            answer: 'Ha, biz SSL shifrlash va xavfsiz serverlardan foydalanamiz. Akkaunt ma\'lumotlari faqat xarid tasdiqlangandan keyin xaridorga ko\'rsatiladi.'
-        },
-        {
-            category: 'account',
-            question: 'Parolimni unutdim, nima qilaman?',
-            answer: 'Login sahifasida "Parolni unutdingizmi?" havolasini bosing. Email manzilingizga parolni tiklash havolasi yuboriladi.'
-        },
-        {
-            category: 'account',
-            question: 'Hisobimni qanday o\'chiraman?',
-            answer: 'Sozlamalar sahifasida "Hisobni o\'chirish" bo\'limiga o\'ting. Eslatma: o\'chirilgan hisobni tiklash mumkin emas.'
-        },
-        {
-            category: 'account',
-            question: 'Premium obunani qanday bekor qilaman?',
-            answer: 'Sozlamalar > Obuna bo\'limiga o\'ting va "Bekor qilish" tugmasini bosing. Obuna davri oxirigacha Premium imkoniyatlardan foydalanishingiz mumkin.'
-        },
+        { category: 'buying', question: t('faq.q1') || 'How do I buy an account?', answer: t('faq.a1') || 'Select an account, click "Buy", choose payment method and complete payment. Account details will be sent after confirmation.' },
+        { category: 'buying', question: t('faq.q2') || 'How does payment work?', answer: t('faq.a2') || 'We accept Payme, Click, Paynet, Uzcard and Humo. All payments are secure and encrypted.' },
+        { category: 'buying', question: t('faq.q3') || 'What if the account doesn\'t work?', answer: t('faq.a3') || 'Click "Report" within 48 hours. Our moderators will review and if confirmed, a full refund will be issued.' },
+        { category: 'buying', question: t('faq.q4') || 'How long to verify an account?', answer: t('faq.a4') || 'You have 48 hours after purchase to verify the account. Issues within this period are eligible for refund.' },
+        { category: 'selling', question: t('faq.q5') || 'How do I sell my account?', answer: t('faq.a5') || 'Go to "Sell" page, fill in account details and submit. After moderation, your listing will appear on the site.' },
+        { category: 'selling', question: t('faq.q6') || 'What is the commission?', answer: t('faq.a6') || 'Free plan: 10%, Premium: 8%, Pro: 5%. Pro plan is the most beneficial!' },
+        { category: 'selling', question: t('faq.q7') || 'When do I receive payment?', answer: t('faq.a7') || 'Within 1-3 business days after the buyer confirms the account.' },
+        { category: 'selling', question: t('faq.q8') || 'Why was my listing rejected?', answer: t('faq.a8') || 'Listings are rejected for: incorrect info, low-quality images, or prohibited content.' },
+        { category: 'security', question: t('faq.q9') || 'What is the Escrow system?', answer: t('faq.a9') || 'Escrow holds payment until the buyer confirms the account. This protects both parties.' },
+        { category: 'security', question: t('faq.q10') || 'How to protect against fraud?', answer: t('faq.a10') || 'Only trade through the platform. Never pay outside. Report suspicious listings. Our moderators work 24/7.' },
+        { category: 'security', question: t('faq.q11') || 'Is my data safe?', answer: t('faq.a11') || 'Yes, we use SSL encryption and secure servers. Account details are only shown after purchase confirmation.' },
+        { category: 'account', question: t('faq.q12') || 'I forgot my password', answer: t('faq.a12') || 'Click "Forgot password?" on the login page. A reset link will be sent to your email.' },
+        { category: 'account', question: t('faq.q13') || 'How to delete my account?', answer: t('faq.a13') || 'Go to Settings > Delete Account. Note: deleted accounts cannot be restored.' },
+        { category: 'account', question: t('faq.q14') || 'How to cancel Premium?', answer: t('faq.a14') || 'Go to Settings > Subscription and click "Cancel". You can use Premium features until period ends.' },
     ];
 
     const filteredFaqs = faqs.filter(faq => {
@@ -95,102 +42,181 @@ const FAQPage = () => {
     });
 
     return (
-        <div className="min-h-screen" style={{ paddingTop: '140px', paddingBottom: '64px' }}>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
+            <div className="gh-container" style={{ maxWidth: '800px' }}>
+                {/* Breadcrumbs */}
+                <div className="breadcrumbs">
+                    <Link to="/">Home</Link>
+                    <span className="breadcrumb-separator">/</span>
+                    <span className="breadcrumb-current">FAQ</span>
+                </div>
+
                 {/* Header */}
-                <div className="flex flex-col items-center mb-14">
-                    <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-50 border border-blue-200 rounded-full text-blue-600 text-sm font-medium mb-6">
-                        <HelpCircle className="w-4 h-4" />
-                        Yordam markazi
+                <div className="text-center" style={{ paddingTop: '32px', marginBottom: '40px' }}>
+                    <div
+                        className="badge badge-blue inline-flex items-center gap-2"
+                        style={{ padding: '6px 14px', marginBottom: '20px', fontSize: '13px' }}
+                    >
+                        <HelpCircle className="w-3.5 h-3.5" />
+                        <span>{t('faq.badge') || 'Help Center'}</span>
                     </div>
-                    <h1 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-5" style={{ textAlign: 'center' }}>
-                        Ko&apos;p beriladigan savollar
+                    <h1 style={{
+                        fontSize: 'clamp(28px, 4vw, 36px)',
+                        fontWeight: 'var(--font-weight-bold)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '12px',
+                    }}>
+                        {t('faq.title') || 'Frequently Asked Questions'}
                     </h1>
-                    <p className="text-gray-500 text-lg" style={{ textAlign: 'center' }}>
-                        Savolingizga javob toping yoki biz bilan bog&apos;laning
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-lg)' }}>
+                        {t('faq.subtitle') || 'Find answers or contact us'}
                     </p>
                 </div>
 
                 {/* Search */}
-                <div className="relative mb-10">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <div className="relative" style={{ marginBottom: '24px' }}>
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Savol qidiring..."
-                        className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 shadow-sm"
+                        placeholder={t('faq.search') || 'Search questions...'}
+                        className="input input-md"
+                        style={{ paddingLeft: '36px' }}
                     />
                 </div>
 
                 {/* Categories */}
-                <div className="flex flex-wrap justify-center gap-3 mb-10">
+                <div className="flex flex-wrap justify-center gap-2" style={{ marginBottom: '32px' }}>
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
                             onClick={() => setActiveCategory(cat.id)}
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium transition-all ${activeCategory === cat.id
-                                ? 'bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/25'
-                                : 'bg-white text-gray-600 border border-slate-200 hover:border-blue-300 hover:bg-blue-50'
-                                }`}
-                            style={activeCategory === cat.id ? { color: '#ffffff' } : {}}
+                            className={`btn btn-sm flex items-center gap-2 ${activeCategory === cat.id ? 'btn-primary' : 'btn-secondary'}`}
                         >
-                            <cat.icon className="w-4 h-4" />
+                            <cat.icon className="w-3.5 h-3.5" />
                             {cat.label}
                         </button>
                     ))}
                 </div>
 
                 {/* FAQ List */}
-                <div className="space-y-4">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '48px' }}>
                     {filteredFaqs.length > 0 ? (
                         filteredFaqs.map((faq, index) => (
                             <div
                                 key={index}
-                                className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                                className="faq-item-hover"
+                                style={{
+                                    borderRadius: 'var(--radius-lg)',
+                                    border: '1px solid var(--color-border-default)',
+                                    backgroundColor: 'var(--color-bg-primary)',
+                                    overflow: 'hidden',
+                                }}
                             >
                                 <button
                                     onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                    className="w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 transition-colors"
+                                    className="w-full flex items-center justify-between text-left"
+                                    style={{
+                                        padding: '16px 20px',
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                    }}
                                 >
-                                    <span className="font-semibold text-gray-800 pr-4">{faq.question}</span>
-                                    <ChevronDown className={`w-5 h-5 text-blue-500 transition-transform flex-shrink-0 ${openIndex === index ? 'rotate-180' : ''
-                                        }`} />
+                                    <span style={{
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        color: 'var(--color-text-primary)',
+                                        fontSize: 'var(--font-size-base)',
+                                        paddingRight: '16px',
+                                    }}>
+                                        {faq.question}
+                                    </span>
+                                    <ChevronDown
+                                        className="w-4 h-4 flex-shrink-0"
+                                        style={{
+                                            color: 'var(--color-text-muted)',
+                                            transition: 'transform 0.2s ease',
+                                            transform: openIndex === index ? 'rotate(180deg)' : 'rotate(0deg)',
+                                        }}
+                                    />
                                 </button>
                                 {openIndex === index && (
-                                    <div className="px-6 pb-6 text-gray-600 border-t border-slate-100 pt-4 leading-relaxed">
+                                    <div
+                                        className="animate-fadeIn"
+                                        style={{
+                                            padding: '0 20px 16px',
+                                            color: 'var(--color-text-secondary)',
+                                            fontSize: 'var(--font-size-sm)',
+                                            lineHeight: 'var(--line-height-lg)',
+                                            borderTop: '1px solid var(--color-border-muted)',
+                                            paddingTop: '16px',
+                                        }}
+                                    >
                                         {faq.answer}
                                     </div>
                                 )}
                             </div>
                         ))
                     ) : (
-                        <div className="text-center py-16">
-                            <HelpCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500">Hech narsa topilmadi</p>
+                        <div className="text-center" style={{ padding: '64px 16px' }}>
+                            <HelpCircle className="w-12 h-12 mx-auto" style={{ color: 'var(--color-text-muted)', marginBottom: '16px' }} />
+                            <p style={{ color: 'var(--color-text-secondary)' }}>
+                                {t('faq.no_results') || 'No questions found'}
+                            </p>
                         </div>
                     )}
                 </div>
 
-                {/* Contact */}
-                <div className="mt-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-10 text-center shadow-lg shadow-blue-500/20">
-                    <MessageCircle className="w-12 h-12 mx-auto mb-4" style={{ color: '#ffffff' }} />
-                    <h3 className="text-xl font-bold mb-3" style={{ color: '#ffffff' }}>Javob topmadingizmi?</h3>
-                    <p className="mb-8" style={{ color: 'rgba(255,255,255,0.85)' }}>Bizning qo&apos;llab-quvvatlash jamoamiz sizga yordam beradi</p>
-                    <div className="flex flex-wrap justify-center gap-4">
-                        <a
-                            href="https://t.me/wibestoreuz"
-                            className="flex items-center gap-2 px-6 py-3 bg-white rounded-xl text-blue-600 font-medium hover:bg-blue-50 transition-colors"
-                        >
-                            💬 Telegram orqali
-                        </a>
-                        <a
-                            href="mailto:support@wibestore.uz"
-                            className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium border-2 transition-colors"
-                            style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#ffffff' }}
-                        >
-                            📧 Email orqali
-                        </a>
+                {/* Contact CTA */}
+                <div
+                    className="text-center"
+                    style={{
+                        padding: '40px 32px',
+                        borderRadius: 'var(--radius-xl)',
+                        backgroundColor: 'var(--color-accent-blue)',
+                        position: 'relative',
+                        overflow: 'hidden',
+                    }}
+                >
+                    <div style={{ position: 'absolute', inset: 0, opacity: 0.06, pointerEvents: 'none' }}>
+                        <div style={{ position: 'absolute', top: '-30%', right: '-10%', width: '250px', height: '250px', background: '#fff', borderRadius: '50%', filter: 'blur(60px)' }} />
+                    </div>
+                    <div style={{ position: 'relative' }}>
+                        <MessageCircle className="w-10 h-10 mx-auto" style={{ color: '#ffffff', marginBottom: '16px' }} />
+                        <h3 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: '#ffffff', marginBottom: '8px' }}>
+                            {t('faq.contact_title') || "Didn't find your answer?"}
+                        </h3>
+                        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '24px' }}>
+                            {t('faq.contact_subtitle') || 'Our support team is here to help you'}
+                        </p>
+                        <div className="flex flex-wrap justify-center gap-3">
+                            <a
+                                href="https://t.me/wibestoreuz"
+                                className="btn btn-lg"
+                                style={{
+                                    backgroundColor: '#ffffff',
+                                    color: 'var(--color-accent-blue)',
+                                    textDecoration: 'none',
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                }}
+                            >
+                                💬 Telegram
+                            </a>
+                            <a
+                                href="mailto:support@wibestore.uz"
+                                className="btn btn-lg"
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    border: '2px solid rgba(255,255,255,0.3)',
+                                    color: '#ffffff',
+                                    textDecoration: 'none',
+                                    fontWeight: 'var(--font-weight-semibold)',
+                                }}
+                            >
+                                📧 Email
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

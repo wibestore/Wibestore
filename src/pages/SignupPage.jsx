@@ -25,24 +25,22 @@ const SignupPage = () => {
         e.preventDefault();
         setError('');
 
-        // Validation
         if (formData.password !== formData.confirmPassword) {
-            setError(t('signup.password_mismatch'));
+            setError(t('signup.password_mismatch') || 'Passwords do not match');
             return;
         }
 
         if (formData.password.length < 6) {
-            setError(t('signup.password_short'));
+            setError(t('signup.password_short') || 'Password must be at least 6 characters');
             return;
         }
 
         if (!formData.agreeTerms) {
-            setError(t('signup.agree_terms'));
+            setError(t('signup.agree_terms') || 'You must agree to the terms');
             return;
         }
 
         setIsLoading(true);
-
         try {
             const newUser = await register({
                 name: formData.name,
@@ -50,7 +48,7 @@ const SignupPage = () => {
                 phone: formData.phone,
                 password: formData.password
             });
-            sendWelcomeEmail(newUser);  // Xush kelibsiz emaili
+            sendWelcomeEmail(newUser);
             navigate('/');
         } catch (err) {
             setError(err.message);
@@ -59,159 +57,197 @@ const SignupPage = () => {
         }
     };
 
+    const handleChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
     return (
-        <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
-            <div className="w-full max-w-md px-4">
-                {/* Logo */}
-                <div className="text-center mb-8">
-                    <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                            <Gamepad2 className="w-7 h-7" style={{ color: '#ffffff' }} />
+        <div
+            className="page-enter flex items-center justify-center"
+            style={{ minHeight: 'calc(100vh - 64px)', padding: '32px 16px' }}
+        >
+            <div style={{ width: '100%', maxWidth: '440px' }}>
+                {/* Header */}
+                <div className="text-center" style={{ marginBottom: '24px' }}>
+                    <div
+                        className="flex items-center justify-center mx-auto"
+                        style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: 'var(--radius-xl)',
+                            background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                            marginBottom: '20px',
+                        }}
+                    >
+                        <Gamepad2 className="w-6 h-6" style={{ color: '#ffffff' }} />
+                    </div>
+                    <h1
+                        style={{
+                            fontSize: 'var(--font-size-2xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            color: 'var(--color-text-primary)',
+                            marginBottom: '8px',
+                        }}
+                    >
+                        {t('signup.title') || 'Create your account'}
+                    </h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)' }}>
+                        {t('signup.subtitle') || 'Join WibeStore marketplace'}
+                    </p>
+                </div>
+
+                {/* Features Badge */}
+                <div
+                    style={{
+                        padding: '12px 16px',
+                        borderRadius: 'var(--radius-lg)',
+                        backgroundColor: 'var(--color-info-bg)',
+                        border: '1px solid var(--color-border-muted)',
+                        marginBottom: '20px',
+                    }}
+                >
+                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+                        <CheckCircle className="w-4 h-4" style={{ color: 'var(--color-accent-green)' }} />
+                        <span>{t('signup.feature1') || 'Free account'} <span style={{ color: 'var(--color-text-accent)', fontWeight: 500 }}>{t('signup.feature1_and') || '& instant access'}</span></span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        <CheckCircle className="w-4 h-4" style={{ color: 'var(--color-accent-green)' }} />
+                        <span>{t('signup.feature2') || 'Secure transactions'}</span>
+                    </div>
+                </div>
+
+                {/* Form Card */}
+                <div
+                    style={{
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border-default)',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: '24px',
+                    }}
+                >
+                    {/* Error */}
+                    {error && (
+                        <div
+                            className="flex items-center gap-2"
+                            style={{
+                                padding: '12px',
+                                borderRadius: 'var(--radius-md)',
+                                backgroundColor: 'var(--color-error-bg)',
+                                color: 'var(--color-error)',
+                                fontSize: 'var(--font-size-sm)',
+                                marginBottom: '16px',
+                            }}
+                        >
+                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                            <span>{error}</span>
                         </div>
-                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
-                            wibestore.uz
-                        </span>
-                    </Link>
-                    <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('signup.title')}</h1>
-                    <p className="text-gray-500">{t('signup.subtitle')}</p>
-                </div>
+                    )}
 
-                {/* Features */}
-                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
-                    <div className="flex items-center gap-3 text-sm">
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                        <span className="text-gray-600">{t('signup.feature1')} <span className="text-blue-600 font-medium">{t('signup.feature1_and')}</span> {t('signup.feature1_end')}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm mt-2">
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                        <span className="text-gray-600">{t('signup.feature2')}</span>
-                    </div>
-                </div>
-
-                {/* Signup Form */}
-                <div className="bg-white rounded-2xl p-8 border border-blue-100 shadow-lg">
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Error Message */}
-                        {error && (
-                            <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400">
-                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                                <span className="text-sm">{error}</span>
-                            </div>
-                        )}
-
+                    <form onSubmit={handleSubmit}>
                         {/* Name */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                {t('signup.name')}
-                            </label>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label className="input-label">{t('signup.name') || 'Full Name'}</label>
                             <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                                 <input
                                     type="text"
                                     value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder={t('signup.name_placeholder')}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
-                                    style={{ paddingLeft: '52px' }}
+                                    onChange={(e) => handleChange('name', e.target.value)}
+                                    placeholder={t('signup.name_placeholder') || 'Enter your name'}
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px' }}
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Email */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                {t('signup.email')}
-                            </label>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label className="input-label">{t('signup.email') || 'Email'}</label>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                                 <input
                                     type="email"
                                     value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    placeholder={t('signup.email_placeholder')}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
-                                    style={{ paddingLeft: '52px' }}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    placeholder={t('signup.email_placeholder') || 'you@example.com'}
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px' }}
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Phone */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                {t('signup.phone')}
-                            </label>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label className="input-label">{t('signup.phone') || 'Phone'}</label>
                             <div className="relative">
-                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                                 <input
                                     type="tel"
                                     value={formData.phone}
-                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    placeholder={t('signup.phone_placeholder')}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
-                                    style={{ paddingLeft: '52px' }}
+                                    onChange={(e) => handleChange('phone', e.target.value)}
+                                    placeholder={t('signup.phone_placeholder') || '+998 90 123 45 67'}
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px' }}
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Password */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                {t('signup.password')}
-                            </label>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label className="input-label">{t('signup.password') || 'Password'}</label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    placeholder={t('signup.password_placeholder')}
-                                    className="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
-                                    style={{ paddingLeft: '52px' }}
+                                    onChange={(e) => handleChange('password', e.target.value)}
+                                    placeholder={t('signup.password_placeholder') || '••••••••'}
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px', paddingRight: '40px' }}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                                    style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
                                 >
-                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
                         </div>
 
                         {/* Confirm Password */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                {t('signup.confirm_password')}
-                            </label>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label className="input-label">{t('signup.confirm_password') || 'Confirm Password'}</label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.confirmPassword}
-                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    placeholder={t('signup.confirm_placeholder')}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
-                                    style={{ paddingLeft: '52px' }}
+                                    onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                                    placeholder={t('signup.confirm_placeholder') || 'Repeat password'}
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px' }}
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Terms */}
-                        <label className="flex items-start gap-3 cursor-pointer">
+                        <label className="flex items-start gap-2 cursor-pointer" style={{ marginBottom: '20px' }}>
                             <input
                                 type="checkbox"
                                 checked={formData.agreeTerms}
-                                onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })}
-                                className="w-4 h-4 mt-0.5 rounded border-slate-300 bg-slate-50 text-blue-500 focus:ring-blue-500"
+                                onChange={(e) => handleChange('agreeTerms', e.target.checked)}
+                                style={{ marginTop: '2px', accentColor: 'var(--color-accent-blue)' }}
                             />
-                            <span className="text-sm text-gray-500">
-                                <Link to="/terms" className="text-blue-500 hover:underline">{t('signup.terms')}</Link> va{' '}
-                                <Link to="/terms" className="text-blue-500 hover:underline">{t('signup.privacy')}</Link>{t('signup.agree')}
+                            <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                                <Link to="/terms" style={{ color: 'var(--color-text-accent)' }}>{t('signup.terms') || 'Terms'}</Link>{' '}
+                                {t('signup.agree') || 'and Privacy Policy'}
                             </span>
                         </label>
 
@@ -219,19 +255,29 @@ const SignupPage = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-4 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            style={{ color: '#ffffff' }}
+                            className="btn btn-primary btn-lg w-full"
                         >
-                            {isLoading ? t('signup.loading') : t('signup.submit')}
+                            {isLoading && <span className="spinner" />}
+                            {t('signup.submit') || 'Create Account'}
                         </button>
                     </form>
                 </div>
 
                 {/* Login Link */}
-                <p className="text-center mt-6 text-gray-400">
-                    {t('signup.has_account')}{' '}
-                    <Link to="/login" className="text-blue-500 hover:underline font-medium">
-                        {t('signup.login_link')}
+                <p
+                    className="text-center"
+                    style={{
+                        marginTop: '24px',
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-secondary)',
+                    }}
+                >
+                    {t('signup.has_account') || 'Already have an account?'}{' '}
+                    <Link
+                        to="/login"
+                        style={{ color: 'var(--color-text-accent)', fontWeight: 'var(--font-weight-semibold)', textDecoration: 'none' }}
+                    >
+                        {t('signup.login_link') || 'Sign in'}
                     </Link>
                 </p>
             </div>

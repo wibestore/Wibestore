@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Gamepad2, Flame, Star, LogIn, UserPlus, Package, User, LogOut, ChevronDown, Settings, PlusCircle, Sun, Moon, Coins, Trophy, Globe } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon, Bell, User, LogOut, Settings, ShoppingBag, Heart, Crown, Gamepad2, ChevronDown, Globe } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCoins } from '../context/CoinContext';
@@ -8,300 +8,423 @@ import { useLanguage, languages as langList } from '../context/LanguageContext';
 import NotificationWidget from './NotificationWidget';
 
 const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const { user, isAuthenticated, logout } = useAuth();
+    const { theme, toggleTheme, isDark } = useTheme();
+    const { coins } = useCoins();
+    const { t, language, setLanguage, languages: langs } = useLanguage();
     const location = useLocation();
     const navigate = useNavigate();
-    const { user, isAuthenticated, logout } = useAuth();
-    const { theme, toggleTheme } = useTheme();
-    const { balance } = useCoins();
-    const { t, language, setLanguage } = useLanguage();
-    const dropdownRef = useRef(null);
-    const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-    const langRef = useRef(null);
 
-    // Close user dropdown on outside click
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isLangOpen, setIsLangOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const profileRef = useRef(null);
+    const langRef = useRef(null);
+    const searchInputRef = useRef(null);
+
+    // Ctrl+K keyboard shortcut for search
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInputRef.current?.focus();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    // Close dropdowns on outside click or Escape
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setIsUserMenuOpen(false);
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
+                setIsProfileOpen(false);
             }
             if (langRef.current && !langRef.current.contains(e.target)) {
-                setIsLangMenuOpen(false);
+                setIsLangOpen(false);
+            }
+        };
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                setIsProfileOpen(false);
+                setIsLangOpen(false);
+                setIsMobileMenuOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
+        };
     }, []);
 
+    // Scroll detection
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
-        window.addEventListener('scroll', handleScroll);
+        const handleScroll = () => setIsScrolled(window.scrollY > 8);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close menus on route change
+    // Close mobile menu on route change
     useEffect(() => {
         setIsMobileMenuOpen(false);
-        setIsUserMenuOpen(false);
-        setIsLangMenuOpen(false);
-    }, [location]);
+        setIsProfileOpen(false);
+    }, [location.pathname]);
 
     const handleLogout = () => {
         logout();
-        setIsUserMenuOpen(false);
+        setIsProfileOpen(false);
         navigate('/');
     };
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchQuery('');
+        }
+    };
+
     const navLinks = [
-        { to: '/products', icon: Package, label: t('nav.products') },
-        { to: '/top', icon: Flame, label: t('nav.top') },
-        { to: '/statistics', icon: Trophy, label: t('nav.statistics') },
-        { to: '/premium', icon: Star, label: t('nav.premium'), premium: true },
+        { to: '/products', label: t('nav.products') || 'Products' },
+        { to: '/top', label: t('nav.top') || 'Top' },
+        { to: '/statistics', label: t('nav.statistics') || 'Statistics' },
+        { to: '/premium', label: t('nav.premium') || 'Premium', icon: Crown },
     ];
 
-    const currentLang = langList.find(l => l.code === language);
+    const isActive = (path) => location.pathname === path;
+
+    const currentLang = langList.find(l => l.code === language) || langList[0];
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 h-18 z-50 transition-all duration-300 ${isScrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-blue-500/5'
-            : 'bg-white/90 backdrop-blur-lg'
-            } border-b border-blue-100`}>
-            <div className="sl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-                <div className="flex items-center justify-between h-full">
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30 animate-pulse-glow group-hover:scale-105 transition-transform">
-                            <Gamepad2 className="w-6 h-6" style={{ color: '#ffffff' }} />
-                        </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
-                            wibestore.uz
-                        </span>
-                    </Link>
-
-                    {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-4">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.to}
-                                to={link.to}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 relative overflow-hidden group ${link.premium
-                                    ? 'text-yellow-500 hover:bg-yellow-50'
-                                    : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-                                    } ${location.pathname === link.to ? 'bg-blue-50 text-blue-600' : ''}`}
-                            >
-                                <link.icon className={`w-4 h-4 ${link.premium ? 'text-yellow-500' : ''}`} />
-                                {link.label}
-                            </Link>
-                        ))}
+        <nav
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${isScrolled
+                ? 'border-b shadow-sm'
+                : 'border-b border-transparent'
+                }`}
+            style={{
+                height: '64px',
+                backgroundColor: isScrolled
+                    ? (isDark ? 'rgba(13, 17, 23, 0.95)' : 'rgba(255, 255, 255, 0.97)')
+                    : (isDark ? 'rgba(13, 17, 23, 0.8)' : 'rgba(255, 255, 255, 0.85)'),
+                backdropFilter: 'blur(12px)',
+                borderColor: isScrolled ? 'var(--color-border-default)' : 'transparent',
+            }}
+            role="navigation"
+            aria-label="Main navigation"
+        >
+            <div className="gh-container h-full flex items-center justify-between gap-4">
+                {/* Logo */}
+                <Link
+                    to="/"
+                    className="flex items-center gap-2.5 flex-shrink-0"
+                    style={{ textDecoration: 'none' }}
+                >
+                    <div
+                        className="flex items-center justify-center rounded-lg"
+                        style={{
+                            width: '32px',
+                            height: '32px',
+                            background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                        }}
+                    >
+                        <Gamepad2 className="w-5 h-5" style={{ color: '#fff' }} />
                     </div>
+                    <span
+                        className="text-lg font-bold hidden sm:block"
+                        style={{ color: 'var(--color-text-primary)' }}
+                    >
+                        WibeStore
+                    </span>
+                </Link>
 
-                    {/* Auth Section */}
-                    <div className="hidden lg:flex items-center gap-3">
-                        {/* Language Switcher */}
-                        <div className="relative" ref={langRef}>
-                            <button
-                                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors text-sm font-medium text-gray-600"
-                            >
-                                <Globe className="w-4 h-4 text-blue-500" />
-                                <span>{currentLang?.flag}</span>
-                                <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
-                            </button>
-                            {isLangMenuOpen && (
-                                <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl border border-blue-100 shadow-xl overflow-hidden z-50">
-                                    {langList.map((lang) => (
-                                        <button
-                                            key={lang.code}
-                                            onClick={() => { setLanguage(lang.code); setIsLangMenuOpen(false); }}
-                                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${language === lang.code
-                                                ? 'bg-blue-50 text-blue-600 font-medium'
-                                                : 'text-gray-600 hover:bg-blue-50'
-                                                }`}
-                                        >
-                                            <span className="text-lg">{lang.flag}</span>
-                                            {lang.name}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Theme Toggle */}
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors"
-                            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                {/* Desktop Navigation */}
+                <div className="hidden lg:flex items-center gap-1">
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.to}
+                            to={link.to}
+                            className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium nav-link-hover`}
+                            style={{
+                                color: isActive(link.to) ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                                backgroundColor: isActive(link.to) ? 'var(--color-bg-secondary)' : 'transparent',
+                                textDecoration: 'none',
+                            }}
                         >
-                            {theme === 'dark' ? (
-                                <Sun className="w-5 h-5 text-yellow-400" />
-                            ) : (
-                                <Moon className="w-5 h-5 text-blue-500" />
-                            )}
+                            {link.icon && <link.icon className="w-4 h-4" style={{ color: 'var(--color-premium-gold-light)' }} />}
+                            {link.label}
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Search Bar (Desktop) */}
+                <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-4">
+                    <div className="relative w-full">
+                        <Search
+                            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                            style={{ color: 'var(--color-text-muted)' }}
+                        />
+                        <input
+                            type="text"
+                            placeholder={t('nav.search') || 'Search accounts...'}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            ref={searchInputRef}
+                            className="input input-md w-full"
+                            style={{ paddingLeft: '36px', height: '32px', fontSize: '13px' }}
+                            aria-label="Search"
+                        />
+                        <kbd
+                            className="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center px-1.5 py-0.5 rounded text-xs"
+                            style={{
+                                backgroundColor: 'var(--color-bg-tertiary)',
+                                color: 'var(--color-text-muted)',
+                                border: '1px solid var(--color-border-default)',
+                                fontSize: '10px',
+                            }}
+                        >
+                            Ctrl+K
+                        </kbd>
+                    </div>
+                </form>
+
+                {/* Right Actions */}
+                <div className="flex items-center gap-1">
+                    {/* Language Switcher */}
+                    <div className="relative" ref={langRef}>
+                        <button
+                            onClick={() => setIsLangOpen(!isLangOpen)}
+                            className="btn btn-ghost btn-sm flex items-center gap-1"
+                            aria-label="Change language"
+                            aria-haspopup="true"
+                            aria-expanded={isLangOpen}
+                            style={{ padding: '0 8px' }}
+                        >
+                            <Globe className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                            <span className="hidden sm:inline text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                {currentLang.flag}
+                            </span>
                         </button>
 
-                        {isAuthenticated && user ? (
-                            <>
-                                {/* Coin Balance */}
-                                <Link to="/coins" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 hover:bg-yellow-500/20 transition-colors">
-                                    <Coins className="w-4 h-4 text-yellow-400" />
-                                    <span className="text-sm font-semibold text-yellow-400">{balance}</span>
-                                </Link>
-
-                                {/* Sell Button */}
-                                <Link
-                                    to="/sell"
-                                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90 transition-opacity"
-                                    style={{ color: '#ffffff' }}
-                                >
-                                    <PlusCircle className="w-4 h-4" />
-                                    {t('nav.sell')}
-                                </Link>
-
-                                {/* Notifications */}
-                                <NotificationWidget />
-
-                                <div className="relative" ref={dropdownRef}>
+                        {isLangOpen && (
+                            <div
+                                className="dropdown-menu absolute right-0 mt-1"
+                                role="menu"
+                                aria-label="Language selection"
+                                style={{ minWidth: '140px' }}
+                            >
+                                {langList.map((lang) => (
                                     <button
-                                        onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                        className="flex items-center gap-3 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors"
+                                        key={lang.code}
+                                        onClick={() => { setLanguage(lang.code); setIsLangOpen(false); }}
+                                        className={`dropdown-item ${language === lang.code ? 'dropdown-item-active' : ''}`}
                                     >
-                                        <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-sm font-bold" style={{ color: '#ffffff' }}>
-                                            {user.name?.charAt(0) || 'U'}
-                                        </div>
-                                        <span className="text-gray-700 text-sm font-medium">{user.name?.split(' ')[0] || 'User'}</span>
-                                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                                        <span>{lang.flag}</span>
+                                        <span>{lang.name}</span>
                                     </button>
-
-                                    {/* Dropdown Menu */}
-                                    {isUserMenuOpen && (
-                                        <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl border border-blue-100 shadow-xl overflow-hidden">
-                                            <div className="p-4 border-b border-blue-100">
-                                                <p className="text-gray-800 font-medium">{user.name}</p>
-                                                <p className="text-sm text-gray-500">{user.email}</p>
-                                            </div>
-                                            <div className="p-2">
-                                                <Link
-                                                    to="/profile"
-                                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors"
-                                                >
-                                                    <User className="w-4 h-4" />
-                                                    {t('nav.profile')}
-                                                </Link>
-                                                <Link
-                                                    to="/settings"
-                                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors"
-                                                >
-                                                    <Settings className="w-4 h-4" />
-                                                    {t('nav.settings')}
-                                                </Link>
-                                                <button
-                                                    onClick={handleLogout}
-                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors"
-                                                >
-                                                    <LogOut className="w-4 h-4" />
-                                                    {t('nav.logout')}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    to="/login"
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-gray-600 border border-blue-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
-                                >
-                                    <LogIn className="w-4 h-4" />
-                                    {t('nav.login')}
-                                </Link>
-                                <Link
-                                    to="/signup"
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all duration-200"
-                                    style={{ color: '#ffffff' }}
-                                >
-                                    <UserPlus className="w-4 h-4" />
-                                    {t('nav.signup')}
-                                </Link>
-                            </>
+                                ))}
+                            </div>
                         )}
                     </div>
 
-                    {/* Mobile Menu Button */}
+                    {/* Theme Toggle */}
                     <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="lg:hidden p-2 text-gray-500 hover:text-blue-600 transition-colors"
+                        onClick={toggleTheme}
+                        className="btn btn-ghost btn-sm"
+                        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                        style={{ padding: '0 8px' }}
                     >
-                        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        {isDark ? (
+                            <Sun className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                        ) : (
+                            <Moon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                        )}
+                    </button>
+
+                    {/* Notifications */}
+                    {isAuthenticated && (
+                        <NotificationWidget />
+                    )}
+
+                    {/* Auth actions */}
+                    {isAuthenticated ? (
+                        <div className="relative" ref={profileRef}>
+                            <button
+                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                className="flex items-center gap-2 btn btn-ghost btn-sm"
+                                style={{ padding: '0 8px' }}
+                                aria-label="User menu"
+                                aria-haspopup="true"
+                                aria-expanded={isProfileOpen}
+                            >
+                                <div className="avatar avatar-sm" style={{
+                                    backgroundColor: 'var(--color-accent-blue)',
+                                    color: '#fff'
+                                }}>
+                                    {user?.avatar ? (
+                                        <img src={user.avatar} alt="" />
+                                    ) : (
+                                        <span style={{ fontSize: '11px' }}>
+                                            {(user?.name || 'U').charAt(0).toUpperCase()}
+                                        </span>
+                                    )}
+                                </div>
+                                <ChevronDown className="w-3 h-3 hidden sm:block" style={{ color: 'var(--color-text-muted)' }} />
+                            </button>
+
+                            {isProfileOpen && (
+                                <div
+                                    className="dropdown-menu absolute right-0 mt-1"
+                                    role="menu"
+                                    aria-label="User actions"
+                                    style={{ minWidth: '220px' }}
+                                >
+                                    {/* User info */}
+                                    <div style={{ padding: '12px 12px 8px' }}>
+                                        <div className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                                            {user?.name || 'User'}
+                                        </div>
+                                        <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                                            {user?.email || ''}
+                                        </div>
+                                        {coins > 0 && (
+                                            <div className="flex items-center gap-1 mt-1">
+                                                <span style={{ fontSize: '12px' }}>🪙</span>
+                                                <span className="text-xs font-medium" style={{ color: 'var(--color-premium-gold-light)' }}>
+                                                    {coins} coins
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="dropdown-divider" />
+
+                                    <Link to="/profile" className="dropdown-item" onClick={() => setIsProfileOpen(false)}>
+                                        <User className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                                        <span>{t('nav.profile') || 'Profile'}</span>
+                                    </Link>
+                                    <Link to="/sell" className="dropdown-item" onClick={() => setIsProfileOpen(false)}>
+                                        <ShoppingBag className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                                        <span>{t('nav.sell') || 'Sell Account'}</span>
+                                    </Link>
+                                    <Link to="/settings" className="dropdown-item" onClick={() => setIsProfileOpen(false)}>
+                                        <Settings className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                                        <span>{t('nav.settings') || 'Settings'}</span>
+                                    </Link>
+
+                                    <div className="dropdown-divider" />
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="dropdown-item"
+                                        style={{ color: 'var(--color-accent-red)' }}
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        <span>{t('nav.logout') || 'Log out'}</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <Link
+                                to="/login"
+                                className="btn btn-ghost btn-sm hidden sm:inline-flex"
+                                style={{ textDecoration: 'none', color: 'var(--color-text-primary)' }}
+                            >
+                                {t('nav.login') || 'Sign in'}
+                            </Link>
+                            <Link
+                                to="/signup"
+                                className="btn btn-primary btn-sm"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                {t('nav.signup') || 'Sign up'}
+                            </Link>
+                        </div>
+                    )}
+
+                    {/* Mobile menu toggle */}
+                    <button
+                        className="btn btn-ghost btn-sm lg:hidden"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                        aria-expanded={isMobileMenuOpen}
+                        style={{ padding: '0 8px' }}
+                    >
+                        {isMobileMenuOpen ? (
+                            <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+                        ) : (
+                            <Menu className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+                        )}
                     </button>
                 </div>
             </div>
 
             {/* Mobile Menu */}
-            <div className={`lg:hidden absolute top-full left-0 right-0 bg-white border-b border-blue-100 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-                }`}>
-                <div className="p-4 space-y-2">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.to}
-                            to={link.to}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${link.premium ? 'text-yellow-500' : 'text-gray-600'
-                                } hover:bg-blue-50`}
-                        >
-                            <link.icon className="w-5 h-5" />
-                            {link.label}
-                        </Link>
-                    ))}
+            {isMobileMenuOpen && (
+                <div
+                    className="lg:hidden animate-fadeIn"
+                    style={{
+                        backgroundColor: 'var(--color-bg-primary)',
+                        borderTop: '1px solid var(--color-border-default)',
+                        boxShadow: 'var(--shadow-lg)',
+                    }}
+                >
+                    {/* Mobile search */}
+                    <form onSubmit={handleSearch} className="p-4 md:hidden">
+                        <div className="relative">
+                            <Search
+                                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                                style={{ color: 'var(--color-text-muted)' }}
+                            />
+                            <input
+                                type="text"
+                                placeholder={t('nav.search') || 'Search...'}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="input input-md w-full"
+                                style={{ paddingLeft: '36px' }}
+                            />
+                        </div>
+                    </form>
 
-                    <div className="pt-4 mt-4 border-t border-blue-100">
-                        {isAuthenticated && user ? (
+                    {/* Nav links */}
+                    <div className="px-2 pb-4 space-y-0.5">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.to}
+                                to={link.to}
+                                className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors"
+                                style={{
+                                    color: isActive(link.to) ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                                    backgroundColor: isActive(link.to) ? 'var(--color-bg-secondary)' : 'transparent',
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                {link.icon && <link.icon className="w-4 h-4" style={{ color: 'var(--color-premium-gold-light)' }} />}
+                                {link.label}
+                            </Link>
+                        ))}
+
+                        {!isAuthenticated && (
                             <>
-                                <div className="flex items-center gap-3 px-4 py-3 mb-2">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-lg font-bold" style={{ color: '#ffffff' }}>
-                                        {user.name?.charAt(0) || 'U'}
-                                    </div>
-                                    <div>
-                                        <p className="text-gray-800 font-medium">{user.name}</p>
-                                        <p className="text-sm text-gray-500">{user.email}</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={handleLogout}
-                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
-                                >
-                                    <LogOut className="w-5 h-5" />
-                                    {t('nav.logout')}
-                                </button>
-                            </>
-                        ) : (
-                            <div className="space-y-2">
+                                <div className="divider my-2" />
                                 <Link
                                     to="/login"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-gray-600 border border-blue-200 hover:bg-blue-50 transition-colors"
+                                    className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"
+                                    style={{ color: 'var(--color-text-primary)', textDecoration: 'none' }}
                                 >
-                                    <LogIn className="w-5 h-5" />
-                                    {t('nav.login')}
+                                    {t('nav.login') || 'Sign in'}
                                 </Link>
-                                <Link
-                                    to="/signup"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500"
-                                    style={{ color: '#ffffff' }}
-                                >
-                                    <UserPlus className="w-5 h-5" />
-                                    {t('nav.signup')}
-                                </Link>
-                            </div>
+                            </>
                         )}
                     </div>
                 </div>
-            </div>
+            )}
         </nav>
     );
 };

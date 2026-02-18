@@ -7,231 +7,244 @@ import { sendLoginEmail } from '../lib/emailService';
 import { useLanguage } from '../context/LanguageContext';
 
 const LoginPage = () => {
-    const navigate = useNavigate();
-    const { login } = useAuth();
     const { t } = useLanguage();
+    const { login, loginWithGoogle } = useAuth();
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setIsLoading(true);
-
+        setLoading(true);
         try {
-            const loggedUser = await login(formData.email, formData.password);
-            sendLoginEmail(loggedUser);  // Email yuborish
+            await login(email, password);
+            await sendLoginEmail(email);
             navigate('/');
-        } catch (err) {
-            setError(err.message);
+        } catch {
+            setError(t('auth.invalid_credentials') || 'Invalid email or password');
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 
-    const handleGoogleLogin = useGoogleLogin({
+    const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                setIsLoading(true);
-                // Get user info from Google
-                const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
                 });
-                const googleUser = await userInfoResponse.json();
-
-                // Create user object
-                const user = {
-                    id: googleUser.sub,
-                    name: googleUser.name,
-                    email: googleUser.email,
-                    avatar: googleUser.picture,
-                    isPremium: false,
-                    isAdmin: false,
-                    createdAt: new Date().toISOString()
-                };
-
-                // Check if user exists in localStorage, if not add them
-                const savedUsers = localStorage.getItem('wibeUsers');
-                let users = savedUsers ? JSON.parse(savedUsers) : [];
-                const existingUser = users.find(u => u.email === googleUser.email);
-
-                if (existingUser) {
-                    // Update existing user's avatar if changed
-                    existingUser.avatar = googleUser.picture;
-                    localStorage.setItem('wibeUsers', JSON.stringify(users));
-                    localStorage.setItem('wibeUser', JSON.stringify(existingUser));
-                    sendLoginEmail(existingUser);  // Email yuborish
-                } else {
-                    users.push(user);
-                    localStorage.setItem('wibeUsers', JSON.stringify(users));
-                    localStorage.setItem('wibeUser', JSON.stringify(user));
-                    sendLoginEmail(user);  // Email yuborish
-                }
-
-                // Dispatch custom event to update AuthContext
-                window.dispatchEvent(new Event('storage'));
+                const data = await res.json();
+                await loginWithGoogle({
+                    id: data.sub,
+                    email: data.email,
+                    name: data.name,
+                    avatar: data.picture,
+                });
                 navigate('/');
             } catch {
-                setError('Google bilan kirishda xatolik yuz berdi');
-            } finally {
-                setIsLoading(false);
+                setError(t('auth.google_error') || 'Google login failed');
             }
         },
         onError: () => {
-            setError('Google bilan kirishda xatolik yuz berdi');
-        }
+            setError(t('auth.google_error') || 'Google login failed');
+        },
     });
 
     const handleTelegramClick = () => {
-        alert('Telegram bilan kirish tez orada ishga tushiriladi!');
+        window.open('https://t.me/wibestoreuz', '_blank');
     };
 
     return (
-        <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
-            <div className="w-full max-w-md px-4">
-                {/* Logo */}
-                <div className="text-center mb-8">
-                    <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                            <Gamepad2 className="w-7 h-7" style={{ color: '#ffffff' }} />
-                        </div>
-                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
-                            wibestore.uz
-                        </span>
-                    </Link>
-                    <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('login.welcome')}</h1>
-                    <p className="text-gray-500">{t('login.subtitle')}</p>
+        <div
+            className="page-enter flex items-center justify-center"
+            style={{
+                minHeight: 'calc(100vh - 64px)',
+                padding: '32px 16px',
+            }}
+        >
+            <div
+                style={{
+                    width: '100%',
+                    maxWidth: '400px',
+                }}
+            >
+                {/* Header */}
+                <div className="text-center" style={{ marginBottom: '32px' }}>
+                    <div
+                        className="flex items-center justify-center mx-auto"
+                        style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: 'var(--radius-xl)',
+                            background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                            marginBottom: '20px',
+                        }}
+                    >
+                        <Gamepad2 className="w-6 h-6" style={{ color: '#ffffff' }} />
+                    </div>
+                    <h1
+                        style={{
+                            fontSize: 'var(--font-size-2xl)',
+                            fontWeight: 'var(--font-weight-bold)',
+                            color: 'var(--color-text-primary)',
+                            marginBottom: '8px',
+                        }}
+                    >
+                        {t('auth.login_title') || 'Sign in to WibeStore'}
+                    </h1>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)' }}>
+                        {t('auth.login_subtitle') || 'Welcome back'}
+                    </p>
                 </div>
 
-                {/* Login Form */}
-                <div className="bg-white rounded-2xl p-8 border border-blue-100 shadow-lg">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Error Message */}
-                        {error && (
-                            <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400">
-                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                                <span className="text-sm">{error}</span>
-                            </div>
-                        )}
+                {/* Form Card */}
+                <div
+                    style={{
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border-default)',
+                        borderRadius: 'var(--radius-lg)',
+                        padding: '24px',
+                    }}
+                >
+                    {/* Error */}
+                    {error && (
+                        <div
+                            className="flex items-center gap-2"
+                            style={{
+                                padding: '12px',
+                                borderRadius: 'var(--radius-md)',
+                                backgroundColor: 'var(--color-error-bg)',
+                                color: 'var(--color-error)',
+                                fontSize: 'var(--font-size-sm)',
+                                marginBottom: '16px',
+                            }}
+                        >
+                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                            <span>{error}</span>
+                        </div>
+                    )}
 
+                    <form onSubmit={handleSubmit}>
                         {/* Email */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                {t('login.email')}
-                            </label>
+                        <div style={{ marginBottom: '16px' }}>
+                            <label className="input-label">{t('auth.email') || 'Email'}</label>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <Mail
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                                    style={{ color: 'var(--color-text-muted)' }}
+                                />
                                 <input
                                     type="email"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    placeholder={t('login.email_placeholder')}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
-                                    style={{ paddingLeft: '52px' }}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="you@example.com"
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px' }}
                                     required
+                                    autoComplete="email"
                                 />
                             </div>
                         </div>
 
                         {/* Password */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-2">
-                                {t('login.password')}
-                            </label>
+                        <div style={{ marginBottom: '16px' }}>
+                            <div className="flex items-center justify-between" style={{ marginBottom: '4px' }}>
+                                <label className="input-label" style={{ marginBottom: 0 }}>{t('auth.password') || 'Password'}</label>
+                                <Link
+                                    to="/forgot-password"
+                                    className="text-sm"
+                                    style={{ color: 'var(--color-text-accent)', textDecoration: 'none', fontSize: 'var(--font-size-sm)' }}
+                                >
+                                    {t('auth.forgot_password') || 'Forgot password?'}
+                                </Link>
+                            </div>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <Lock
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                                    style={{ color: 'var(--color-text-muted)' }}
+                                />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    placeholder={t('login.password_placeholder')}
-                                    className="w-full pl-12 pr-14 py-4 bg-slate-50 border border-slate-200 rounded-xl text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-colors"
-                                    style={{ paddingLeft: '52px' }}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    className="input input-md"
+                                    style={{ paddingLeft: '36px', paddingRight: '40px' }}
                                     required
+                                    autoComplete="current-password"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                                    style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
                                 >
-                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
-                        </div>
-
-                        {/* Remember & Forgot */}
-                        <div className="flex items-center justify-between">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="w-4 h-4 rounded border-slate-300 bg-slate-50 text-blue-500 focus:ring-blue-500"
-                                />
-                                <span className="text-sm text-gray-400">{t('login.remember')}</span>
-                            </label>
-                            <Link to="/forgot-password" className="text-sm text-blue-500 hover:underline">
-                                {t('login.forgot')}
-                            </Link>
                         </div>
 
                         {/* Submit */}
                         <button
                             type="submit"
-                            disabled={isLoading}
-                            className="w-full py-4 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            style={{ color: '#ffffff' }}
+                            className="btn btn-primary btn-lg w-full"
+                            disabled={loading}
                         >
-                            {isLoading ? t('login.loading') : t('login.submit')}
+                            {loading && <span className="spinner" />}
+                            {t('auth.login_btn') || 'Sign in'}
                         </button>
                     </form>
 
                     {/* Divider */}
-                    <div className="relative my-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-white/10"></div>
-                        </div>
-                        <div className="relative flex justify-center">
-                            <span className="px-4 bg-white text-sm text-gray-400">{t('login.or')}</span>
-                        </div>
+                    <div className="flex items-center gap-3" style={{ margin: '20px 0' }}>
+                        <div className="divider flex-1" />
+                        <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+                            {t('auth.or') || 'Or continue with'}
+                        </span>
+                        <div className="divider flex-1" />
                     </div>
 
                     {/* Social Login */}
-                    <div className="space-y-3">
+                    <div className="flex flex-col gap-3">
                         <button
-                            onClick={handleGoogleLogin}
-                            className="w-full flex items-center justify-center gap-3 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-gray-700 hover:bg-slate-100 transition-colors"
+                            onClick={() => googleLogin()}
+                            className="btn btn-secondary btn-lg w-full"
+                            style={{ gap: '8px' }}
                         >
-                            <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                            </svg>
-                            {t('login.google')}
+                            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" /></svg>
+                            Google
                         </button>
                         <button
                             onClick={handleTelegramClick}
-                            className="w-full flex items-center justify-center gap-3 py-3 bg-[#0088cc]/80 rounded-xl text-white opacity-50 cursor-not-allowed relative"
-                            disabled
-                            title="Tez orada ishga tushiriladi!"
+                            className="btn btn-secondary btn-lg w-full"
+                            style={{ gap: '8px' }}
                         >
-                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
-                            </svg>
-                            {t('login.telegram')}
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z" fill="#2AABEE" /><path d="M5.432 11.873l8.772-3.63c.65-.233 2.82-.935 2.82-.935s1.005-.39.922.558c-.027.39-.243 1.766-.458 3.256l-.676 4.403s-.057.65-.536.758c-.479.108-1.267-.39-1.404-.498-.108-.081-2.024-1.296-2.72-1.892-.19-.163-.406-.49.027-.87l2.845-2.72c.325-.307.65-1.024-.703-.152l-3.804 2.575s-.46.284-1.318.027c-.858-.257-1.857-.603-1.857-.603s-.693-.433.487-.893z" fill="#fff" /></svg>
+                            Telegram
                         </button>
                     </div>
                 </div>
 
-                {/* Sign Up Link */}
-                <p className="text-center mt-6 text-gray-400">
-                    {t('login.no_account')}{' '}
-                    <Link to="/signup" className="text-blue-500 hover:underline font-medium">
-                        {t('login.signup_link')}
+                {/* Sign up link */}
+                <p
+                    className="text-center"
+                    style={{
+                        marginTop: '24px',
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-secondary)',
+                    }}
+                >
+                    {t('auth.no_account') || "Don't have an account?"}{' '}
+                    <Link
+                        to="/signup"
+                        style={{ color: 'var(--color-text-accent)', fontWeight: 'var(--font-weight-semibold)', textDecoration: 'none' }}
+                    >
+                        {t('auth.signup_link') || 'Sign up'}
                     </Link>
                 </p>
             </div>

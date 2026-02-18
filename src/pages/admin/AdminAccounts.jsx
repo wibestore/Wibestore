@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Eye, EyeOff, Check, X, Crown, Ban, MoreVertical, Key, AlertCircle, RefreshCw } from 'lucide-react';
+import { Search, Eye, EyeOff, Check, X, Crown, Ban, Key, AlertCircle, RefreshCw } from 'lucide-react';
 import { formatPrice, games } from '../../data/mockData';
 
 const AdminAccounts = () => {
@@ -18,10 +18,7 @@ const AdminAccounts = () => {
         }
     };
 
-    // Load listings from localStorage
-    useEffect(() => {
-        loadListings();
-    }, []);
+    useEffect(() => { loadListings(); }, []);
 
     const statusFilters = [
         { value: 'all', label: 'Barchasi' },
@@ -32,23 +29,14 @@ const AdminAccounts = () => {
     ];
 
     const getStatusBadge = (status) => {
-        const styles = {
-            active: 'bg-green-500/20 text-green-400',
-            pending: 'bg-yellow-500/20 text-yellow-400',
-            rejected: 'bg-red-500/20 text-red-400',
-            sold: 'bg-blue-500/20 text-blue-400'
+        const config = {
+            active: { bg: 'var(--color-success-bg)', color: 'var(--color-accent-green)', label: 'Faol' },
+            pending: { bg: 'var(--color-warning-bg)', color: 'var(--color-accent-orange)', label: 'Kutilmoqda' },
+            rejected: { bg: 'var(--color-error-bg)', color: 'var(--color-accent-red)', label: 'Rad etilgan' },
+            sold: { bg: 'var(--color-info-bg)', color: 'var(--color-accent-blue)', label: 'Sotilgan' },
         };
-        const labels = {
-            active: 'Faol',
-            pending: 'Kutilmoqda',
-            rejected: 'Rad etilgan',
-            sold: 'Sotilgan'
-        };
-        return (
-            <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-500/20 text-gray-400'}`}>
-                {labels[status] || status}
-            </span>
-        );
+        const s = config[status] || { bg: 'var(--color-bg-tertiary)', color: 'var(--color-text-muted)', label: status };
+        return <span className="badge" style={{ backgroundColor: s.bg, color: s.color }}>{s.label}</span>;
     };
 
     const getGameName = (gameId) => {
@@ -57,39 +45,27 @@ const AdminAccounts = () => {
     };
 
     const handleApprove = (listing) => {
-        const updatedListings = listings.map(l => {
-            if (l.id === listing.id) {
-                return { ...l, status: 'active', approvedAt: new Date().toISOString() };
-            }
-            return l;
-        });
-        localStorage.setItem('wibeListings', JSON.stringify(updatedListings));
-        setListings(updatedListings);
+        const updated = listings.map(l => l.id === listing.id ? { ...l, status: 'active', approvedAt: new Date().toISOString() } : l);
+        localStorage.setItem('wibeListings', JSON.stringify(updated));
+        setListings(updated);
         setMessage({ type: 'success', text: `"${listing.title}" tasdiqlandi!` });
         setTimeout(() => setMessage({ type: '', text: '' }), 3000);
     };
 
     const handleReject = (listing) => {
         if (!window.confirm(`"${listing.title}" ni rad etmoqchimisiz?`)) return;
-
-        const updatedListings = listings.map(l => {
-            if (l.id === listing.id) {
-                return { ...l, status: 'rejected', rejectedAt: new Date().toISOString() };
-            }
-            return l;
-        });
-        localStorage.setItem('wibeListings', JSON.stringify(updatedListings));
-        setListings(updatedListings);
+        const updated = listings.map(l => l.id === listing.id ? { ...l, status: 'rejected', rejectedAt: new Date().toISOString() } : l);
+        localStorage.setItem('wibeListings', JSON.stringify(updated));
+        setListings(updated);
         setMessage({ type: 'success', text: `"${listing.title}" rad etildi!` });
         setTimeout(() => setMessage({ type: '', text: '' }), 3000);
     };
 
     const handleDelete = (listing) => {
         if (!window.confirm(`"${listing.title}" ni o'chirmoqchimisiz?`)) return;
-
-        const updatedListings = listings.filter(l => l.id !== listing.id);
-        localStorage.setItem('wibeListings', JSON.stringify(updatedListings));
-        setListings(updatedListings);
+        const updated = listings.filter(l => l.id !== listing.id);
+        localStorage.setItem('wibeListings', JSON.stringify(updated));
+        setListings(updated);
         setMessage({ type: 'success', text: `E'lon o'chirildi!` });
         setTimeout(() => setMessage({ type: '', text: '' }), 3000);
     };
@@ -110,22 +86,28 @@ const AdminAccounts = () => {
     const pendingCount = listings.filter(l => l.status === 'pending').length;
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between" style={{ gap: '16px' }}>
                 <div>
-                    <h1 className="text-2xl font-bold text-white mb-1">Akkauntlar</h1>
-                    <p className="text-gray-400 text-sm">Foydalanuvchi e'lonlarini boshqaring</p>
+                    <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '4px' }}>
+                        Akkauntlar
+                    </h1>
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+                        Foydalanuvchi e&apos;lonlarini boshqaring
+                    </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <button
                         onClick={loadListings}
-                        className="p-2 bg-[#1e1e32] text-gray-400 hover:text-white rounded-lg transition-colors"
+                        className="btn btn-ghost btn-md"
                         title="Yangilash"
+                        aria-label="Refresh"
                     >
-                        <RefreshCw className="w-5 h-5" />
+                        <RefreshCw style={{ width: '16px', height: '16px' }} />
                     </button>
                     {pendingCount > 0 && (
-                        <span className="px-3 py-1.5 bg-yellow-500/20 text-yellow-400 rounded-full text-sm font-medium">
+                        <span className="badge" style={{ backgroundColor: 'var(--color-warning-bg)', color: 'var(--color-accent-orange)', padding: '6px 12px' }}>
                             {pendingCount} ta kutilmoqda
                         </span>
                     )}
@@ -134,35 +116,32 @@ const AdminAccounts = () => {
 
             {/* Success/Error Message */}
             {message.text && (
-                <div className={`p-4 rounded-xl flex items-center gap-3 ${message.type === 'success' ? 'bg-green-500/10 border border-green-500/30 text-green-400' : 'bg-red-500/10 border border-red-500/30 text-red-400'
-                    }`}>
-                    <Check className="w-5 h-5" />
-                    {message.text}
+                <div className={`alert ${message.type === 'success' ? 'alert-success' : 'alert-error'}`}>
+                    <Check style={{ width: '18px', height: '18px', flexShrink: 0 }} />
+                    <span>{message.text}</span>
                 </div>
             )}
 
             {/* Filters */}
-            <div className="flex flex-col lg:flex-row gap-4">
-                <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <div className="flex flex-col lg:flex-row" style={{ gap: '12px' }}>
+                <div style={{ position: 'relative', flex: 1 }}>
+                    <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: 'var(--color-text-muted)' }} />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Akkaunt yoki sotuvchi qidirish..."
-                        className="w-full pl-12 pr-4 py-3 bg-[#1e1e32] border border-white/10 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500/50"
+                        className="input input-lg"
+                        style={{ paddingLeft: '36px' }}
                     />
                 </div>
-
-                <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0">
+                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto' }}>
                     {statusFilters.map((filter) => (
                         <button
                             key={filter.value}
                             onClick={() => setSelectedStatus(filter.value)}
-                            className={`px-4 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${selectedStatus === filter.value
-                                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                : 'bg-[#1e1e32] text-gray-300 hover:bg-[#25253a]'
-                                }`}
+                            className={`btn ${selectedStatus === filter.value ? 'btn-primary' : 'btn-secondary'} btn-md`}
+                            style={{ whiteSpace: 'nowrap' }}
                         >
                             {filter.label}
                         </button>
@@ -171,89 +150,70 @@ const AdminAccounts = () => {
             </div>
 
             {/* Table */}
-            <div className="bg-[#1e1e32] rounded-2xl border border-white/5 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
+            <div style={{
+                backgroundColor: 'var(--color-bg-secondary)',
+                borderRadius: 'var(--radius-xl)',
+                border: '1px solid var(--color-border-default)',
+                overflow: 'hidden',
+            }}>
+                <div style={{ overflowX: 'auto' }}>
+                    <table className="gh-table">
                         <thead>
-                            <tr className="border-b border-white/5">
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">ID</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Akkaunt</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">O'yin</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Sotuvchi</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Narx</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Status</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Sana</th>
-                                <th className="text-left text-xs text-gray-500 font-medium p-4">Amallar</th>
+                            <tr>
+                                <th>ID</th>
+                                <th>Akkaunt</th>
+                                <th>O&apos;yin</th>
+                                <th>Sotuvchi</th>
+                                <th>Narx</th>
+                                <th>Status</th>
+                                <th>Sana</th>
+                                <th>Amallar</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredListings.length > 0 ? (
                                 filteredListings.map((listing) => (
-                                    <tr key={listing.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02]">
-                                        <td className="p-4 text-gray-500 text-sm">#{listing.id}</td>
-                                        <td className="p-4">
-                                            <div className="font-medium text-white text-sm">{listing.title}</div>
-                                            <div className="text-xs text-gray-500 mt-1">
+                                    <tr key={listing.id}>
+                                        <td style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>#{listing.id}</td>
+                                        <td>
+                                            <div style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', fontSize: 'var(--font-size-sm)' }}>
+                                                {listing.title}
+                                            </div>
+                                            <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', marginTop: '2px' }}>
                                                 Level: {listing.level || '-'} | Rank: {listing.rank || '-'}
                                             </div>
                                         </td>
-                                        <td className="p-4 text-gray-400 text-sm">{getGameName(listing.gameId)}</td>
-                                        <td className="p-4">
-                                            <span className="text-sm text-white">{listing.sellerName}</span>
-                                        </td>
-                                        <td className="p-4 text-cyan-400 text-sm font-medium">
+                                        <td style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{getGameName(listing.gameId)}</td>
+                                        <td style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-sm)' }}>{listing.sellerName}</td>
+                                        <td style={{ color: 'var(--color-text-accent)', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)' }}>
                                             {formatPrice(Number(listing.price))}
                                         </td>
-                                        <td className="p-4">
-                                            {getStatusBadge(listing.status)}
-                                        </td>
-                                        <td className="p-4 text-gray-500 text-sm">
+                                        <td>{getStatusBadge(listing.status)}</td>
+                                        <td style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
                                             {new Date(listing.createdAt).toLocaleDateString('uz-UZ')}
                                         </td>
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-1">
-                                                {/* View Credentials */}
-                                                <button
-                                                    onClick={() => viewCredentials(listing)}
-                                                    className="p-2 text-purple-400 hover:bg-purple-500/20 rounded-lg transition-colors"
-                                                    title="Login/Parol ko'rish"
-                                                >
-                                                    <Key className="w-4 h-4" />
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                <button onClick={() => viewCredentials(listing)} className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-text-accent)' }} title="Login/Parol" aria-label="View credentials">
+                                                    <Key style={{ width: '14px', height: '14px' }} />
                                                 </button>
-
                                                 {listing.status === 'pending' && (
                                                     <>
-                                                        <button
-                                                            onClick={() => handleApprove(listing)}
-                                                            className="p-2 text-green-400 hover:bg-green-500/20 rounded-lg transition-colors"
-                                                            title="Tasdiqlash"
-                                                        >
-                                                            <Check className="w-4 h-4" />
+                                                        <button onClick={() => handleApprove(listing)} className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-accent-green)' }} title="Tasdiqlash" aria-label="Approve">
+                                                            <Check style={{ width: '14px', height: '14px' }} />
                                                         </button>
-                                                        <button
-                                                            onClick={() => handleReject(listing)}
-                                                            className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
-                                                            title="Rad etish"
-                                                        >
-                                                            <X className="w-4 h-4" />
+                                                        <button onClick={() => handleReject(listing)} className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-accent-red)' }} title="Rad etish" aria-label="Reject">
+                                                            <X style={{ width: '14px', height: '14px' }} />
                                                         </button>
                                                     </>
                                                 )}
                                                 {listing.status === 'active' && (
-                                                    <button
-                                                        onClick={() => handleReject(listing)}
-                                                        className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
-                                                        title="Bloklash"
-                                                    >
-                                                        <Ban className="w-4 h-4" />
+                                                    <button onClick={() => handleReject(listing)} className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-accent-red)' }} title="Bloklash" aria-label="Block">
+                                                        <Ban style={{ width: '14px', height: '14px' }} />
                                                     </button>
                                                 )}
-                                                <button
-                                                    onClick={() => handleDelete(listing)}
-                                                    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                                                    title="O'chirish"
-                                                >
-                                                    <X className="w-4 h-4" />
+                                                <button onClick={() => handleDelete(listing)} className="btn btn-ghost btn-sm" style={{ padding: '6px', color: 'var(--color-text-muted)' }} title="O'chirish" aria-label="Delete">
+                                                    <X style={{ width: '14px', height: '14px' }} />
                                                 </button>
                                             </div>
                                         </td>
@@ -261,10 +221,12 @@ const AdminAccounts = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="8" className="p-12 text-center">
-                                        <AlertCircle className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                                        <p className="text-gray-400">Hech qanday e'lon topilmadi</p>
-                                        <p className="text-gray-500 text-sm mt-1">Foydalanuvchilar e'lon qo'shganda bu yerda ko'rinadi</p>
+                                    <td colSpan="8" style={{ padding: '48px 16px', textAlign: 'center' }}>
+                                        <AlertCircle style={{ width: '40px', height: '40px', color: 'var(--color-text-muted)', margin: '0 auto 16px' }} />
+                                        <p style={{ color: 'var(--color-text-secondary)' }}>Hech qanday e&apos;lon topilmadi</p>
+                                        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginTop: '4px' }}>
+                                            Foydalanuvchilar e&apos;lon qo&apos;shganda bu yerda ko&apos;rinadi
+                                        </p>
                                     </td>
                                 </tr>
                             )}
@@ -273,8 +235,14 @@ const AdminAccounts = () => {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between p-4 border-t border-white/5">
-                    <div className="text-sm text-gray-500">
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: 'var(--space-4)',
+                    borderTop: '1px solid var(--color-border-muted)',
+                }}>
+                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
                         {filteredListings.length} ta akkaunt topildi
                     </div>
                 </div>
@@ -282,65 +250,71 @@ const AdminAccounts = () => {
 
             {/* Credentials Modal */}
             {showCredentials && selectedListing && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-[#1e1e32] rounded-2xl p-6 w-full max-w-md border border-white/10">
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                                    <Key className="w-6 h-6 text-white" />
+                <div className="modal-overlay" style={{ position: 'fixed', inset: 0, backgroundColor: 'var(--color-bg-overlay)', backdropFilter: 'blur(4px)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                    <div style={{
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        borderRadius: 'var(--radius-xl)',
+                        padding: '24px',
+                        width: '100%',
+                        maxWidth: '440px',
+                        border: '1px solid var(--color-border-default)',
+                    }}>
+                        {/* Modal Header */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{
+                                    width: '44px',
+                                    height: '44px',
+                                    backgroundColor: 'var(--color-accent-blue)',
+                                    borderRadius: 'var(--radius-full)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}>
+                                    <Key style={{ width: '22px', height: '22px', color: '#ffffff' }} />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-white">Akkaunt ma'lumotlari</h3>
-                                    <p className="text-gray-400 text-sm">{selectedListing.title}</p>
+                                    <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
+                                        Akkaunt ma&apos;lumotlari
+                                    </h3>
+                                    <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{selectedListing.title}</p>
                                 </div>
                             </div>
-                            <button
-                                onClick={() => setShowCredentials(false)}
-                                className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg"
-                            >
-                                <X className="w-5 h-5" />
+                            <button onClick={() => setShowCredentials(false)} className="btn btn-ghost btn-sm" style={{ padding: '6px' }} aria-label="Close">
+                                <X style={{ width: '18px', height: '18px' }} />
                             </button>
                         </div>
 
-                        <div className="space-y-4">
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {/* Login Method */}
-                            <div className="p-4 bg-[#25253a] rounded-xl">
-                                <label className="text-xs text-gray-500 block mb-1">Kirish usuli</label>
-                                <p className="text-white font-medium">{selectedListing.loginMethod || 'Email'}</p>
+                            <div style={{ padding: '16px', backgroundColor: 'var(--color-bg-primary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-muted)' }}>
+                                <label style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'block', marginBottom: '4px' }}>Kirish usuli</label>
+                                <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{selectedListing.loginMethod || 'Email'}</p>
                             </div>
 
                             {/* Email/Login */}
-                            <div className="p-4 bg-[#25253a] rounded-xl">
-                                <label className="text-xs text-gray-500 block mb-1">Email / Login</label>
-                                <div className="flex items-center justify-between">
-                                    <p className="text-white font-medium font-mono">{selectedListing.accountEmail}</p>
-                                    <button
-                                        onClick={() => navigator.clipboard.writeText(selectedListing.accountEmail)}
-                                        className="text-purple-400 text-sm hover:underline"
-                                    >
+                            <div style={{ padding: '16px', backgroundColor: 'var(--color-bg-primary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-muted)' }}>
+                                <label style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'block', marginBottom: '4px' }}>Email / Login</label>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', fontFamily: 'monospace' }}>{selectedListing.accountEmail}</p>
+                                    <button onClick={() => navigator.clipboard.writeText(selectedListing.accountEmail)} style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-accent)', background: 'none', border: 'none', cursor: 'pointer' }}>
                                         Nusxalash
                                     </button>
                                 </div>
                             </div>
 
                             {/* Password */}
-                            <div className="p-4 bg-[#25253a] rounded-xl">
-                                <label className="text-xs text-gray-500 block mb-1">Parol</label>
-                                <div className="flex items-center justify-between">
-                                    <p className="text-white font-medium font-mono">
+                            <div style={{ padding: '16px', backgroundColor: 'var(--color-bg-primary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-muted)' }}>
+                                <label style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'block', marginBottom: '4px' }}>Parol</label>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', fontFamily: 'monospace' }}>
                                         {showPassword ? selectedListing.accountPassword : '••••••••••'}
                                     </p>
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="text-gray-400 hover:text-white"
-                                        >
-                                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <button onClick={() => setShowPassword(!showPassword)} className="btn btn-ghost btn-sm" style={{ padding: '4px' }} aria-label={showPassword ? 'Hide' : 'Show'}>
+                                            {showPassword ? <EyeOff style={{ width: '14px', height: '14px' }} /> : <Eye style={{ width: '14px', height: '14px' }} />}
                                         </button>
-                                        <button
-                                            onClick={() => navigator.clipboard.writeText(selectedListing.accountPassword)}
-                                            className="text-purple-400 text-sm hover:underline"
-                                        >
+                                        <button onClick={() => navigator.clipboard.writeText(selectedListing.accountPassword)} style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-accent)', background: 'none', border: 'none', cursor: 'pointer' }}>
                                             Nusxalash
                                         </button>
                                     </div>
@@ -349,49 +323,34 @@ const AdminAccounts = () => {
 
                             {/* Additional Info */}
                             {selectedListing.additionalInfo && (
-                                <div className="p-4 bg-[#25253a] rounded-xl">
-                                    <label className="text-xs text-gray-500 block mb-1">Qo'shimcha ma'lumot</label>
-                                    <p className="text-white text-sm">{selectedListing.additionalInfo}</p>
+                                <div style={{ padding: '16px', backgroundColor: 'var(--color-bg-primary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-muted)' }}>
+                                    <label style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'block', marginBottom: '4px' }}>Qo&apos;shimcha ma&apos;lumot</label>
+                                    <p style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-sm)' }}>{selectedListing.additionalInfo}</p>
                                 </div>
                             )}
 
                             {/* Seller Info */}
-                            <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
-                                <label className="text-xs text-purple-400 block mb-1">Sotuvchi</label>
-                                <p className="text-white font-medium">{selectedListing.sellerName}</p>
-                                <p className="text-gray-400 text-sm">ID: {selectedListing.sellerId}</p>
+                            <div style={{ padding: '16px', backgroundColor: 'var(--color-info-bg)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-accent-blue)' }}>
+                                <label style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-accent)', display: 'block', marginBottom: '4px' }}>Sotuvchi</label>
+                                <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{selectedListing.sellerName}</p>
+                                <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>ID: {selectedListing.sellerId}</p>
                             </div>
                         </div>
 
-                        <div className="flex gap-3 mt-6">
+                        <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
                             {selectedListing.status === 'pending' && (
                                 <>
-                                    <button
-                                        onClick={() => {
-                                            handleApprove(selectedListing);
-                                            setShowCredentials(false);
-                                        }}
-                                        className="flex-1 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Check className="w-5 h-5" />
-                                        Tasdiqlash
+                                    <button onClick={() => { handleApprove(selectedListing); setShowCredentials(false); }}
+                                        className="btn btn-md" style={{ flex: 1, backgroundColor: 'var(--color-accent-green)', color: '#fff', border: 'none' }}>
+                                        <Check style={{ width: '16px', height: '16px' }} /> Tasdiqlash
                                     </button>
-                                    <button
-                                        onClick={() => {
-                                            handleReject(selectedListing);
-                                            setShowCredentials(false);
-                                        }}
-                                        className="flex-1 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <X className="w-5 h-5" />
-                                        Rad etish
+                                    <button onClick={() => { handleReject(selectedListing); setShowCredentials(false); }}
+                                        className="btn btn-danger btn-md" style={{ flex: 1 }}>
+                                        <X style={{ width: '16px', height: '16px' }} /> Rad etish
                                     </button>
                                 </>
                             )}
-                            <button
-                                onClick={() => setShowCredentials(false)}
-                                className="flex-1 py-3 bg-white/5 text-gray-300 rounded-xl hover:bg-white/10 transition-colors"
-                            >
+                            <button onClick={() => setShowCredentials(false)} className="btn btn-secondary btn-md" style={{ flex: 1 }}>
                                 Yopish
                             </button>
                         </div>

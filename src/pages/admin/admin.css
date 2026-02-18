@@ -1,0 +1,71 @@
+/* ================================
+   ADMIN PANEL STYLES
+   WibeStore Admin Dashboard
+   ================================ */
+
+/* Admin-specific responsive adjustments */
+@media (max-width: 1023px) {
+    .admin-main {
+        padding: 20px !important;
+    }
+}
+
+@media (max-width: 639px) {
+    .admin-main {
+        padding: 16px !important;
+    }
+}
+
+/* Admin sidebar active link indicator */
+.admin-sidebar-link-active {
+    position: relative;
+}
+
+.admin-sidebar-link-active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background-color: var(--color-accent-blue);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Smooth scrolling in admin tables */
+.admin-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.admin-table-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+
+.admin-table-wrapper::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+.admin-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 3px;
+}
+
+/* Admin header search focus state */
+.admin-search-input:focus-within {
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+    border-color: var(--color-border-accent);
+}
+
+/* Admin card hover animation */
+.admin-card-hover {
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.admin-card-hover:hover {
+    border-color: var(--color-border-accent);
+    box-shadow: var(--shadow-sm);
+}

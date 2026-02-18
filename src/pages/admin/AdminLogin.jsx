@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, Eye, EyeOff, Shield, AlertCircle } from 'lucide-react';
 
-// Admin credentials from environment variables
 const ADMIN_CREDENTIALS = {
     username: import.meta.env.VITE_ADMIN_USERNAME || 'admin',
     password: import.meta.env.VITE_ADMIN_PASSWORD || ''
@@ -10,19 +9,13 @@ const ADMIN_CREDENTIALS = {
 
 const AdminLogin = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        username: '',
-        password: ''
-    });
+    const [formData, setFormData] = useState({ username: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
         setError('');
     };
 
@@ -31,11 +24,9 @@ const AdminLogin = () => {
         setIsLoading(true);
         setError('');
 
-        // Simulate API call delay
         setTimeout(() => {
             if (formData.username === ADMIN_CREDENTIALS.username &&
                 formData.password === ADMIN_CREDENTIALS.password) {
-                // Set admin session
                 localStorage.setItem('adminAuth', JSON.stringify({
                     isAuthenticated: true,
                     username: formData.username,
@@ -43,82 +34,163 @@ const AdminLogin = () => {
                 }));
                 navigate('/admin');
             } else {
-                setError('Login yoki parol noto\'g\'ri!');
+                setError("Login yoki parol noto'g'ri!");
             }
             setIsLoading(false);
         }, 1000);
     };
 
     return (
-        <div className="min-h-screen bg-[#0f0f1a] flex items-center justify-center px-4">
-            {/* Background effects */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl" />
-            </div>
+        <div
+            style={{
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'var(--color-bg-primary)',
+                padding: '0 16px',
+                position: 'relative',
+                overflow: 'hidden',
+            }}
+        >
+            {/* Subtle background accent */}
+            <div
+                style={{
+                    position: 'absolute',
+                    top: '30%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '500px',
+                    height: '500px',
+                    background: 'radial-gradient(circle, var(--color-accent-blue) 0%, transparent 70%)',
+                    opacity: 0.04,
+                    pointerEvents: 'none',
+                }}
+            />
 
-            <div className="relative w-full max-w-md">
+            <div style={{ position: 'relative', width: '100%', maxWidth: '420px' }}>
                 {/* Logo */}
-                <div className="text-center mb-8">
-                    <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-                        <Shield className="w-10 h-10 text-white" />
+                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                    <div
+                        style={{
+                            width: '64px',
+                            height: '64px',
+                            margin: '0 auto 16px',
+                            background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-blue-hover))',
+                            borderRadius: 'var(--radius-xl)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Shield style={{ width: '32px', height: '32px', color: '#ffffff' }} />
                     </div>
-                    <h1 className="text-2xl font-bold text-white mb-2">Admin Panel</h1>
-                    <p className="text-gray-400">WibeStore boshqaruv paneli</p>
+                    <h1 style={{
+                        fontSize: 'var(--font-size-2xl)',
+                        fontWeight: 'var(--font-weight-bold)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '8px',
+                    }}>
+                        Admin Panel
+                    </h1>
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-base)' }}>
+                        WibeStore boshqaruv paneli
+                    </p>
                 </div>
 
                 {/* Login Form */}
-                <div className="bg-gradient-to-b from-[#1e1e32] to-[#25253a] rounded-2xl p-8 border border-white/5 shadow-xl">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                <div
+                    style={{
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        borderRadius: 'var(--radius-xl)',
+                        padding: '32px',
+                        border: '1px solid var(--color-border-default)',
+                    }}
+                >
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         {/* Error Message */}
                         {error && (
-                            <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400">
-                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                                <span className="text-sm">{error}</span>
+                            <div className="alert alert-error">
+                                <AlertCircle style={{ width: '18px', height: '18px', flexShrink: 0 }} />
+                                <span style={{ fontSize: 'var(--font-size-sm)' }}>{error}</span>
                             </div>
                         )}
 
                         {/* Username */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Login
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <div className="form-field" style={{ marginBottom: 0 }}>
+                            <label className="input-label" htmlFor="admin-username">Login</label>
+                            <div style={{ position: 'relative' }}>
+                                <User
+                                    style={{
+                                        position: 'absolute',
+                                        left: '12px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        width: '18px',
+                                        height: '18px',
+                                        color: 'var(--color-text-muted)',
+                                    }}
+                                />
                                 <input
+                                    id="admin-username"
                                     type="text"
                                     name="username"
                                     value={formData.username}
                                     onChange={handleChange}
                                     placeholder="admin"
-                                    className="w-full pl-12 pr-4 py-3.5 bg-[#0f0f1a] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                                    className="input input-lg"
+                                    style={{ paddingLeft: '40px' }}
                                     required
+                                    autoComplete="username"
                                 />
                             </div>
                         </div>
 
                         {/* Password */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Parol
-                            </label>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <div className="form-field" style={{ marginBottom: 0 }}>
+                            <label className="input-label" htmlFor="admin-password">Parol</label>
+                            <div style={{ position: 'relative' }}>
+                                <Lock
+                                    style={{
+                                        position: 'absolute',
+                                        left: '12px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        width: '18px',
+                                        height: '18px',
+                                        color: 'var(--color-text-muted)',
+                                    }}
+                                />
                                 <input
+                                    id="admin-password"
                                     type={showPassword ? 'text' : 'password'}
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="••••••••"
-                                    className="w-full pl-12 pr-12 py-3.5 bg-[#0f0f1a] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                                    className="input input-lg"
+                                    style={{ paddingLeft: '40px', paddingRight: '44px' }}
                                     required
+                                    autoComplete="current-password"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                                    className="password-toggle-btn"
+                                    style={{
+                                        position: 'absolute',
+                                        right: '12px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        color: 'var(--color-text-muted)',
+                                        padding: '4px',
+                                    }}
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                                 >
-                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                    {showPassword ? <EyeOff style={{ width: '18px', height: '18px' }} /> : <Eye style={{ width: '18px', height: '18px' }} />}
                                 </button>
                             </div>
                         </div>
@@ -127,14 +199,12 @@ const AdminLogin = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                            className={`btn btn-primary btn-xl ${isLoading ? 'btn-loading' : ''}`}
+                            style={{ width: '100%', marginTop: '8px', height: '48px', fontSize: 'var(--font-size-lg)' }}
                         >
                             {isLoading ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                    </svg>
+                                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                    <span className="spinner" />
                                     Kirish...
                                 </span>
                             ) : (
@@ -144,19 +214,30 @@ const AdminLogin = () => {
                     </form>
 
                     {/* Back to Home */}
-                    <div className="mt-6 text-center">
-                        <a href="/" className="text-sm text-gray-400 hover:text-purple-400 transition-colors">
+                    <div style={{ marginTop: '24px', textAlign: 'center' }}>
+                        <a
+                            href="/"
+                            className="link-hover-accent"
+                            style={{
+                                fontSize: 'var(--font-size-sm)',
+                            }}
+                        >
                             ← Bosh sahifaga qaytish
                         </a>
                     </div>
                 </div>
 
                 {/* Security Note */}
-                <p className="text-center text-xs text-gray-500 mt-6">
+                <p style={{
+                    textAlign: 'center',
+                    fontSize: 'var(--font-size-xs)',
+                    color: 'var(--color-text-muted)',
+                    marginTop: '24px',
+                }}>
                     🔒 Xavfsiz ulanish orqali himoyalangan
                 </p>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
