@@ -331,8 +331,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 # ============================================================
 # DJANGO AXES (Brute Force Protection)
 # ============================================================
-AXES_FAILURE_LIMIT = 5
-AXES_COOLOFF_TIME = timedelta(minutes=30)
+AXES_ENABLED = False  # TEMPORARILY DISABLED
+AXES_FAILURE_LIMIT = 100
+AXES_COOLOFF_TIME = timedelta(minutes=5)
 AXES_LOCKOUT_PARAMETERS = ["ip_address", "username"]
 AXES_RESET_ON_SUCCESS = True
 
