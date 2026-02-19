@@ -31,22 +31,14 @@ FROM base AS production
 COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=deps /usr/local/bin /usr/local/bin
 
+ENV DJANGO_SETTINGS_MODULE=config.settings.production
+
 COPY . /app/
-RUN mkdir -p /app/staticfiles /app/media /app/logs && \
+RUN mkdir -p /app/staticfiles /app/media /app/logs /app/static && \
     chmod +x /app/entrypoint.sh && \
     chown -R wibestore:wibestore /app
 
 USER wibestore
 
-EXPOSE 8000
-
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-CMD ["gunicorn", "config.wsgi:application", \
-    "--bind", "0.0.0.0:8000", \
-    "--workers", "4", \
-    "--worker-class", "gthread", \
-    "--threads", "4", \
-    "--timeout", "120", \
-    "--access-logfile", "-", \
-    "--error-logfile", "-"]
