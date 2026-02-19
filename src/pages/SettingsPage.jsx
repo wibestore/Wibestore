@@ -433,6 +433,7 @@ const SettingsPage = () => {
                                     <div className="grid grid-cols-2" style={{ gap: '12px', marginBottom: '24px' }}>
                                         <button
                                             className="text-center"
+                                            onClick={() => alert('Tez orada ishga tushiriladi! \nPul qo\'shish funksiyasi hozircha mavjud emas.')}
                                             style={{
                                                 padding: '16px',
                                                 borderRadius: 'var(--radius-lg)',
@@ -447,6 +448,7 @@ const SettingsPage = () => {
                                         </button>
                                         <button
                                             className="text-center"
+                                            onClick={() => alert('Tez orada ishga tushiriladi! \nPul yechish funksiyasi hozircha mavjud emas.')}
                                             style={{
                                                 padding: '16px',
                                                 borderRadius: 'var(--radius-lg)',
@@ -472,7 +474,7 @@ const SettingsPage = () => {
                                         }}>
                                             <CreditCard className="mx-auto" style={{ width: '40px', height: '40px', color: 'var(--color-text-muted)', marginBottom: '12px' }} />
                                             <p style={{ color: 'var(--color-text-secondary)' }}>{t('settings.no_cards')}</p>
-                                            <button style={{ marginTop: '12px', color: 'var(--color-text-accent)', fontSize: 'var(--font-size-sm)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                            <button onClick={() => alert('Tez orada! Karta qo\'shish funksiyasi ishlab chiqilmoqda.')} style={{ marginTop: '12px', color: 'var(--color-text-accent)', fontSize: 'var(--font-size-sm)', background: 'none', border: 'none', cursor: 'pointer' }}>
                                                 {t('settings.add_card')}
                                             </button>
                                         </div>

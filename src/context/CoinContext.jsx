@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 
 const CoinContext = createContext(null);
 
@@ -34,14 +34,16 @@ export const CoinProvider = ({ children }) => {
         localStorage.setItem('wibeCoinState', JSON.stringify(coinState));
     }, [coinState]);
 
+    const spendResultRef = useRef(false);
+
     // Add coins for selling/buying account (max 5 transactions = 100 coins per month)
-    const addCoins = (amount, reason) => {
+    const addCoins = useCallback((amount, reason) => {
         setCoinState(prev => {
             if (prev.monthlyTransactions >= 5) {
                 return prev; // Max 5 transactions per month
             }
             const newHistory = [...prev.history, {
-                id: Date.now(),
+                id: crypto.randomUUID(),
                 amount,
                 reason,
                 date: new Date().toISOString(),
@@ -55,14 +57,17 @@ export const CoinProvider = ({ children }) => {
                 history: newHistory
             };
         });
-    };
+    }, []);
 
-    // Spend coins (for premium)
-    const spendCoins = (amount, reason) => {
-        let success = false;
+    // Spend coins (for premium) — uses ref to avoid stale closure
+    const spendCoins = useCallback((amount, reason) => {
+        spendResultRef.current = false;
         setCoinState(prev => {
-            if (prev.balance < amount) return prev;
-            success = true;
+            if (prev.balance < amount) {
+                spendResultRef.current = false;
+                return prev;
+            }
+            spendResultRef.current = true;
             return {
                 ...prev,
                 balance: prev.balance - amount,
@@ -75,8 +80,8 @@ export const CoinProvider = ({ children }) => {
                 }]
             };
         });
-        return success;
-    };
+        return spendResultRef.current;
+    }, []);
 
     // Can earn more coins this month?
     const canEarnCoins = coinState.monthlyTransactions < 5;

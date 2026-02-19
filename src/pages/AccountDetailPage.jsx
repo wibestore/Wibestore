@@ -1,7 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, Shield, Clock, MessageCircle, Crown, ChevronRight, AlertTriangle } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { accounts, formatPrice, COMMISSION_RATE } from '../data/mockData';
+import { accounts, formatPrice } from '../data/mockData';
 import AccountCard from '../components/AccountCard';
 import ReviewModal from '../components/ReviewModal';
 import LoginModal from '../components/LoginModal';

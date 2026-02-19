@@ -38,6 +38,9 @@ const AdminAccounts = lazy(() => import('./pages/admin/AdminAccounts'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminPremium = lazy(() => import('./pages/admin/AdminPremium'));
+const AdminReports = lazy(() => import('./pages/admin/AdminReports'));
+const AdminFinance = lazy(() => import('./pages/admin/AdminFinance'));
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
 
 // Page loading fallback with skeleton shimmer
 const PageLoader = () => (
@@ -119,7 +122,7 @@ function App() {
                     } />
                     <Route path="/admin/reports" element={
                       <Suspense fallback={<PageLoader />}>
-                        <AdminLayout><AdminDashboard /></AdminLayout>
+                        <AdminLayout><AdminReports /></AdminLayout>
                       </Suspense>
                     } />
                     <Route path="/admin/premium" element={
@@ -129,12 +132,12 @@ function App() {
                     } />
                     <Route path="/admin/finance" element={
                       <Suspense fallback={<PageLoader />}>
-                        <AdminLayout><AdminDashboard /></AdminLayout>
+                        <AdminLayout><AdminFinance /></AdminLayout>
                       </Suspense>
                     } />
                     <Route path="/admin/settings" element={
                       <Suspense fallback={<PageLoader />}>
-                        <AdminLayout><AdminDashboard /></AdminLayout>
+                        <AdminLayout><AdminSettings /></AdminLayout>
                       </Suspense>
                     } />
 

@@ -351,7 +351,7 @@ export const accounts = [
         title: 'Conqueror Account - Season 25',
         description: 'Level 75, 200+ skins, M416 Glacier, AWM Dragon, Kar98 Dragon',
         price: 2500000,
-        image: '/img/FireFree/fire.jpg',
+        image: '/img/Pubg/pg.jpg',
         seller: {
             id: 1,
             name: 'ProGamer_UZ',
@@ -408,7 +408,7 @@ export const accounts = [
         title: 'Elite Account - Rare Knives',
         description: 'Karambit Fade, M4A4 Howl, AK-47 Fire Serpent',
         price: 1800000,
-        image: '/img/Steam/st.jpg',
+        image: '/img/icons/st.webp',
         seller: {
             id: 4,
             name: 'SO2Master',
@@ -427,7 +427,7 @@ export const accounts = [
         title: 'Mythic Glory - All Heroes',
         description: '115+ heroes, 200+ skins, Legendary skins, Collector skins',
         price: 2100000,
-        image: '/img/FireFree/fire.jpg',
+        image: '/img/icons/ml.webp',
         seller: {
             id: 5,
             name: 'MLBB_Pro',
@@ -446,7 +446,7 @@ export const accounts = [
         title: 'TH14 Max Account',
         description: 'Fully maxed TH14, 6 builders, all heroes 80+',
         price: 4500000,
-        image: '/img/Pubg/pg.jpg',
+        image: '/img/icons/cc.webp',
         seller: {
             id: 6,
             name: 'ClashKing',
@@ -465,7 +465,7 @@ export const accounts = [
         title: 'Legendary Account - All Guns',
         description: 'Legendary rank, 50+ legendary skins, Damascus camo',
         price: 1900000,
-        image: '/img/Pubg/pg.jpg',
+        image: '/img/icons/cal.webp',
         seller: {
             id: 1,
             name: 'ProGamer_UZ',
@@ -484,7 +484,7 @@ export const accounts = [
         title: 'Rich Account - 10K Robux',
         description: '10,000 Robux, Premium membership, rare limiteds',
         price: 850000,
-        image: '/img/FireFree/fire.jpg',
+        image: '/img/icons/roblox.webp',
         seller: {
             id: 7,
             name: 'RobloxMaster',
@@ -503,7 +503,7 @@ export const accounts = [
         title: 'ACE Account - 150 Skins',
         description: 'Level 68, 150 skins, multiple mythics, maxed RP',
         price: 1500000,
-        image: '/img/FireFree/fire.jpg',
+        image: '/img/Pubg/pg.jpg',
         seller: {
             id: 8,
             name: 'PUBGTrader',
