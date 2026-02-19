@@ -63,11 +63,50 @@ const SettingsPage = () => {
         if (passwordData.newPassword.length < 6) {
             setMessage({ type: 'error', text: t('settings.password_short') }); return;
         }
+
         setIsSaving(true);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setMessage({ type: 'success', text: t('settings.password_changed') });
-        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        setIsSaving(false);
+
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Get all users
+            const registeredUsers = JSON.parse(localStorage.getItem('wibeRegisteredUsers') || '[]');
+            const userIndex = registeredUsers.findIndex(u => u.id === user.id);
+
+            if (userIndex === -1) {
+                setMessage({ type: 'error', text: 'Foydalanuvchi topilmadi' });
+                setIsSaving(false);
+                return;
+            }
+
+            const currentUser = registeredUsers[userIndex];
+
+            // Hash function (must match AuthContext)
+            const hashPassword = (password) => btoa(password + '_wibe_salt_2024');
+
+            // Check current password (support both hashed and legacy plain text for transition)
+            const inputHash = hashPassword(passwordData.currentPassword);
+            const isPasswordValid = currentUser.password === inputHash || currentUser.password === passwordData.currentPassword;
+
+            if (!isPasswordValid) {
+                setMessage({ type: 'error', text: t('settings.current_password_wrong') || 'Joriy parol noto\'g\'ri' });
+                setIsSaving(false);
+                return;
+            }
+
+            // Update password
+            currentUser.password = hashPassword(passwordData.newPassword);
+            registeredUsers[userIndex] = currentUser;
+            localStorage.setItem('wibeRegisteredUsers', JSON.stringify(registeredUsers));
+
+            setMessage({ type: 'success', text: t('settings.password_changed') });
+            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        } catch (err) {
+            console.error(err);
+            setMessage({ type: 'error', text: 'Xatolik yuz berdi' });
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleDeleteAccount = () => {

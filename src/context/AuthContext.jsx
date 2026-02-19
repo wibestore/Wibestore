@@ -41,13 +41,23 @@ export const AuthProvider = ({ children }) => {
         return JSON.parse(localStorage.getItem('wibeRegisteredUsers') || '[]');
     };
 
+    // Simple hash function for client-side mocking (in real app, use backend hashing like bcrypt)
+    const hashPassword = (password) => {
+        if (!password) return null;
+        // Simple mock hash: Base64(password + salt)
+        // In a real application, NEVER do this client-side. Send plain password to backend over HTTPS.
+        return btoa(password + '_wibe_salt_2024');
+    };
+
     // Login function
     const login = (email, password) => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 const registeredUsers = getRegisteredUsers();
+                const hashedPassword = hashPassword(password);
+
                 const foundUser = registeredUsers.find(
-                    u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+                    u => u.email.toLowerCase() === email.toLowerCase() && u.password === hashedPassword
                 );
 
                 if (foundUser) {
@@ -80,7 +90,7 @@ export const AuthProvider = ({ children }) => {
                     name: userData.name,
                     email: userData.email,
                     phone: userData.phone,
-                    password: userData.password,
+                    password: hashPassword(userData.password), // Hash the password
                     avatar: null,
                     rating: 5.0,
                     sales: 0,
