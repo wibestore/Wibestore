@@ -51,6 +51,11 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 
 # ============================================================
+# STATIC FILES (WhiteNoise)
+# ============================================================
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# ============================================================
 # SENTRY
 # ============================================================
 SENTRY_DSN = env("SENTRY_DSN", default="")  # noqa: F405
