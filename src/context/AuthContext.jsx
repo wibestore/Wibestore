@@ -1,230 +1,190 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import apiClient, { setTokens, getStoredTokens, removeTokens } from '../lib/apiClient';
+import { createPublicClient } from '../lib/apiClient';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => {
-        // Lazy initialization - runs only once, not in effect
-        const savedUser = localStorage.getItem('wibeUser');
-        if (savedUser) {
-            try {
-                return JSON.parse(savedUser);
-            } catch {
-                localStorage.removeItem('wibeUser');
-            }
-        }
-        return null;
-    });
-    const [isLoading, setIsLoading] = useState(false);
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isInitialized, setIsInitialized] = useState(false);
 
-    // Listen for storage events (for Google OAuth login)
+    // Проверка авторизации при загрузке
     useEffect(() => {
-        const handleStorageChange = () => {
-            const savedUser = localStorage.getItem('wibeUser');
-            if (savedUser) {
-                try {
-                    setUser(JSON.parse(savedUser));
-                } catch {
-                    localStorage.removeItem('wibeUser');
-                }
-            } else {
+        const checkAuth = async () => {
+            const tokens = getStoredTokens();
+            
+            if (!tokens?.access) {
+                setIsLoading(false);
+                setIsInitialized(true);
+                return;
+            }
+
+            try {
+                // Получаем данные текущего пользователя
+                const { data } = await apiClient.get('/auth/me/');
+                setUser(data);
+            } catch (error) {
+                console.error('[Auth] Failed to fetch user:', error);
+                // Токен недействителен - очищаем
+                removeTokens();
                 setUser(null);
+            } finally {
+                setIsLoading(false);
+                setIsInitialized(true);
             }
         };
 
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
+        checkAuth();
+
+        // Слушаем событие logout из apiClient
+        const handleLogout = () => {
+            setUser(null);
+        };
+
+        window.addEventListener('wibe-logout', handleLogout);
+        return () => window.removeEventListener('wibe-logout', handleLogout);
     }, []);
 
-    // Get all registered users
-    const getRegisteredUsers = () => {
-        return JSON.parse(localStorage.getItem('wibeRegisteredUsers') || '[]');
+    // Login функция
+    const login = async (email, password) => {
+        try {
+            const publicClient = createPublicClient();
+            const { data } = await publicClient.post('/auth/login/', { email, password });
+            
+            // Backend returns: { success: true, data: { user, tokens: { access, refresh } } }
+            const { user: userData, tokens } = data.data || data;
+            
+            // Сохраняем токены
+            setTokens({ access: tokens.access, refresh: tokens.refresh });
+            setUser(userData);
+            
+            return userData;
+        } catch (error) {
+            console.error('[Auth] Login failed:', error);
+            throw error.response?.data?.error || error.response?.data || new Error('Login failed');
+        }
     };
 
-    // Simple hash function for client-side mocking (in real app, use backend hashing like bcrypt)
-    const hashPassword = (password) => {
-        if (!password) return null;
-        // Simple mock hash: Base64(password + salt)
-        // In a real application, NEVER do this client-side. Send plain password to backend over HTTPS.
-        return btoa(password + '_wibe_salt_2024');
-    };
-
-    // Login function
-    const login = (email, password) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const registeredUsers = getRegisteredUsers();
-                const hashedPassword = hashPassword(password);
-
-                const foundUser = registeredUsers.find(
-                    u => u.email.toLowerCase() === email.toLowerCase() && u.password === hashedPassword
-                );
-
-                if (foundUser) {
-                    const userData = { ...foundUser };
-                    delete userData.password;
-                    setUser(userData);
-                    localStorage.setItem('wibeUser', JSON.stringify(userData));
-                    resolve(userData);
-                } else {
-                    reject(new Error('Email yoki parol noto\'g\'ri'));
-                }
-            }, 500);
-        });
-    };
-
-    // Register function
-    const register = (userData) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const registeredUsers = getRegisteredUsers();
-
-                // Check if email already exists
-                if (registeredUsers.some(u => u.email.toLowerCase() === userData.email.toLowerCase())) {
-                    reject(new Error('Bu email allaqachon ro\'yxatdan o\'tgan'));
-                    return;
-                }
-
-                const newUser = {
-                    id: crypto.randomUUID(),
-                    name: userData.name,
-                    email: userData.email,
-                    phone: userData.phone,
-                    password: hashPassword(userData.password), // Hash the password
-                    avatar: null,
-                    rating: 5.0,
-                    sales: 0,
-                    purchases: 0,
-                    isPremium: false,
-                    premiumType: null,
-                    premiumExpiry: null,
-                    createdAt: new Date().toISOString().split('T')[0]
-                };
-
-                registeredUsers.push(newUser);
-                localStorage.setItem('wibeRegisteredUsers', JSON.stringify(registeredUsers));
-
-                // Also update wibeUsers for admin panel
-                const wibeUsers = JSON.parse(localStorage.getItem('wibeUsers') || '[]');
-                wibeUsers.push({
-                    id: String(newUser.id),
-                    name: newUser.name,
-                    email: newUser.email,
-                    isPremium: false,
-                    premiumType: null,
-                    premiumExpiry: null
-                });
-                localStorage.setItem('wibeUsers', JSON.stringify(wibeUsers));
-
-                const userDataWithoutPassword = { ...newUser };
-                delete userDataWithoutPassword.password;
-                setUser(userDataWithoutPassword);
-                localStorage.setItem('wibeUser', JSON.stringify(userDataWithoutPassword));
-
-                resolve(userDataWithoutPassword);
-            }, 500);
-        });
+    // Register функция
+    const register = async (userData) => {
+        try {
+            const publicClient = createPublicClient();
+            const { data } = await publicClient.post('/auth/register/', userData);
+            
+            // Backend returns: { success: true, data: { user, tokens: { access, refresh } } }
+            const { user: newUser, tokens } = data.data || data;
+            
+            // Сохраняем токены
+            setTokens({ access: tokens.access, refresh: tokens.refresh });
+            setUser(newUser);
+            
+            return newUser;
+        } catch (error) {
+            console.error('[Auth] Register failed:', error);
+            throw error.response?.data?.error || error.response?.data || new Error('Register failed');
+        }
     };
 
     // Google OAuth login/register
-    const loginWithGoogle = (googleData) => {
-        return new Promise((resolve) => {
-            const registeredUsers = getRegisteredUsers();
-
-            // Check if user with this email already exists
-            const existingUser = registeredUsers.find(
-                u => u.email.toLowerCase() === googleData.email.toLowerCase()
-            );
-
-            if (existingUser) {
-                // User exists — update avatar from Google and log in
-                existingUser.avatar = googleData.avatar || existingUser.avatar;
-                existingUser.googleId = googleData.id;
-                const idx = registeredUsers.findIndex(u => u.id === existingUser.id);
-                if (idx !== -1) registeredUsers[idx] = existingUser;
-                localStorage.setItem('wibeRegisteredUsers', JSON.stringify(registeredUsers));
-
-                const userData = { ...existingUser };
-                delete userData.password;
-                setUser(userData);
-                localStorage.setItem('wibeUser', JSON.stringify(userData));
-                resolve(userData);
-            } else {
-                // New user — auto-register with Google data
-                const newUser = {
-                    id: crypto.randomUUID(),
-                    googleId: googleData.id,
-                    name: googleData.name,
-                    email: googleData.email,
-                    phone: '',
-                    password: null, // Google users have no password
-                    avatar: googleData.avatar || null,
-                    rating: 5.0,
-                    sales: 0,
-                    purchases: 0,
-                    isPremium: false,
-                    premiumType: null,
-                    premiumExpiry: null,
-                    authProvider: 'google',
-                    createdAt: new Date().toISOString().split('T')[0]
-                };
-
-                registeredUsers.push(newUser);
-                localStorage.setItem('wibeRegisteredUsers', JSON.stringify(registeredUsers));
-
-                // Also update wibeUsers for admin panel
-                const wibeUsers = JSON.parse(localStorage.getItem('wibeUsers') || '[]');
-                wibeUsers.push({
-                    id: String(newUser.id),
-                    name: newUser.name,
-                    email: newUser.email,
-                    isPremium: false,
-                    premiumType: null,
-                    premiumExpiry: null
-                });
-                localStorage.setItem('wibeUsers', JSON.stringify(wibeUsers));
-
-                const userDataWithoutPassword = { ...newUser };
-                delete userDataWithoutPassword.password;
-                setUser(userDataWithoutPassword);
-                localStorage.setItem('wibeUser', JSON.stringify(userDataWithoutPassword));
-                resolve(userDataWithoutPassword);
-            }
-        });
-    };
-
-    // Logout function
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('wibeUser');
-    };
-
-    // Update user profile
-    const updateProfile = (updates) => {
-        const updatedUser = { ...user, ...updates };
-        setUser(updatedUser);
-        localStorage.setItem('wibeUser', JSON.stringify(updatedUser));
-
-        // Also update in registered users
-        const registeredUsers = getRegisteredUsers();
-        const userIndex = registeredUsers.findIndex(u => u.id === user.id);
-        if (userIndex !== -1) {
-            registeredUsers[userIndex] = { ...registeredUsers[userIndex], ...updates };
-            localStorage.setItem('wibeRegisteredUsers', JSON.stringify(registeredUsers));
+    const loginWithGoogle = async (credential) => {
+        try {
+            const publicClient = createPublicClient();
+            const { data } = await publicClient.post('/auth/google/', { access_token: credential });
+            
+            // Backend returns: { success: true, data: { user, tokens: { access, refresh } } }
+            const { user: userData, tokens } = data.data || data;
+            
+            // Сохраняем токены
+            setTokens({ access: tokens.access, refresh: tokens.refresh });
+            setUser(userData);
+            
+            return userData;
+        } catch (error) {
+            console.error('[Auth] Google login failed:', error);
+            throw error.response?.data?.error || error.response?.data || new Error('Google login failed');
         }
+    };
 
-        return updatedUser;
+    // Logout функция
+    const logout = async () => {
+        try {
+            // Уведомляем сервер о logout (для blacklist токена)
+            await apiClient.post('/auth/logout/');
+        } catch (error) {
+            console.error('[Auth] Logout request failed:', error);
+        } finally {
+            // Очищаем локально в любом случае
+            removeTokens();
+            setUser(null);
+        }
+    };
+
+    // Refresh данных пользователя
+    const refreshUser = useCallback(async () => {
+        try {
+            const { data } = await apiClient.get('/auth/me/');
+            setUser(data);
+            return data;
+        } catch (error) {
+            console.error('[Auth] Failed to refresh user:', error);
+            throw error;
+        }
+    }, []);
+
+    // Update профиля
+    const updateProfile = async (updates) => {
+        try {
+            const { data } = await apiClient.patch('/auth/me/', updates);
+            setUser(data);
+            return data;
+        } catch (error) {
+            console.error('[Auth] Profile update failed:', error);
+            throw error.response?.data || new Error('Profile update failed');
+        }
+    };
+
+    // Reset пароля
+    const resetPassword = async (email) => {
+        try {
+            const publicClient = createPublicClient();
+            await publicClient.post('/auth/password/reset/', { email });
+            return true;
+        } catch (error) {
+            console.error('[Auth] Password reset failed:', error);
+            throw error.response?.data || new Error('Password reset failed');
+        }
+    };
+
+    // Confirm reset пароля
+    const confirmResetPassword = async (uid, token, newPassword) => {
+        try {
+            const publicClient = createPublicClient();
+            await publicClient.post('/auth/password/reset/confirm/', {
+                uid,
+                token,
+                new_password: newPassword,
+            });
+            return true;
+        } catch (error) {
+            console.error('[Auth] Password reset confirm failed:', error);
+            throw error.response?.data || new Error('Password reset confirm failed');
+        }
     };
 
     const value = {
         user,
         isLoading,
+        isInitialized,
         isAuthenticated: !!user,
         login,
         loginWithGoogle,
         register,
         logout,
-        updateProfile
+        updateProfile,
+        refreshUser,
+        resetPassword,
+        confirmResetPassword,
     };
 
     return (

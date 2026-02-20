@@ -21,14 +21,13 @@ export const useChats = () => {
  */
 export const useChat = (chatId) => {
     return useQuery({
-        queryKey: ['chat', chatId],
+        queryKey: ['chats', chatId],
         queryFn: async () => {
-            if (!chatId) throw new Error('Chat ID is required');
             const { data } = await apiClient.get(`/chats/${chatId}/`);
             return data;
         },
         enabled: !!chatId,
-        staleTime: 1 * 60 * 1000, // 1 minute
+        staleTime: 1 * 60 * 1000,
     });
 };
 
@@ -36,16 +35,21 @@ export const useChat = (chatId) => {
  * Hook для получения сообщений чата
  */
 export const useChatMessages = (chatId) => {
-    return useQuery({
-        queryKey: ['chat', chatId, 'messages'],
-        queryFn: async () => {
-            if (!chatId) throw new Error('Chat ID is required');
-            const { data } = await apiClient.get(`/chats/${chatId}/messages/`);
+    return useInfiniteQuery({
+        queryKey: ['chats', chatId, 'messages'],
+        queryFn: async ({ pageParam = 1 }) => {
+            const { data } = await apiClient.get(`/chats/${chatId}/messages/?page=${pageParam}`);
             return data;
         },
         enabled: !!chatId,
+        getNextPageParam: (lastPage) => {
+            if (lastPage.next) {
+                const url = new URL(lastPage.next);
+                return url.searchParams.get('page');
+            }
+            return undefined;
+        },
         staleTime: 30 * 1000, // 30 seconds
-        refetchInterval: 5 * 1000, // Refetch every 5 seconds for real-time feel
     });
 };
 
@@ -56,8 +60,8 @@ export const useCreateChat = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (chatData) => {
-            const { data } = await apiClient.post('/chats/', chatData);
+        mutationFn: async (participantId) => {
+            const { data } = await apiClient.post('/chats/', { participant_id: participantId });
             return data;
         },
         onSuccess: () => {
@@ -73,58 +77,21 @@ export const useSendMessage = (chatId) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (message) => {
-            const { data } = await apiClient.post(`/chats/${chatId}/messages/`, {
-                content: message,
-            });
+        mutationFn: async (text) => {
+            const { data } = await apiClient.post(`/chats/${chatId}/messages/`, { text });
             return data;
         },
-        onMutate: async (newMessage) => {
-            // Optimistic update
-            await queryClient.cancelQueries(['chat', chatId, 'messages']);
-            const previousMessages = queryClient.getQueryData(['chat', chatId, 'messages']);
-
-            if (previousMessages) {
-                queryClient.setQueryData(['chat', chatId, 'messages'], (old) => [
-                    ...old,
-                    {
-                        id: Date.now(),
-                        content: newMessage,
-                        sender: 'me',
-                        created_at: new Date().toISOString(),
-                        is_read: false,
-                        optimistic: true,
-                    },
-                ]);
-            }
-
-            return { previousMessages };
-        },
-        onError: (err, variables, context) => {
-            if (context?.previousMessages) {
-                queryClient.setQueryData(['chat', chatId, 'messages'], context.previousMessages);
-            }
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries(['chat', chatId, 'messages']);
+        onSuccess: () => {
+            queryClient.invalidateQueries(['chats', chatId, 'messages']);
+            queryClient.invalidateQueries(['chats']);
         },
     });
 };
 
-/**
- * Hook для отметки сообщений как прочитанные
- */
-export const useMarkMessagesAsRead = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async (chatId) => {
-            const { data } = await apiClient.post(`/chats/${chatId}/mark_read/`);
-            return data;
-        },
-        onSuccess: (_, chatId) => {
-            queryClient.invalidateQueries(['chat', chatId, 'messages']);
-            queryClient.invalidateQueries(['chats']);
-        },
-    });
+export default {
+    useChats,
+    useChat,
+    useChatMessages,
+    useCreateChat,
+    useSendMessage,
 };

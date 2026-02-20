@@ -2,53 +2,51 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../lib/apiClient';
 
 /**
+ * Hook для получения отзывов listing'а
+ */
+export const useListingReviews = (listingId) => {
+    return useQuery({
+        queryKey: ['reviews', 'listing', listingId],
+        queryFn: async () => {
+            const { data } = await apiClient.get(`/listings/${listingId}/reviews/`);
+            return data;
+        },
+        enabled: !!listingId,
+        staleTime: 5 * 60 * 1000,
+    });
+};
+
+/**
  * Hook для создания отзыва
  */
 export const useCreateReview = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (reviewData) => {
-            const { data } = await apiClient.post('/reviews/', reviewData);
+        mutationFn: async ({ listing_id, rating, comment }) => {
+            const { data } = await apiClient.post('/reviews/', { listing_id, rating, comment });
             return data;
         },
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries(['reviews']);
-            queryClient.invalidateQueries(['listing', variables.listing]);
-            queryClient.invalidateQueries(['profile', 'sales']);
+            queryClient.invalidateQueries(['reviews', 'listing', variables.listing_id]);
+            queryClient.invalidateQueries(['listings', variables.listing_id]);
         },
-    });
-};
-
-/**
- * Hook для получения отзывов listing'а
- */
-export const useListingReviews = (listingId) => {
-    return useQuery({
-        queryKey: ['listing', listingId, 'reviews'],
-        queryFn: async () => {
-            if (!listingId) throw new Error('Listing ID is required');
-            const { data } = await apiClient.get(`/listings/${listingId}/reviews/`);
-            return data;
-        },
-        enabled: !!listingId,
-        staleTime: 5 * 60 * 1000, // 5 minutes
     });
 };
 
 /**
  * Hook для обновления отзыва
  */
-export const useUpdateReview = () => {
+export const useUpdateReview = (reviewId) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ id, updates }) => {
-            const { data } = await apiClient.put(`/reviews/${id}/`, updates);
+        mutationFn: async ({ rating, comment }) => {
+            const { data } = await apiClient.put(`/reviews/${reviewId}/`, { rating, comment });
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(['reviews']);
+            queryClient.invalidateQueries(['reviews', reviewId]);
         },
     });
 };
@@ -56,43 +54,40 @@ export const useUpdateReview = () => {
 /**
  * Hook для удаления отзыва
  */
-export const useDeleteReview = () => {
+export const useDeleteReview = (reviewId) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (reviewId) => {
+        mutationFn: async () => {
             await apiClient.delete(`/reviews/${reviewId}/`);
-            return reviewId;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(['reviews']);
+            queryClient.invalidateQueries(['reviews', reviewId]);
         },
     });
 };
 
 /**
- * Hook для ответа на отзыв (для продавца)
+ * Hook для ответа на отзыв (продавец)
  */
 export const useReviewResponse = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ reviewId, response }) => {
-            const { data } = await apiClient.post(`/reviews/${reviewId}/response/`, {
-                response,
-            });
+            const { data } = await apiClient.post(`/reviews/${reviewId}/response/`, { response });
             return data;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['reviews']);
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries(['reviews', variables.reviewId]);
         },
     });
 };
 
 /**
- * Hook для отметки отзыва как полезный
+ * Hook для отметки отзыва как полезного
  */
-export const useReviewHelpful = () => {
+export const useMarkReviewHelpful = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -100,8 +95,17 @@ export const useReviewHelpful = () => {
             const { data } = await apiClient.post(`/reviews/${reviewId}/helpful/`);
             return data;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['reviews']);
+        onSuccess: (_, reviewId) => {
+            queryClient.invalidateQueries(['reviews', reviewId]);
         },
     });
+};
+
+export default {
+    useListingReviews,
+    useCreateReview,
+    useUpdateReview,
+    useDeleteReview,
+    useReviewResponse,
+    useMarkReviewHelpful,
 };

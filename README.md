@@ -1,16 +1,261 @@
-# React + Vite
+# 🎮 WibeStore — Маркетплейс игровых аккаунтов
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**WibeStore** — профессиональная платформа для покупки и продажи игровых аккаунтов с полной интеграцией платежей, чатом и системой гарантий.
 
-Currently, two official plugins are available:
+## 🚀 Технологии
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Frontend
+- **React 19** + **Vite** — современный UI
+- **React Query (TanStack)** — data fetching
+- **React Router** — навигация
+- **Tailwind CSS** — стилизация
+- **Axios** — HTTP клиент
+- **WebSocket** — real-time коммуникация
 
-## React Compiler
+### Backend
+- **Django 5.1** + **Django REST Framework** — API
+- **Django Channels** — WebSocket поддержка
+- **PostgreSQL** — база данных
+- **Redis** — кэш и message broker
+- **Celery** — асинхронные задачи
+- **JWT** — аутентификация
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📁 Структура проекта
 
-## Expanding the ESLint configuration
+```
+WibeStore/
+├── src/                        # Frontend исходный код
+│   ├── components/            # React компоненты
+│   ├── context/               # React контексты
+│   ├── hooks/                 # Custom hooks
+│   ├── pages/                 # Страницы
+│   ├── lib/                   # Утилиты (API client, etc.)
+│   ├── App.jsx
+│   └── main.jsx
+├── wibestore_backend/         # Backend исходный код
+│   ├── apps/                  # Django приложения
+│   ├── config/                # Настройки Django
+│   ├── core/                  # Общие утилиты
+│   ├── manage.py
+│   └── requirements.txt
+├── .env                       # Frontend environment
+├── package.json
+└── README.md
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🏃 Быстрый старт
+
+### Требования
+
+- **Node.js 20+**
+- **Python 3.12+**
+- **PostgreSQL 16+**
+- **Redis 7+**
+
+### 1. Клонирование
+
+```bash
+git clone <repository-url>
+cd WibeStore
+```
+
+### 2. Backend настройка
+
+```bash
+cd wibestore_backend
+
+# Создать виртуальное окружение
+python -m venv venv
+
+# Активировать
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/Mac
+
+# Установить зависимости
+pip install -r requirements.txt
+
+# Настроить .env
+copy .env.example .env  # Windows
+cp .env.example .env  # Linux/Mac
+
+# Применить миграции
+python manage.py migrate
+
+# Создать суперпользователя
+python manage.py createsuperuser
+
+# Запустить сервер
+python manage.py runserver
+```
+
+### 3. Frontend настройка
+
+```bash
+cd c:\WibeStore\Wibestore
+
+# Установить зависимости
+npm install
+
+# .env уже настроен для локальной разработки
+
+# Запустить dev сервер
+npm run dev
+```
+
+### 4. Docker (рекомендуется)
+
+```bash
+cd wibestore_backend
+
+# Запустить все сервисы
+docker-compose up -d
+
+# Применить миграции
+docker-compose exec web python manage.py migrate
+
+# Создать суперпользователя
+docker-compose exec web python manage.py createsuperuser
+```
+
+## 🔌 API Документация
+
+После запуска backend сервера Swagger UI доступен по адресу:
+- **Swagger UI**: http://localhost:8000/api/v1/docs/
+- **ReDoc**: http://localhost:8000/api/v1/schema/
+
+### Основные endpoints
+
+| Endpoint | Описание |
+|----------|----------|
+| `POST /api/v1/auth/register/` | Регистрация нового пользователя |
+| `POST /api/v1/auth/login/` | Аутентификация |
+| `GET /api/v1/games/` | Список игр |
+| `GET /api/v1/listings/` | Список игровых аккаунтов |
+| `GET /api/v1/profile/` | Профиль пользователя |
+| `GET /api/v1/chats/` | Чаты пользователя |
+| `WS /ws/chat/{id}/` | WebSocket для real-time чата |
+
+Полный список endpoints см. в [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
+
+## 🎯 Основные возможности
+
+### Для покупателей
+- ✅ Поиск и фильтрация игровых аккаунтов
+- ✅ Безопасная покупка через Escrow
+- ✅ Гарантия возврата средств
+- ✅ Real-time чат с продавцом
+- ✅ Система отзывов и рейтингов
+
+### Для продавцов
+- ✅ Создание и управление listings
+- ✅ Статистика продаж
+- ✅ Управление заказами
+- ✅ Вывод средств
+
+### Для администраторов
+- ✅ Модерация listings
+- ✅ Управление пользователями
+- ✅ Обработка жалоб
+- ✅ Финансовая статистика
+
+## 🧪 Тестирование
+
+### Backend
+
+```bash
+cd wibestore_backend
+
+# Запустить тесты
+pytest
+
+# С coverage
+pytest --cov=apps
+```
+
+### Frontend
+
+```bash
+# Запустить линтер
+npm run lint
+
+# Сборка
+npm run build
+
+# Preview production
+npm run preview
+```
+
+## 📦 Production Deployment
+
+### Backend
+
+```bash
+# Собрать статику
+python manage.py collectstatic --noinput
+
+# Применить миграции
+python manage.py migrate
+
+# Запустить с Gunicorn
+gunicorn config.wsgi:application --bind 0.0.0.0:8000
+
+# Запустить Celery worker
+celery -A config worker -l INFO --concurrency=4
+
+# Запустить Celery beat
+celery -A config beat -l INFO
+```
+
+### Frontend
+
+```bash
+# Сборка
+npm run build
+
+# Деплой на Netlify/Vercel или свой сервер
+```
+
+### Docker Compose (Production)
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+## 🔐 Безопасность
+
+- ✅ HTTPS в production
+- ✅ JWT аутентификация
+- ✅ CSRF защита
+- ✅ Rate limiting
+- ✅ Input валидация
+- ✅ XSS защита
+- ✅ SQL Injection защита (ORM)
+
+## 📊 Мониторинг
+
+- **Health Check**: http://localhost:8000/health/
+- **Detailed Health**: http://localhost:8000/health/detailed/
+- **Sentry** — отслеживание ошибок
+- **Django Logging** — логи в файлах
+
+## 🤝 Вклад
+
+1. Fork репозиторий
+2. Создай feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit изменения (`git commit -m 'Add amazing feature'`)
+4. Push в branch (`git push origin feature/amazing-feature`)
+5. Открой Pull Request
+
+## 📄 License
+
+MIT License — см. [LICENSE](./LICENSE) файл.
+
+## 📞 Контакты
+
+- **Email**: support@wibestore.uz
+- **Telegram**: @wibestore_support
+- **Website**: https://wibestore.uz
+
+---
+
+**WibeStore** © 2024. Создано с ❤️ для геймеров.

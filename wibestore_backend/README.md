@@ -1,192 +1,258 @@
 # WibeStore Backend
 
-> Professional Django 6.0 backend for the WibeStore gaming accounts marketplace.
+Django REST API для маркетплейса игровых аккаунтов WibeStore.
 
-## 📋 Overview
+## 🚀 Быстрый старт
 
-WibeStore is a marketplace for buying and selling gaming accounts (PUBG Mobile, Steam, Free Fire, Standoff 2, Mobile Legends, Clash of Clans, Roblox, and 40+ other games). The platform includes premium subscriptions, secure Escrow transactions, real-time chat, notifications, a reviews system, and a powerful admin panel.
-
-## 🛠️ Tech Stack
-
-- **Django 6.0** — Web framework
-- **Django REST Framework 3.15+** — REST API
-- **PostgreSQL 16+** — Database
-- **Redis 7+** — Cache, Celery broker, WebSocket layer
-- **Celery 5.3+** — Background tasks
-- **Django Channels 4.2+** — WebSocket support
-- **JWT** — Authentication (via `djangorestframework-simplejwt`)
-- **drf-spectacular** — OpenAPI documentation
-- **Docker** — Containerized deployment
-
-## 🚀 Quick Start
-
-### Prerequisites
+### Требования
 
 - Python 3.12+
 - PostgreSQL 16+
 - Redis 7+
-- Docker & Docker Compose (optional)
 
-### 1. Clone & Install
+### Установка
 
 ```bash
-git clone https://github.com/your-org/wibestore-backend.git
-cd wibestore-backend
-
-# Create virtual environment
+# Создать виртуальное окружение
 python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# venv\Scripts\activate   # Windows
 
-# Install dependencies
+# Активировать
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/Mac
+
+# Установить зависимости
 pip install -r requirements.txt
-```
 
-### 2. Environment Setup
+# Скопировать .env
+copy .env.example .env  # Windows
+cp .env.example .env  # Linux/Mac
 
-```bash
-cp .env.example .env
-# Edit .env with your values
-```
-
-### 3. Database Setup
-
-```bash
+# Применить миграции
 python manage.py migrate
+
+# Создать суперпользователя
 python manage.py createsuperuser
-```
 
-### 4. Seed Initial Data
-
-```bash
-python scripts/seed_data.py
-```
-
-### 5. Run the Server
-
-```bash
+# Запустить сервер
 python manage.py runserver
 ```
 
-### 6. Run Celery (in a separate terminal)
+### Docker
 
 ```bash
-celery -A config worker --loglevel=info
-celery -A config beat --loglevel=info
+# Запустить все сервисы
+docker-compose up -d
+
+# Миграции
+docker-compose exec web python manage.py migrate
+
+# Суперпользователь
+docker-compose exec web python manage.py createsuperuser
 ```
 
-## 🐳 Docker Setup
-
-```bash
-docker-compose up --build
-```
-
-This starts:
-- **web** — Django + Gunicorn
-- **postgres** — PostgreSQL database
-- **redis** — Redis cache/broker
-- **celery-worker** — Celery worker
-- **celery-beat** — Celery Beat scheduler
-- **nginx** — Reverse proxy
-
-## 📡 API Documentation
-
-Once the server is running, access:
-
-- **Swagger UI**: [http://localhost:8000/api/v1/docs/](http://localhost:8000/api/v1/docs/)
-- **OpenAPI Schema**: [http://localhost:8000/api/v1/schema/](http://localhost:8000/api/v1/schema/)
-- **Admin Panel**: [http://localhost:8000/admin/](http://localhost:8000/admin/)
-
-### Main API Endpoints
-
-| Module | Endpoint | Description |
-|---|---|---|
-| **Auth** | `POST /api/v1/auth/register/` | Register |
-| **Auth** | `POST /api/v1/auth/login/` | Login (JWT) |
-| **Auth** | `POST /api/v1/auth/google/` | Google OAuth |
-| **Auth** | `GET /api/v1/auth/me/` | Current user |
-| **Games** | `GET /api/v1/games/` | List games |
-| **Games** | `GET /api/v1/games/categories/` | List categories |
-| **Listings** | `GET /api/v1/listings/` | Browse listings |
-| **Listings** | `POST /api/v1/listings/` | Create listing |
-| **Payments** | `POST /api/v1/payments/deposit/` | Deposit funds |
-| **Payments** | `POST /api/v1/payments/purchase/` | Buy (Escrow) |
-| **Payments** | `GET /api/v1/payments/balance/` | User balance |
-| **Subscriptions** | `GET /api/v1/subscriptions/plans/` | List plans |
-| **Chat** | `GET /api/v1/chats/` | List chats |
-| **Notifications** | `GET /api/v1/notifications/` | List notifications |
-| **Reviews** | `POST /api/v1/reviews/` | Create review |
-| **Reports** | `POST /api/v1/reports/` | File report |
-| **Health** | `GET /health/` | Health check |
-| **Health** | `GET /health/detailed/` | Detailed health |
-
-### WebSocket Endpoints
-
-| Endpoint | Description |
-|---|---|
-| `ws://host/ws/chat/{room_id}/` | Real-time chat |
-| `ws://host/ws/notifications/` | Real-time notifications |
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=. --cov-report=html
-
-# Run specific test file
-pytest tests/test_accounts.py
-
-# Run specific test class
-pytest tests/test_accounts.py::TestRegistration
-```
-
-## 📁 Project Structure
+## 📁 Структура проекта
 
 ```
 wibestore_backend/
-├── config/              # Django configuration
-│   ├── settings/        # Environment-specific settings
-│   ├── urls.py          # Root URL configuration
-│   ├── celery.py        # Celery configuration
-│   └── asgi.py          # ASGI (WebSocket support)
-├── apps/                # Django applications
-│   ├── accounts/        # Users & authentication
-│   ├── games/           # Games catalog
-│   ├── marketplace/     # Listings & trading
-│   ├── payments/        # Payments & Escrow
-│   ├── subscriptions/   # Premium subscriptions
-│   ├── messaging/       # Real-time chat
-│   ├── notifications/   # Notification system
-│   ├── reviews/         # Reviews & ratings
-│   ├── reports/         # Reports & moderation
-│   └── admin_panel/     # Admin API
-├── core/                # Shared components
-│   ├── models.py        # Abstract base models
-│   ├── exceptions.py    # Custom exceptions
-│   ├── permissions.py   # Shared permissions
-│   └── utils.py         # Utilities
-├── templates/           # Email templates
-├── tests/               # Test suite
-├── scripts/             # Management scripts
-└── docker-compose.yml   # Docker setup
+├── apps/                    # Django приложения
+│   ├── accounts/           # Аутентификация и пользователи
+│   ├── games/              # Игры
+│   ├── marketplace/        # Listings, покупки/продажи
+│   ├── payments/           # Платежи
+│   ├── subscriptions/      # Подписки
+│   ├── messaging/          # Чат
+│   ├── notifications/      # Уведомления
+│   ├── reviews/            # Отзывы
+│   ├── reports/            # Жалобы
+│   └── admin_panel/        # Админ панель
+├── config/                  # Настройки Django
+│   ├── settings/           # Настройки для разных окружений
+│   ├── urls.py             # Корневой URLconf
+│   ├── asgi.py             # ASGI config (WebSocket)
+│   └── wsgi.py             # WSGI config
+├── core/                    # Общие утилиты
+│   ├── constants.py        # Константы
+│   ├── validators.py       # Валидаторы
+│   └── utils.py            # Утилиты
+├── templates/              # Django templates
+├── static/                 # Статические файлы
+├── media/                  # Медиа файлы
+├── logs/                   # Логи
+├── tests/                  # Тесты
+├── manage.py               # Django management
+├── requirements.txt        # Зависимости
+├── docker-compose.yml      # Docker Compose
+└── Dockerfile              # Docker image
 ```
 
-## 🔒 Security Features
+## 🔌 API Endpoints
 
-- JWT authentication with token rotation
-- Google OAuth 2.0 integration
-- Argon2 password hashing
-- Password history (prevents reuse)
-- Rate limiting on auth endpoints
-- Data encryption (Fernet) for sensitive account credentials
-- HTTPS enforcement in production
-- CORS configuration
-- CSRF protection
-- Content Security Policy headers
+### Authentication
 
-## 📝 License
+- `POST /api/v1/auth/register/` - Регистрация
+- `POST /api/v1/auth/login/` - Login
+- `POST /api/v1/auth/logout/` - Logout
+- `POST /api/v1/auth/refresh/` - Refresh token
+- `POST /api/v1/auth/google/` - Google OAuth
+- `GET /api/v1/auth/me/` - Текущий пользователь
+- `PATCH /api/v1/auth/me/` - Обновить профиль
 
-Proprietary — All rights reserved.
+### Games
+
+- `GET /api/v1/games/` - Список игр
+- `GET /api/v1/games/{slug}/` - Игра по slug
+- `GET /api/v1/games/{slug}/listings/` - Listings игры
+
+### Listings
+
+- `GET /api/v1/listings/` - Список listing'ов
+- `POST /api/v1/listings/` - Создать listing
+- `GET /api/v1/listings/{id}/` - Listing по ID
+- `PUT/PATCH /api/v1/listings/{id}/` - Обновить listing
+- `DELETE /api/v1/listings/{id}/` - Удалить listing
+- `POST /api/v1/listings/{id}/favorite/` - В избранное
+- `POST /api/v1/listings/{id}/view/` - Засчитать просмотр
+
+### Profile
+
+- `GET /api/v1/profile/` - Профиль
+- `PATCH /api/v1/profile/` - Обновить профиль
+- `GET /api/v1/profile/listings/` - Мои listings
+- `GET /api/v1/profile/favorites/` - Избранное
+- `GET /api/v1/profile/purchases/` - Покупки
+- `GET /api/v1/profile/sales/` - Продажи
+- `GET /api/v1/profile/notifications/` - Уведомления
+
+### Payments
+
+- `POST /api/v1/payments/deposit/` - Депозит
+- `POST /api/v1/payments/withdraw/` - Вывод
+- `GET /api/v1/payments/transactions/` - История транзакций
+
+### Subscriptions
+
+- `GET /api/v1/subscriptions/plans/` - Планы подписок
+- `POST /api/v1/subscriptions/purchase/` - Купить подписку
+- `GET /api/v1/subscriptions/my/` - Мои подписки
+- `POST /api/v1/subscriptions/{id}/cancel/` - Отменить подписку
+
+### Chat
+
+- `GET /api/v1/chats/` - Список чатов
+- `POST /api/v1/chats/` - Создать чат
+- `GET /api/v1/chats/{id}/` - Чат по ID
+- `GET /api/v1/chats/{id}/messages/` - Сообщения
+- `WS /ws/chat/{id}/` - WebSocket для real-time чата
+
+### Reviews
+
+- `POST /api/v1/reviews/` - Создать отзыв
+- `GET/PUT/DELETE /api/v1/reviews/{id}/` - CRUD отзыва
+- `POST /api/v1/reviews/{id}/response/` - Ответ на отзыв
+- `POST /api/v1/reviews/{id}/helpful/` - Отметить как полезный
+
+### Admin
+
+- `GET /api/v1/admin-panel/dashboard/` - Dashboard
+- `GET /api/v1/admin-panel/users/` - Пользователи
+- `GET /api/v1/admin-panel/listings/` - Listings
+- `GET /api/v1/admin-panel/reports/` - Жалобы
+- `GET /api/v1/admin-panel/transactions/` - Транзакции
+
+## 📚 Документация
+
+Swagger UI доступен на `/api/v1/docs/` после запуска сервера.
+
+## 🧪 Тестирование
+
+```bash
+# Запустить тесты
+pytest
+
+# С coverage
+pytest --cov=apps
+
+# Конкретный файл
+pytest apps/accounts/tests/test_auth.py -v
+```
+
+## 🔧 Настройки
+
+### Переменные окружения
+
+См. `.env.example` для полного списка переменных.
+
+### Database
+
+```env
+DATABASE_URL=postgresql://wibestore:wibestore_password@localhost:5432/wibestore_db
+```
+
+### Redis
+
+```env
+REDIS_URL=redis://localhost:6379/0
+```
+
+### JWT
+
+```env
+JWT_SECRET_KEY=your-secret-key
+JWT_ACCESS_TOKEN_LIFETIME=15
+JWT_REFRESH_TOKEN_LIFETIME=10080
+```
+
+## 📦 Production
+
+### Сборка статики
+
+```bash
+python manage.py collectstatic --noinput
+```
+
+### Миграции
+
+```bash
+python manage.py migrate
+```
+
+### Запуск с Gunicorn
+
+```bash
+gunicorn config.wsgi:application --bind 0.0.0.0:8000
+```
+
+### Celery Worker
+
+```bash
+celery -A config worker -l INFO --concurrency=4
+```
+
+### Celery Beat
+
+```bash
+celery -A config beat -l INFO
+```
+
+## 🐛 Debugging
+
+### Включить debug logging
+
+В `development.py`:
+
+```python
+LOGGING["loggers"]["apps"]["level"] = "DEBUG"
+```
+
+### Django Debug Toolbar
+
+Установлен в development режиме. Доступен на `/__debug__/`.
+
+## 📞 Support
+
+- Email: support@wibestore.uz
+- Telegram: @wibestore_support
+
+---
+
+WibeStore © 2024

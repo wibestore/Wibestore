@@ -2,69 +2,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../lib/apiClient';
 
 /**
- * Hook для создания жалобы (report)
- */
-export const useCreateReport = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async (reportData) => {
-            const { data } = await apiClient.post('/reports/', reportData);
-            return data;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['reports']);
-        },
-    });
-};
-
-/**
- * Hook для получения списка жалоб (admin)
- */
-export const useAdminReports = (filters = {}) => {
-    return useQuery({
-        queryKey: ['admin', 'reports', filters],
-        queryFn: async () => {
-            const params = new URLSearchParams(filters).toString();
-            const { data } = await apiClient.get(`/admin/reports/?${params}`);
-            return data;
-        },
-        staleTime: 2 * 60 * 1000, // 2 minutes
-    });
-};
-
-/**
- * Hook для обновления статуса жалобы (admin)
- */
-export const useUpdateReport = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async ({ id, status, resolution }) => {
-            const { data } = await apiClient.patch(`/admin/reports/${id}/`, {
-                status,
-                resolution,
-            });
-            return data;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['admin', 'reports']);
-        },
-    });
-};
-
-/**
- * Hook для получения дашборда админа
+ * Hook для получения dashboard статистики (admin)
  */
 export const useAdminDashboard = () => {
     return useQuery({
         queryKey: ['admin', 'dashboard'],
         queryFn: async () => {
-            const { data } = await apiClient.get('/admin/dashboard/');
+            const { data } = await apiClient.get('/admin-panel/dashboard/');
             return data;
         },
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        refetchInterval: 60 * 1000, // Refetch every minute
+        staleTime: 2 * 60 * 1000,
     });
 };
 
@@ -72,26 +19,33 @@ export const useAdminDashboard = () => {
  * Hook для получения списка пользователей (admin)
  */
 export const useAdminUsers = (filters = {}) => {
-    return useQuery({
+    return useInfiniteQuery({
         queryKey: ['admin', 'users', filters],
-        queryFn: async () => {
-            const params = new URLSearchParams(filters).toString();
-            const { data } = await apiClient.get(`/admin/users/?${params}`);
+        queryFn: async ({ pageParam = 1 }) => {
+            const params = new URLSearchParams({ page: pageParam, ...filters });
+            const { data } = await apiClient.get(`/admin-panel/users/?${params}`);
             return data;
         },
-        staleTime: 2 * 60 * 1000, // 2 minutes
+        getNextPageParam: (lastPage) => {
+            if (lastPage.next) {
+                const url = new URL(lastPage.next);
+                return url.searchParams.get('page');
+            }
+            return undefined;
+        },
+        staleTime: 1 * 60 * 1000,
     });
 };
 
 /**
  * Hook для обновления пользователя (admin)
  */
-export const useUpdateAdminUser = () => {
+export const useAdminUpdateUser = (userId) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ id, updates }) => {
-            const { data } = await apiClient.patch(`/admin/users/${id}/`, updates);
+        mutationFn: async (updates) => {
+            const { data } = await apiClient.patch(`/admin-panel/users/${userId}/`, updates);
             return data;
         },
         onSuccess: () => {
@@ -105,46 +59,62 @@ export const useUpdateAdminUser = () => {
  * Hook для получения списка listing'ов (admin)
  */
 export const useAdminListings = (filters = {}) => {
-    return useQuery({
+    return useInfiniteQuery({
         queryKey: ['admin', 'listings', filters],
-        queryFn: async () => {
-            const params = new URLSearchParams(filters).toString();
-            const { data } = await apiClient.get(`/admin/listings/?${params}`);
+        queryFn: async ({ pageParam = 1 }) => {
+            const params = new URLSearchParams({ page: pageParam, ...filters });
+            const { data } = await apiClient.get(`/admin-panel/listings/?${params}`);
             return data;
         },
-        staleTime: 2 * 60 * 1000, // 2 minutes
+        getNextPageParam: (lastPage) => {
+            if (lastPage.next) {
+                const url = new URL(lastPage.next);
+                return url.searchParams.get('page');
+            }
+            return undefined;
+        },
+        staleTime: 1 * 60 * 1000,
     });
 };
 
 /**
  * Hook для обновления listing'а (admin)
  */
-export const useUpdateAdminListing = () => {
+export const useAdminUpdateListing = (listingId) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ id, updates }) => {
-            const { data } = await apiClient.patch(`/admin/listings/${id}/`, updates);
+        mutationFn: async ({ status, rejection_reason }) => {
+            const { data } = await apiClient.patch(`/admin-panel/listings/${listingId}/`, { status, rejection_reason });
             return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['admin', 'listings']);
-            queryClient.invalidateQueries(['admin', 'dashboard']);
+            queryClient.invalidateQueries(['listings', listingId]);
         },
     });
 };
 
 /**
- * Hook для получения списка транзакций (admin)
+ * Hook для получения транзакций (admin)
  */
 export const useAdminTransactions = (filters = {}) => {
     return useQuery({
         queryKey: ['admin', 'transactions', filters],
         queryFn: async () => {
-            const params = new URLSearchParams(filters).toString();
-            const { data } = await apiClient.get(`/admin/transactions/?${params}`);
+            const params = new URLSearchParams(filters);
+            const { data } = await apiClient.get(`/admin-panel/transactions/?${params}`);
             return data;
         },
-        staleTime: 2 * 60 * 1000, // 2 minutes
+        staleTime: 1 * 60 * 1000,
     });
+};
+
+export default {
+    useAdminDashboard,
+    useAdminUsers,
+    useAdminUpdateUser,
+    useAdminListings,
+    useAdminUpdateListing,
+    useAdminTransactions,
 };

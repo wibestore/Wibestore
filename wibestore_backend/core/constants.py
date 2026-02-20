@@ -124,3 +124,12 @@ ESCROW_DISPUTE_WINDOW_HOURS = 48
 # MODERATION TIMEOUT (hours)
 # ============================================================
 MODERATION_AUTO_APPROVE_HOURS = 48
+
+# ============================================================
+# IMAGE UPLOAD SETTINGS
+# ============================================================
+IMAGE_UPLOAD_MAX_SIZE = 5 * 1024 * 1024  # 5MB
+IMAGE_UPLOAD_MAX_WIDTH = 1920
+IMAGE_UPLOAD_MAX_HEIGHT = 1080
+IMAGE_UPLOAD_MAX_FILES = 5
+IMAGE_UPLOAD_ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"]
