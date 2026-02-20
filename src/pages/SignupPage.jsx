@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, Gamepad2, Phone, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { sendWelcomeEmail } from '../lib/emailService';
 import { useLanguage } from '../context/LanguageContext';
+import { useToast } from '../components/ToastProvider';
 
 const SignupPage = () => {
     const navigate = useNavigate();
     const { register } = useAuth();
     const { t } = useLanguage();
+    const { addToast } = useToast();
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -30,8 +31,8 @@ const SignupPage = () => {
             return;
         }
 
-        if (formData.password.length < 6) {
-            setError(t('signup.password_short') || 'Password must be at least 6 characters');
+        if (formData.password.length < 8) {
+            setError(t('signup.password_short') || 'Password must be at least 8 characters');
             return;
         }
 
@@ -42,16 +43,26 @@ const SignupPage = () => {
 
         setIsLoading(true);
         try {
-            const newUser = await register({
+            await register({
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
                 password: formData.password
             });
-            sendWelcomeEmail(newUser);
+            addToast({
+                type: 'success',
+                title: 'Muvaffaqiyatli!',
+                message: 'Ro\'yxatdan o\'tish amalga oshirildi',
+            });
             navigate('/');
         } catch (err) {
-            setError(err.message);
+            const errorMessage = err?.message || 'Ro\'yxatdan o\'tishda xatolik yuz berdi';
+            setError(errorMessage);
+            addToast({
+                type: 'error',
+                title: 'Xatolik',
+                message: errorMessage,
+            });
         } finally {
             setIsLoading(false);
         }

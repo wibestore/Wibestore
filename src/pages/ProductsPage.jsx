@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, ChevronDown, Grid, List, X } from 'lucide-react';
-import GameCard from '../components/GameCard';
+import { useListings, useGames } from '../hooks';
 import AccountCard from '../components/AccountCard';
-import { games, accounts } from '../data/mockData';
+import SkeletonLoader from '../components/SkeletonLoader';
 import { useLanguage } from '../context/LanguageContext';
 
 const ProductsPage = () => {
@@ -13,8 +13,21 @@ const ProductsPage = () => {
     const [sortBy, setSortBy] = useState('newest');
     const [viewMode, setViewMode] = useState('grid');
     const [showFilters, setShowFilters] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12;
+    const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
+    
+    // API hooks
+    const { data: gamesData } = useGames();
+    const { data, isLoading, fetchNextPage, hasNextPage } = useListings({
+        game: selectedGame !== 'all' ? selectedGame : undefined,
+        search: searchQuery || undefined,
+        min_price: priceRange.min || undefined,
+        max_price: priceRange.max || undefined,
+        ordering: sortBy === 'price-low' ? 'price' : sortBy === 'price-high' ? '-price' : '-created_at',
+    });
+
+    // Flatten paginated data
+    const allListings = data?.pages?.flatMap(page => page.results) || [];
+    const totalPages = data?.pages?.[0]?.count ? Math.ceil(data.pages[0].count / 20) : 0;
 
     const sortOptions = [
         { value: 'newest', label: t('products.sort_newest') || 'Newest' },
@@ -22,38 +35,6 @@ const ProductsPage = () => {
         { value: 'price-high', label: t('products.sort_price_high') || 'Price: High to Low' },
         { value: 'rating', label: t('products.sort_rating') || 'Best Rating' },
     ];
-
-    const filteredAccounts = useMemo(() => {
-        let result = [...accounts];
-
-        if (selectedGame !== 'all') {
-            result = result.filter(acc => acc.gameId === selectedGame);
-        }
-
-        if (searchQuery) {
-            const q = searchQuery.toLowerCase();
-            result = result.filter(acc =>
-                acc.title.toLowerCase().includes(q) ||
-                acc.description.toLowerCase().includes(q) ||
-                acc.gameName.toLowerCase().includes(q)
-            );
-        }
-
-        switch (sortBy) {
-            case 'price-low': result.sort((a, b) => a.price - b.price); break;
-            case 'price-high': result.sort((a, b) => b.price - a.price); break;
-            case 'rating': result.sort((a, b) => b.seller.rating - a.seller.rating); break;
-            default: break;
-        }
-
-        return result;
-    }, [selectedGame, searchQuery, sortBy]);
-
-    const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
-    const paginatedAccounts = filteredAccounts.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
 
     return (
         <div className="page-enter" style={{ minHeight: '100vh' }}>
@@ -189,7 +170,13 @@ const ProductsPage = () => {
                 )}
 
                 {/* Results */}
-                {paginatedAccounts.length > 0 ? (
+                {isLoading ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+                        {[...Array(8)].map((_, i) => (
+                            <SkeletonLoader key={i} />
+                        ))}
+                    </div>
+                ) : allListings.length > 0 ? (
                     <>
                         <div
                             className={`grid animate-stagger ${viewMode === 'grid'
@@ -198,39 +185,34 @@ const ProductsPage = () => {
                                 }`}
                             style={{ gap: '16px' }}
                         >
-                            {paginatedAccounts.map((account) => (
-                                <AccountCard key={account.id} account={account} />
+                            {allListings.map((listing) => (
+                                <AccountCard
+                                    key={listing.id}
+                                    account={{
+                                        id: listing.id,
+                                        gameId: listing.game?.slug || listing.game?.id,
+                                        gameName: listing.game?.name || 'Unknown',
+                                        title: listing.title,
+                                        price: parseFloat(listing.price),
+                                        seller: listing.seller,
+                                        image: listing.images?.[0]?.image || '',
+                                        isLiked: listing.is_favorited || false,
+                                    }}
+                                    viewMode={viewMode}
+                                />
                             ))}
                         </div>
 
-                        {/* Pagination */}
-                        {totalPages > 1 && (
-                            <div className="flex items-center justify-center gap-2" style={{ marginTop: '32px', paddingBottom: '32px' }}>
-                                <div className="pagination">
-                                    <button
-                                        className="pagination-btn"
-                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                        disabled={currentPage === 1}
-                                    >
-                                        ←
-                                    </button>
-                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                                        <button
-                                            key={page}
-                                            className={`pagination-btn ${currentPage === page ? 'pagination-active' : ''}`}
-                                            onClick={() => setCurrentPage(page)}
-                                        >
-                                            {page}
-                                        </button>
-                                    ))}
-                                    <button
-                                        className="pagination-btn"
-                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                        disabled={currentPage === totalPages}
-                                    >
-                                        →
-                                    </button>
-                                </div>
+                        {/* Load More */}
+                        {hasNextPage && (
+                            <div className="text-center" style={{ marginTop: '32px' }}>
+                                <button
+                                    onClick={() => fetchNextPage()}
+                                    className="btn btn-primary btn-lg"
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? 'Loading...' : 'Load More'}
+                                </button>
                             </div>
                         )}
                     </>
@@ -245,7 +227,7 @@ const ProductsPage = () => {
                             {t('products.no_results_desc') || 'Try adjusting your search or filters'}
                         </p>
                         <button
-                            onClick={() => { setSearchQuery(''); setSelectedGame('all'); }}
+                            onClick={() => { setSearchQuery(''); setSelectedGame('all'); setPriceRange({ min: 0, max: 10000000 }); }}
                             className="btn btn-primary btn-md"
                         >
                             {t('products.clear_filters') || 'Clear filters'}

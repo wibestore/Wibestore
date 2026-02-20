@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Shield, Zap, Users, TrendingUp, Star, Crown, ChevronRight } from 'lucide-react';
+import { useGames, useListings } from '../hooks';
 import GameCard from '../components/GameCard';
 import AccountCard from '../components/AccountCard';
-import { games, accounts } from '../data/mockData';
+import SkeletonLoader from '../components/SkeletonLoader';
 import { useLanguage } from '../context/LanguageContext';
 
 // Animated counter hook
@@ -42,8 +43,15 @@ function useCounter(target, duration = 2000) {
 
 const HomePage = () => {
     const { t } = useLanguage();
-    const premiumAccounts = accounts.filter(acc => acc.isPremium).slice(0, 6);
-    const recommendedAccounts = accounts.slice(0, 8);
+    
+    // API hooks
+    const { data: gamesData, isLoading: gamesLoading } = useGames();
+    const { data: listingsData } = useListings({ limit: 8 });
+    
+    // Use API data or fallback
+    const games = gamesData?.results || [];
+    const premiumAccounts = listingsData?.pages?.[0]?.results?.filter(l => l.is_premium)?.slice(0, 6) || [];
+    const recommendedAccounts = listingsData?.pages?.[0]?.results?.slice(0, 8) || [];
 
     const statsData = [
         { target: '12,500+', label: t('stats.accounts'), icon: TrendingUp },

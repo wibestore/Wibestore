@@ -2,20 +2,29 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package, MessageSquare, Clock, CheckCircle, XCircle, Trash2, PlusCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useProfile, useProfileListings, useProfileFavorites, useProfilePurchases, useProfileSales, useDeleteListing } from '../hooks';
 import AccountCard from '../components/AccountCard';
 import ReviewList from '../components/ReviewList';
-import { accounts, games, formatPrice } from '../data/mockData';
+import { games, formatPrice } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
+import { useToast } from '../components/ToastProvider';
+import SkeletonLoader from '../components/SkeletonLoader';
 
 const ProfilePage = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
     const { user, isAuthenticated, logout } = useAuth();
-    const [activeTab, setActiveTab] = useState('purchases');
-    const [likedAccounts, setLikedAccounts] = useState([]);
-    const [purchases, setPurchases] = useState([]);
-    const [sales, setSales] = useState([]);
-    const [myListings, setMyListings] = useState([]);
+    const { addToast } = useToast();
+    const [activeTab, setActiveTab] = useState('listings');
+    
+    // API hooks
+    const { data: profile, isLoading: profileLoading } = useProfile();
+    const { data: listingsData, isLoading: listingsLoading } = useProfileListings();
+    const { data: favoritesData } = useProfileFavorites();
+    const { data: purchasesData } = useProfilePurchases();
+    const { data: salesData } = useProfileSales();
+    const { mutate: deleteListingMutation } = useDeleteListing();
+
     const [reviewCount, setReviewCount] = useState(0);
     const [averageRating, setAverageRating] = useState(5.0);
 
@@ -23,43 +32,12 @@ const ProfilePage = () => {
         if (!isAuthenticated) navigate('/login');
     }, [isAuthenticated, navigate]);
 
-    useEffect(() => {
-        if (user) {
-            const savedLikes = localStorage.getItem(`wibeLikes_${user.id}`);
-            if (savedLikes) {
-                const likedIds = JSON.parse(savedLikes);
-                setLikedAccounts(accounts.filter(acc => likedIds.includes(acc.id)));
-            }
-
-            const savedPurchases = localStorage.getItem(`wibePurchases_${user.id}`);
-            if (savedPurchases) {
-                setPurchases(accounts.filter(acc => JSON.parse(savedPurchases).includes(acc.id)));
-            } else {
-                const demoPurchases = accounts.slice(0, 2);
-                setPurchases(demoPurchases);
-                localStorage.setItem(`wibePurchases_${user.id}`, JSON.stringify(demoPurchases.map(a => a.id)));
-            }
-
-            const savedSales = localStorage.getItem(`wibeSales_${user.id}`);
-            if (savedSales) setSales(accounts.filter(acc => JSON.parse(savedSales).includes(acc.id)));
-
-            const savedReviews = localStorage.getItem('wibeReviews');
-            if (savedReviews) {
-                const userReviews = JSON.parse(savedReviews).filter(r => r.sellerId === user.id);
-                setReviewCount(userReviews.length);
-                if (userReviews.length > 0) {
-                    setAverageRating((userReviews.reduce((sum, r) => sum + r.rating, 0) / userReviews.length).toFixed(1));
-                }
-            }
-
-            const savedListings = localStorage.getItem('wibeListings');
-            if (savedListings) {
-                setMyListings(JSON.parse(savedListings).filter(l => l.sellerId === user.id));
-            }
-        }
-    }, [user]);
-
-    const handleLogout = () => { logout(); navigate('/'); };
+    // Use API data or fallback to user context
+    const displayUser = profile || user;
+    const myListings = listingsData?.results || [];
+    const likedAccounts = favoritesData?.results || [];
+    const purchases = purchasesData?.results || [];
+    const sales = salesData?.results || [];
 
     const getStatusBadge = (status) => {
         const map = {
@@ -71,26 +49,44 @@ const ProfilePage = () => {
         return map[status] || map.pending;
     };
 
-    const getGameName = (gameId) => games.find(g => g.id === gameId)?.name || 'Unknown';
-    const getGameImage = (gameId) => games.find(g => g.id === gameId)?.image || '';
-
     const deleteListing = (listingId) => {
         if (window.confirm(t('profile.delete_confirm') || 'Delete this listing?')) {
-            const saved = JSON.parse(localStorage.getItem('wibeListings') || '[]');
-            localStorage.setItem('wibeListings', JSON.stringify(saved.filter(l => l.id !== listingId)));
-            setMyListings(myListings.filter(l => l.id !== listingId));
+            deleteListingMutation(listingId, {
+                onSuccess: () => {
+                    addToast({
+                        type: 'success',
+                        title: 'O\'chirildi',
+                        message: 'Listing muvaffaqiyatli o\'chirildi',
+                    });
+                },
+                onError: (error) => {
+                    addToast({
+                        type: 'error',
+                        title: 'Xatolik',
+                        message: error?.message || 'O\'chirishda xatolik yuz berdi',
+                    });
+                }
+            });
         }
     };
 
     const tabs = [
-        { id: 'mylistings', label: t('profile.my_listings') || 'My Listings', icon: Package, count: myListings.length },
+        { id: 'listings', label: t('profile.my_listings') || 'My Listings', icon: Package, count: myListings.length },
         { id: 'purchases', label: t('profile.purchases') || 'Purchases', icon: ShoppingBag, count: purchases.length },
         { id: 'sales', label: t('profile.sales') || 'Sales', icon: Tag, count: sales.length },
         { id: 'likes', label: t('profile.likes') || 'Liked', icon: Heart, count: likedAccounts.length },
-        { id: 'reviews', label: t('profile.reviews') || 'Reviews', icon: MessageSquare, count: reviewCount },
     ];
 
     if (!user) return null;
+    
+    // Loading state
+    if (profileLoading) {
+        return (
+            <div className="page-enter" style={{ minHeight: '100vh', padding: '32px' }}>
+                <SkeletonLoader />
+            </div>
+        );
+    }
 
     const EmptyState = ({ icon: Icon, text, actionLabel, actionTo }) => (
         <div className="text-center" style={{ padding: '64px 16px' }}>

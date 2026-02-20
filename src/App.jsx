@@ -6,6 +6,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { CoinProvider } from './context/CoinContext';
 import { LanguageProvider } from './context/LanguageContext';
+import ToastProvider from './components/ToastProvider';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -91,13 +92,14 @@ const PageLoader = () => (
 function App() {
   return (
     <ErrorBoundary>
-      <Router>
-        <ThemeProvider>
-          <LanguageProvider>
-            <AuthProvider>
-              <CoinProvider>
-                <ChatProvider>
-                  <NotificationProvider>
+      <ToastProvider>
+        <Router>
+          <ThemeProvider>
+            <LanguageProvider>
+              <AuthProvider>
+                <CoinProvider>
+                  <ChatProvider>
+                    <NotificationProvider>
                     <Routes>
                       {/* Admin Login - No layout */}
                       <Route path="/admin/login" element={
@@ -213,6 +215,7 @@ function App() {
           </LanguageProvider>
         </ThemeProvider>
       </Router>
+      </ToastProvider>
     </ErrorBoundary>
   );
 }

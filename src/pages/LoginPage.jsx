@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Gamepad2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
-import { sendLoginEmail } from '../lib/emailService';
 import { useLanguage } from '../context/LanguageContext';
+import { useToast } from '../components/ToastProvider';
 
 const LoginPage = () => {
     const { t } = useLanguage();
     const { login, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const { addToast } = useToast();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,16 +19,29 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // Get redirect path from location state
+    const from = location.state?.from?.pathname || '/';
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
             await login(email, password);
-            await sendLoginEmail(email);
-            navigate('/');
-        } catch {
-            setError(t('auth.invalid_credentials') || 'Invalid email or password');
+            addToast({
+                type: 'success',
+                title: 'Muvaffaqiyatli!',
+                message: 'Xush kelibsiz!',
+            });
+            navigate(from, { replace: true });
+        } catch (err) {
+            const errorMessage = err?.message || t('auth.invalid_credentials') || 'Email yoki parol noto\'g\'ri';
+            setError(errorMessage);
+            addToast({
+                type: 'error',
+                title: 'Xatolik',
+                message: errorMessage,
+            });
         } finally {
             setLoading(false);
         }
@@ -35,23 +50,32 @@ const LoginPage = () => {
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+                // Exchange token for user info via backend
+                await loginWithGoogle(tokenResponse.access_token);
+                addToast({
+                    type: 'success',
+                    title: 'Muvaffaqiyatli!',
+                    message: 'Google orqali kirish amalga oshirildi',
                 });
-                const data = await res.json();
-                await loginWithGoogle({
-                    id: data.sub,
-                    email: data.email,
-                    name: data.name,
-                    avatar: data.picture,
+                navigate(from, { replace: true });
+            } catch (err) {
+                const errorMessage = err?.message || t('auth.google_error') || 'Google login failed';
+                setError(errorMessage);
+                addToast({
+                    type: 'error',
+                    title: 'Xatolik',
+                    message: errorMessage,
                 });
-                navigate('/');
-            } catch {
-                setError(t('auth.google_error') || 'Google login failed');
             }
         },
         onError: () => {
-            setError(t('auth.google_error') || 'Google login failed');
+            const errorMessage = t('auth.google_error') || 'Google login failed';
+            setError(errorMessage);
+            addToast({
+                type: 'error',
+                title: 'Xatolik',
+                message: errorMessage,
+            });
         },
     });
 

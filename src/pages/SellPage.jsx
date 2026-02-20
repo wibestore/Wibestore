@@ -3,17 +3,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Upload, X, Plus, DollarSign, Image, FileText, Tag, Shield, AlertCircle, CheckCircle, Search } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useToast } from '../components/ToastProvider';
+import { useCreateListing, useUploadImage } from '../hooks';
 import { games } from '../data/mockData';
 
 const SellPage = () => {
     const navigate = useNavigate();
     const { user, isAuthenticated } = useAuth();
     const { t } = useLanguage();
+    const { addToast } = useToast();
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [showGameModal, setShowGameModal] = useState(false);
     const [modalGameSearch, setModalGameSearch] = useState('');
+    
+    // API hooks
+    const { mutate: createListing, isLoading: isCreating } = useCreateListing();
+    const { mutate: uploadImage, isLoading: isUploading } = useUploadImage();
 
     const filteredModalGames = modalGameSearch
         ? games.filter(g => g.name.toLowerCase().includes(modalGameSearch.toLowerCase()))
@@ -72,17 +79,51 @@ const SellPage = () => {
     const handleSubmit = async () => {
         if (!validateStep(3)) return;
         setIsSubmitting(true);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        const listings = JSON.parse(localStorage.getItem('wibeListings') || '[]');
-        const newListing = {
-            id: crypto.randomUUID(), ...formData,
-            sellerId: user.id, sellerName: user.name,
-            status: 'pending', createdAt: new Date().toISOString()
-        };
-        listings.push(newListing);
-        localStorage.setItem('wibeListings', JSON.stringify(listings));
-        setIsSubmitting(false);
-        setSubmitted(true);
+        
+        try {
+            // Prepare data for API
+            const listingData = {
+                game: formData.gameId,
+                title: formData.title,
+                description: formData.description,
+                price: formData.price,
+                level: formData.level || '',
+                rank: formData.rank || '',
+                skins_count: parseInt(formData.skins) || 0,
+                features: formData.features,
+                login_method: formData.loginMethod,
+                account_email: formData.accountEmail,
+                account_password: formData.accountPassword,
+            };
+            
+            createListing(listingData, {
+                onSuccess: () => {
+                    addToast({
+                        type: 'success',
+                        title: 'Muvaffaqiyatli!',
+                        message: 'Listing yaratildi. Moderatsiyadan keyin ko\'rinadi.',
+                    });
+                    setSubmitted(true);
+                },
+                onError: (error) => {
+                    addToast({
+                        type: 'error',
+                        title: 'Xatolik',
+                        message: error?.message || 'Listing yaratishda xatolik yuz berdi',
+                    });
+                },
+                onSettled: () => {
+                    setIsSubmitting(false);
+                }
+            });
+        } catch (error) {
+            addToast({
+                type: 'error',
+                title: 'Xatolik',
+                message: error?.message || 'Noma\'lum xatolik',
+            });
+            setIsSubmitting(false);
+        }
     };
 
     const resetForm = () => {
