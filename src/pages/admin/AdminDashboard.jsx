@@ -55,7 +55,7 @@ const AdminDashboard = () => {
         ? reportsList.slice(0, 5).map((r) => ({
             id: r.id,
             type: r.reason || 'Report',
-            account: r.reported_listing?.title ?? (r.description || '').slice(0, 30) || '-',
+            account: (r.reported_listing?.title ?? (r.description || '').slice(0, 30)) || '-',
             reporter: r.reporter?.email ?? '-',
             status: r.status,
         }))
