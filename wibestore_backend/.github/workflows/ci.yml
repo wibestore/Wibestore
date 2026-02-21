@@ -29,10 +29,10 @@ jobs:
           pip install black ruff isort bandit[toml]
 
       - name: Check formatting (black)
-        run: black --check --line-length=100 .
+        run: black --check --line-length=99 .
 
       - name: Check imports (isort)
-        run: isort --check-only --profile=black --line-length=100 .
+        run: isort --check-only --profile=black --line-length=99 .
 
       - name: Lint (ruff)
         run: ruff check .

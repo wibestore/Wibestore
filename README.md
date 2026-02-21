@@ -91,7 +91,7 @@ python manage.py runserver
 ### 3. Frontend настройка
 
 ```bash
-cd c:\WibeStore\Wibestore
+# В корне репозитория (где лежит package.json)
 
 # Установить зависимости
 npm install

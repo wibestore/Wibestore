@@ -19,6 +19,13 @@ DATABASES = {
     }
 }
 
+# Remove PostgreSQL/health_check apps when using SQLite (avoid Redis/DB checks in tests)
+if "django.contrib.postgres" in INSTALLED_APPS:  # noqa: F405
+    INSTALLED_APPS.remove("django.contrib.postgres")  # noqa: F405
+for _app in ["health_check.contrib.redis", "health_check.db", "health_check.cache", "health_check"]:  # noqa: F405
+    if _app in INSTALLED_APPS:  # noqa: F405
+        INSTALLED_APPS.remove(_app)  # noqa: F405
+
 # ============================================================
 # PASSWORD HASHERS (fast hashing for tests)
 # ============================================================
