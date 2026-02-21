@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package, MessageSquare, Clock, CheckCircle, XCircle, Trash2, PlusCircle } from 'lucide-react';
+import { ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package, Clock, CheckCircle, XCircle, Trash2, PlusCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile, useProfileListings, useProfileFavorites, useProfilePurchases, useProfileSales, useDeleteListing } from '../hooks';
 import AccountCard from '../components/AccountCard';
@@ -16,24 +16,40 @@ const ProfilePage = () => {
     const { user, isAuthenticated, logout } = useAuth();
     const { addToast } = useToast();
     const [activeTab, setActiveTab] = useState('listings');
-    
+
     // API hooks
-    const { data: profile, isLoading: profileLoading } = useProfile();
+    const { isLoading: profileLoading } = useProfile();
     const { data: listingsData, isLoading: listingsLoading } = useProfileListings();
     const { data: favoritesData } = useProfileFavorites();
     const { data: purchasesData } = useProfilePurchases();
     const { data: salesData } = useProfileSales();
     const { mutate: deleteListingMutation } = useDeleteListing();
 
-    const [reviewCount, setReviewCount] = useState(0);
-    const [averageRating, setAverageRating] = useState(5.0);
+    const [reviewCount] = useState(0);
+    const [averageRating] = useState(5.0);
 
     useEffect(() => {
         if (!isAuthenticated) navigate('/login');
     }, [isAuthenticated, navigate]);
 
+    // Helper functions for game info
+    const getGameName = (gameId) => {
+        const game = games.find(g => g.id === gameId);
+        return game?.name || gameId || 'Unknown Game';
+    };
+
+    const getGameImage = (gameId) => {
+        const game = games.find(g => g.id === gameId);
+        return game?.image || null;
+    };
+
+    // Handle logout
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
     // Use API data or fallback to user context
-    const displayUser = profile || user;
     const myListings = listingsData?.results || [];
     const likedAccounts = favoritesData?.results || [];
     const purchases = purchasesData?.results || [];
@@ -78,7 +94,7 @@ const ProfilePage = () => {
     ];
 
     if (!user) return null;
-    
+
     // Loading state
     if (profileLoading) {
         return (
@@ -216,7 +232,7 @@ const ProfilePage = () => {
                         minHeight: '400px',
                     }}
                 >
-                    {activeTab === 'mylistings' && (
+                    {activeTab === 'listings' && (
                         <>
                             <div className="flex items-center justify-between" style={{ marginBottom: '20px' }}>
                                 <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
@@ -226,7 +242,9 @@ const ProfilePage = () => {
                                     <PlusCircle className="w-3.5 h-3.5" /> {t('profile.new_listing') || 'New listing'}
                                 </Link>
                             </div>
-                            {myListings.length > 0 ? (
+                            {listingsLoading ? (
+                                <SkeletonLoader />
+                            ) : myListings.length > 0 ? (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     {myListings.map((listing) => {
                                         const status = getStatusBadge(listing.status);
@@ -248,13 +266,18 @@ const ProfilePage = () => {
                                                         borderRadius: 'var(--radius-md)',
                                                         overflow: 'hidden', flexShrink: 0,
                                                         backgroundColor: 'var(--color-bg-tertiary)',
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                     }}
                                                 >
                                                     {listing.images?.[0] ? (
                                                         <img src={listing.images[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                     ) : (
                                                         <div className="flex items-center justify-center" style={{ width: '100%', height: '100%' }}>
-                                                            <img src={getGameImage(listing.gameId)} alt="" style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: 'var(--radius-md)', opacity: 0.5 }} />
+                                                            {getGameImage(listing.gameId) ? (
+                                                                <img src={getGameImage(listing.gameId)} alt="" style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: 'var(--radius-md)', opacity: 0.5 }} />
+                                                            ) : (
+                                                                <Package style={{ width: '32px', height: '32px', color: 'var(--color-text-muted)', opacity: 0.5 }} />
+                                                            )}
                                                         </div>
                                                     )}
                                                 </div>
@@ -274,7 +297,7 @@ const ProfilePage = () => {
                                                         </span>
                                                         <div className="flex items-center gap-2">
                                                             <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-                                                                {new Date(listing.createdAt).toLocaleDateString()}
+                                                                {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString() : ''}
                                                             </span>
                                                             <button
                                                                 onClick={() => deleteListing(listing.id)}
