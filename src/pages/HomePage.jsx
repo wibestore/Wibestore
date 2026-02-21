@@ -46,12 +46,15 @@ const HomePage = () => {
     
     // API hooks
     const { data: gamesData, isLoading: gamesLoading } = useGames();
-    const { data: listingsData } = useListings({ limit: 8 });
+    const { data: listingsData, isLoading: listingsLoading } = useListings({ limit: 8 });
     
-    // Use API data or fallback
-    const games = gamesData?.results || [];
-    const premiumAccounts = listingsData?.pages?.[0]?.results?.filter(l => l.is_premium)?.slice(0, 6) || [];
-    const recommendedAccounts = listingsData?.pages?.[0]?.results?.slice(0, 8) || [];
+    // Use API data or fallback - handle both paginated and non-paginated responses
+    const games = gamesData?.results || gamesData || [];
+    
+    // Handle different response structures
+    const allListings = listingsData?.pages?.flatMap?.(page => page.results) || listingsData?.results || listingsData || [];
+    const premiumAccounts = allListings.filter(l => l.is_premium)?.slice(0, 6) || [];
+    const recommendedAccounts = allListings.slice(0, 8) || [];
 
     const statsData = [
         { target: '12,500+', label: t('stats.accounts'), icon: TrendingUp },
@@ -230,9 +233,19 @@ const HomePage = () => {
                         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 animate-stagger"
                         style={{ gap: '16px' }}
                     >
-                        {games.slice(0, 8).map((game) => (
-                            <GameCard key={game.id} game={game} />
-                        ))}
+                        {gamesLoading ? (
+                            [...Array(8)].map((_, i) => <SkeletonLoader key={i} />)
+                        ) : games.length > 0 ? (
+                            games.slice(0, 8).map((game) => (
+                                <GameCard key={game.id || game.slug} game={{
+                                    id: game.id || game.slug,
+                                    name: game.name,
+                                    slug: game.slug,
+                                    icon: game.icon,
+                                    listingsCount: game.listings_count,
+                                }} />
+                            ))
+                        ) : null}
                     </div>
                 </div>
             </section>
@@ -286,9 +299,23 @@ const HomePage = () => {
                         className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
                         style={{ margin: '0 -16px', padding: '0 16px 16px' }}
                     >
-                        {premiumAccounts.map((account) => (
-                            <AccountCard key={account.id} account={account} featured />
-                        ))}
+                        {listingsLoading ? (
+                            [...Array(6)].map((_, i) => <SkeletonLoader key={i} />)
+                        ) : premiumAccounts.length > 0 ? (
+                            premiumAccounts.map((account) => (
+                                <AccountCard key={account.id} account={{
+                                    id: account.id,
+                                    gameId: account.game?.slug || account.game?.id,
+                                    gameName: account.game?.name,
+                                    title: account.title,
+                                    price: parseFloat(account.price),
+                                    seller: account.seller,
+                                    image: account.images?.[0]?.image || '',
+                                    isLiked: account.is_favorited || false,
+                                    isPremium: account.is_premium,
+                                }} featured />
+                            ))
+                        ) : null}
                     </div>
                 </div>
             </section>
@@ -322,9 +349,23 @@ const HomePage = () => {
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-stagger"
                         style={{ gap: '16px' }}
                     >
-                        {recommendedAccounts.map((account) => (
-                            <AccountCard key={account.id} account={account} />
-                        ))}
+                        {listingsLoading ? (
+                            [...Array(8)].map((_, i) => <SkeletonLoader key={i} />)
+                        ) : recommendedAccounts.length > 0 ? (
+                            recommendedAccounts.map((account) => (
+                                <AccountCard key={account.id} account={{
+                                    id: account.id,
+                                    gameId: account.game?.slug || account.game?.id,
+                                    gameName: account.game?.name,
+                                    title: account.title,
+                                    price: parseFloat(account.price),
+                                    seller: account.seller,
+                                    image: account.images?.[0]?.image || '',
+                                    isLiked: account.is_favorited || false,
+                                    isPremium: account.is_premium,
+                                }} />
+                            ))
+                        ) : null}
                     </div>
                 </div>
             </section>

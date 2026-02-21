@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, ChevronDown, Grid, List, X } from 'lucide-react';
 import { useListings, useGames } from '../hooks';
@@ -14,9 +14,9 @@ const ProductsPage = () => {
     const [viewMode, setViewMode] = useState('grid');
     const [showFilters, setShowFilters] = useState(false);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
-    
+
     // API hooks
-    const { data: gamesData } = useGames();
+    const { data: gamesData, isLoading: gamesLoading } = useGames();
     const { data, isLoading, fetchNextPage, hasNextPage } = useListings({
         game: selectedGame !== 'all' ? selectedGame : undefined,
         search: searchQuery || undefined,
@@ -27,7 +27,40 @@ const ProductsPage = () => {
 
     // Flatten paginated data
     const allListings = data?.pages?.flatMap(page => page.results) || [];
-    const totalPages = data?.pages?.[0]?.count ? Math.ceil(data.pages[0].count / 20) : 0;
+    const games = gamesData?.results || gamesData || [];
+    
+    // Filter va sort
+    let filteredListings = [...allListings];
+    
+    if (selectedGame !== 'all' && selectedGame) {
+        filteredListings = filteredListings.filter(l => l.game?.slug === selectedGame || l.game?.id === selectedGame);
+    }
+    
+    if (searchQuery) {
+        filteredListings = filteredListings.filter(l => 
+            l.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            l.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }
+    
+    if (priceRange.min || priceRange.max < 10000000) {
+        filteredListings = filteredListings.filter(l => {
+            const price = parseFloat(l.price);
+            return price >= priceRange.min && price <= priceRange.max;
+        });
+    }
+    
+    // Sort
+    filteredListings.sort((a, b) => {
+        if (sortBy === 'price-low') return parseFloat(a.price) - parseFloat(b.price);
+        if (sortBy === 'price-high') return parseFloat(b.price) - parseFloat(a.price);
+        return 0;
+    });
+    
+    // Premium first
+    const premium = filteredListings.filter(l => l.is_premium);
+    const regular = filteredListings.filter(l => !l.is_premium);
+    const filteredAccounts = [...premium, ...regular];
 
     const sortOptions = [
         { value: 'newest', label: t('products.sort_newest') || 'Newest' },
@@ -71,7 +104,7 @@ const ProductsPage = () => {
                             type="text"
                             placeholder={t('products.search_placeholder') || 'Search accounts...'}
                             value={searchQuery}
-                            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className="input input-md w-full"
                             style={{ paddingLeft: '36px' }}
                         />
@@ -89,14 +122,14 @@ const ProductsPage = () => {
                     {/* Game Filter */}
                     <select
                         value={selectedGame}
-                        onChange={(e) => { setSelectedGame(e.target.value); setCurrentPage(1); }}
+                        onChange={(e) => setSelectedGame(e.target.value)}
                         className="select select-md"
                         style={{ maxWidth: '200px' }}
                         aria-label="Filter by game"
                     >
                         <option value="all">{t('products.all_games') || 'All Games'}</option>
-                        {games.filter(g => g.accountCount > 0).map(game => (
-                            <option key={game.id} value={game.id}>{game.name}</option>
+                        {games.map(game => (
+                            <option key={game.id || game.slug} value={game.slug || game.id}>{game.name}</option>
                         ))}
                     </select>
 
@@ -176,7 +209,7 @@ const ProductsPage = () => {
                             <SkeletonLoader key={i} />
                         ))}
                     </div>
-                ) : allListings.length > 0 ? (
+                ) : filteredAccounts.length > 0 ? (
                     <>
                         <div
                             className={`grid animate-stagger ${viewMode === 'grid'
@@ -185,7 +218,7 @@ const ProductsPage = () => {
                                 }`}
                             style={{ gap: '16px' }}
                         >
-                            {allListings.map((listing) => (
+                            {filteredAccounts.map((listing) => (
                                 <AccountCard
                                     key={listing.id}
                                     account={{
@@ -197,13 +230,14 @@ const ProductsPage = () => {
                                         seller: listing.seller,
                                         image: listing.images?.[0]?.image || '',
                                         isLiked: listing.is_favorited || false,
+                                        isPremium: listing.is_premium,
                                     }}
                                     viewMode={viewMode}
                                 />
                             ))}
                         </div>
 
-                        {/* Load More */}
+                        {/* Load More - agar API pagination bo'lsa */}
                         {hasNextPage && (
                             <div className="text-center" style={{ marginTop: '32px' }}>
                                 <button

@@ -36,13 +36,23 @@ const AccountCard = ({ account, featured = false }) => {
         setIsLiked(!isLiked);
     };
 
+    // Fallback for missing data
+    const accountId = account.id || crypto.randomUUID();
+    const accountTitle = account.title || 'Untitled Account';
+    const accountPrice = account.price || 0;
+    const accountGameName = account.gameName || account.game?.name || 'Unknown Game';
+    const accountDescription = account.description || '';
+    const accountImage = account.image;
+    const accountIsPremium = account.isPremium || account.is_premium || false;
+    const seller = account.seller || { rating: 5.0, isPremium: false };
+    
     return (
         <Link
-            to={`/account/${account.id}`}
-            className={`group relative account-card-hover block ${account.isPremium ? 'account-card-premium' : ''} ${featured ? 'flex-shrink-0 snap-start' : ''}`}
+            to={`/account/${accountId}`}
+            className={`group relative account-card-hover block ${accountIsPremium ? 'account-card-premium' : ''} ${featured ? 'flex-shrink-0 snap-start' : ''}`}
             style={{
                 backgroundColor: 'var(--color-bg-primary)',
-                border: `1px solid ${account.isPremium ? 'var(--color-premium-gold-light)' : 'var(--color-border-default)'}`,
+                border: `1px solid ${accountIsPremium ? 'var(--color-premium-gold-light)' : 'var(--color-border-default)'}`,
                 borderRadius: 'var(--radius-lg)',
                 overflow: 'hidden',
                 width: featured ? '280px' : 'auto',
@@ -50,7 +60,7 @@ const AccountCard = ({ account, featured = false }) => {
             }}
         >
             {/* Premium top accent */}
-            {account.isPremium && (
+            {accountIsPremium && (
                 <div
                     style={{
                         position: 'absolute',
@@ -72,10 +82,10 @@ const AccountCard = ({ account, featured = false }) => {
                     backgroundColor: 'var(--color-bg-tertiary)',
                 }}
             >
-                {account.image ? (
+                {accountImage ? (
                     <img
-                        src={account.image}
-                        alt={account.title}
+                        src={accountImage}
+                        alt={accountTitle}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                 ) : (
@@ -107,7 +117,7 @@ const AccountCard = ({ account, featured = false }) => {
                 )}
 
                 {/* Premium Badge */}
-                {account.isPremium && (
+                {accountIsPremium && (
                     <div
                         className="badge badge-premium absolute flex items-center gap-1"
                         style={{ top: '12px', right: '12px', padding: '4px 8px', fontSize: '11px' }}
@@ -130,7 +140,7 @@ const AccountCard = ({ account, featured = false }) => {
                         fontWeight: 500,
                     }}
                 >
-                    {account.gameName}
+                    {accountGameName}
                 </div>
             </div>
 
@@ -145,20 +155,22 @@ const AccountCard = ({ account, featured = false }) => {
                         color: 'var(--color-text-primary)',
                     }}
                 >
-                    {account.title}
+                    {accountTitle}
                 </h3>
 
                 {/* Description */}
-                <p
-                    className="line-clamp-2 mb-4"
-                    style={{
-                        fontSize: 'var(--font-size-sm)',
-                        color: 'var(--color-text-muted)',
-                        lineHeight: 'var(--line-height-sm)',
-                    }}
-                >
-                    {account.description}
-                </p>
+                {accountDescription && (
+                    <p
+                        className="line-clamp-2 mb-4"
+                        style={{
+                            fontSize: 'var(--font-size-sm)',
+                            color: 'var(--color-text-muted)',
+                            lineHeight: 'var(--line-height-sm)',
+                        }}
+                    >
+                        {accountDescription}
+                    </p>
+                )}
 
                 {/* Footer */}
                 <div
@@ -176,7 +188,7 @@ const AccountCard = ({ account, featured = false }) => {
                             color: 'var(--color-text-accent)',
                         }}
                     >
-                        {formatPrice(account.price)}
+                        {formatPrice(accountPrice)}
                     </span>
 
                     {/* Seller Info */}
@@ -184,10 +196,10 @@ const AccountCard = ({ account, featured = false }) => {
                         <div className="flex items-center gap-1">
                             <Star className="w-3.5 h-3.5 fill-current" style={{ color: 'var(--color-premium-gold-light)' }} />
                             <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                                {account.seller.rating}
+                                {seller.rating}
                             </span>
                         </div>
-                        {account.seller.isPremium && (
+                        {seller.isPremium && (
                             <Crown className="w-3.5 h-3.5" style={{ color: 'var(--color-premium-gold-light)' }} />
                         )}
                     </div>

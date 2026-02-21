@@ -95,6 +95,9 @@ const Navbar = () => {
         { to: '/statistics', label: t('nav.statistics') || 'Statistics' },
         { to: '/premium', label: t('nav.premium') || 'Premium', icon: Crown },
     ];
+    
+    // Admin link - faqat admin userlarga ko'rinadi
+    const isAdmin = user?.is_staff || false;
 
     const isActive = (path) => location.pathname === path;
 
@@ -159,6 +162,22 @@ const Navbar = () => {
                             {link.label}
                         </Link>
                     ))}
+                    
+                    {/* Admin Panel Link - faqat admin uchun */}
+                    {isAdmin && (
+                        <Link
+                            to="/admin"
+                            className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium nav-link-hover`}
+                            style={{
+                                color: 'var(--color-error)',
+                                backgroundColor: 'var(--color-error-bg)',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            <Settings className="w-4 h-4" />
+                            Admin
+                        </Link>
+                    )}
                 </div>
 
                 {/* Search Bar (Desktop) */}
@@ -409,6 +428,22 @@ const Navbar = () => {
                                 {link.label}
                             </Link>
                         ))}
+                        
+                        {/* Mobile Admin Link */}
+                        {isAdmin && (
+                            <Link
+                                to="/admin"
+                                className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors"
+                                style={{
+                                    color: 'var(--color-error)',
+                                    backgroundColor: 'var(--color-error-bg)',
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                <Settings className="w-4 h-4" />
+                                Admin Panel
+                            </Link>
+                        )}
 
                         {!isAuthenticated && (
                             <>

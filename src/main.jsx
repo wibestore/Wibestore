@@ -15,7 +15,10 @@ createRoot(document.getElementById('root')).render(
       <GoogleOAuthProvider clientId={CLIENT_ID}>
         <App />
       </GoogleOAuthProvider>
-      <ReactQueryDevtools initialPosition="bottom-right" />
+      {/* ReactQuery Devtools - faqat development da */}
+      {import.meta.env.DEV && (
+        <ReactQueryDevtools initialPosition="bottom-right" />
+      )}
     </QueryClientProvider>
   </StrictMode>,
 )

@@ -39,8 +39,10 @@ const ChatWidget = () => {
 
     const unreadCount = getUnreadCount();
 
-    // Don't show if not on public pages
-    if (!isAuthenticated) {
+    // Show on all pages, but only functional for authenticated users
+    // Don't show on admin pages
+    const isAdminPage = window.location.pathname.includes('/admin');
+    if (isAdminPage) {
         return null;
     }
 

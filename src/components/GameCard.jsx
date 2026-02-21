@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom';
 
 const GameCard = ({ game }) => {
+    // API formatini qo'llab-quvvatlash
+    const gameId = game.id || game.slug;
+    const gameName = game.name;
+    const gameIcon = game.icon;
+    const gameImage = game.image || game.banner;
+    const accountCount = game.accountCount || game.listingsCount || 0;
+    
     return (
         <Link
-            to={`/game/${game.id}`}
+            to={`/game/${gameId}`}
             className="group block card-hover-lift"
             style={{
                 backgroundColor: 'var(--color-bg-primary)',
@@ -21,18 +28,20 @@ const GameCard = ({ game }) => {
                     backgroundColor: 'var(--color-bg-tertiary)',
                 }}
             >
-                {game.image && !game.image.includes('placeholder') ? (
+                {gameImage && !gameImage.includes('placeholder') ? (
                     <img
-                        src={game.image}
-                        alt={game.name}
+                        src={gameImage}
+                        alt={gameName}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                ) : gameIcon ? (
+                    <span className="text-4xl opacity-40">{gameIcon}</span>
                 ) : (
-                    <span className="text-4xl opacity-40">{game.icon}</span>
+                    <span className="text-4xl opacity-40">🎮</span>
                 )}
 
                 {/* Account count badge */}
-                {game.accountCount > 0 && (
+                {accountCount > 0 && (
                     <div
                         className="absolute rounded-full"
                         style={{
@@ -45,7 +54,7 @@ const GameCard = ({ game }) => {
                             fontWeight: 'var(--font-weight-semibold)',
                         }}
                     >
-                        {game.accountCount}
+                        {accountCount}
                     </div>
                 )}
             </div>
@@ -55,7 +64,9 @@ const GameCard = ({ game }) => {
                 className="flex items-center gap-3"
                 style={{ padding: 'var(--space-3) var(--space-4)' }}
             >
-                <span className="text-lg flex-shrink-0">{game.icon}</span>
+                {gameIcon && (
+                    <span className="text-lg flex-shrink-0">{gameIcon}</span>
+                )}
                 <div className="min-w-0">
                     <h3
                         className="font-semibold truncate"
@@ -65,14 +76,14 @@ const GameCard = ({ game }) => {
                             lineHeight: 'var(--line-height-base)',
                         }}
                     >
-                        {game.name}
+                        {gameName}
                     </h3>
-                    {game.accountCount > 0 && (
+                    {accountCount > 0 && (
                         <p style={{
                             fontSize: 'var(--font-size-sm)',
                             color: 'var(--color-text-muted)',
                         }}>
-                            {game.accountCount} accounts
+                            {accountCount} accounts
                         </p>
                     )}
                 </div>
