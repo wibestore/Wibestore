@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, Filter, ChevronDown, Grid, List, X } from 'lucide-react';
+import { Search, Grid, List, X } from 'lucide-react';
 import { useListings, useGames } from '../hooks';
 import AccountCard from '../components/AccountCard';
-import SkeletonLoader from '../components/SkeletonLoader';
+import { SkeletonGrid } from '../components/SkeletonLoader';
+import { PageHeader } from '../components/ui';
 import { useLanguage } from '../context/LanguageContext';
 
 const ProductsPage = () => {
@@ -71,21 +71,12 @@ const ProductsPage = () => {
 
     return (
         <div className="page-enter" style={{ minHeight: '100vh' }}>
-            {/* Page Header */}
             <div className="gh-container">
-                {/* Breadcrumbs */}
-                <div className="breadcrumbs">
-                    <Link to="/">Home</Link>
-                    <span className="breadcrumb-separator">/</span>
-                    <span className="breadcrumb-current">{t('nav.products') || 'Products'}</span>
-                </div>
-
-                <div className="page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
-                    <h1>{t('products.title') || 'All Products'}</h1>
-                    <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
-                        {filteredAccounts.length} {t('products.found') || 'accounts found'}
-                    </p>
-                </div>
+                <PageHeader
+                    breadcrumbs={[{ label: 'Home', to: '/' }, { label: t('nav.products') || 'Products' }]}
+                    title={t('products.title') || 'All Products'}
+                    description={`${filteredAccounts.length} ${t('products.found') || 'accounts found'}`}
+                />
             </div>
 
             <div className="gh-container">
@@ -204,11 +195,7 @@ const ProductsPage = () => {
 
                 {/* Results */}
                 {isLoading ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
-                        {[...Array(8)].map((_, i) => (
-                            <SkeletonLoader key={i} />
-                        ))}
-                    </div>
+                    <SkeletonGrid count={8} />
                 ) : filteredAccounts.length > 0 ? (
                     <>
                         <div

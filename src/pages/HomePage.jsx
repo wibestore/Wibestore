@@ -4,7 +4,7 @@ import { ArrowRight, Shield, Zap, Users, TrendingUp, Star, Crown, ChevronRight, 
 import { useGames, useListings } from '../hooks';
 import GameCard from '../components/GameCard';
 import AccountCard from '../components/AccountCard';
-import SkeletonLoader from '../components/SkeletonLoader';
+import { SkeletonGrid, SkeletonCard } from '../components/SkeletonLoader';
 import { useLanguage } from '../context/LanguageContext';
 import { games as mockGames, accounts as mockAccounts } from '../data/mockData';
 
@@ -240,11 +240,11 @@ const HomePage = () => {
                     </div>
 
                     <div
-                        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 animate-stagger"
-                        style={{ gap: '16px' }}
+                        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 animate-stagger grid-auto-fill-280"
+                        style={{ gap: 'var(--space-4)' }}
                     >
                         {gamesLoading ? (
-                            [...Array(8)].map((_, i) => <SkeletonLoader key={i} />)
+                            Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : games.length > 0 ? (
                             games.slice(0, 8).map((game) => (
                                 <GameCard key={game.id || game.slug} game={{
@@ -310,7 +310,7 @@ const HomePage = () => {
                         style={{ margin: '0 -16px', padding: '0 16px 16px' }}
                     >
                         {listingsLoading ? (
-                            [...Array(6)].map((_, i) => <SkeletonLoader key={i} />)
+                            Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : premiumAccounts.length > 0 ? (
                             premiumAccounts.map((account) => (
                                 <AccountCard key={account.id} account={{
@@ -366,7 +366,7 @@ const HomePage = () => {
                         style={{ gap: '16px' }}
                     >
                         {listingsLoading ? (
-                            [...Array(8)].map((_, i) => <SkeletonLoader key={i} />)
+                            Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : topAccounts.length > 0 ? (
                             topAccounts.map((account) => (
                                 <AccountCard key={account.id} account={{
@@ -416,7 +416,7 @@ const HomePage = () => {
                         style={{ gap: '16px' }}
                     >
                         {listingsLoading ? (
-                            [...Array(8)].map((_, i) => <SkeletonLoader key={i} />)
+                            Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : recommendedAccounts.length > 0 ? (
                             recommendedAccounts.map((account) => (
                                 <AccountCard key={account.id} account={{

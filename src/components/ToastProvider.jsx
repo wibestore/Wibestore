@@ -46,24 +46,39 @@ let toastIdCounter = 0;
 
 const Toast = ({ toast, onDismiss }) => {
     const [isExiting, setIsExiting] = useState(false);
+    const [progress, setProgress] = useState(100);
     const Icon = TOAST_ICONS[toast.type] || Info;
     const colors = TOAST_COLORS[toast.type] || TOAST_COLORS.info;
+    const duration = toast.duration === 0 ? null : (toast.duration || 5000);
 
     const handleDismiss = useCallback(() => {
         setIsExiting(true);
         setTimeout(() => onDismiss(toast.id), 200);
     }, [toast.id, onDismiss]);
 
-    // Auto-dismiss
+    // Auto-dismiss + progress bar
     useEffect(() => {
-        if (toast.duration === 0) return; // manual dismiss only
-        const timer = setTimeout(handleDismiss, toast.duration || 5000);
-        return () => clearTimeout(timer);
-    }, [handleDismiss, toast.duration]);
+        if (!duration) return;
+        const start = Date.now();
+        const interval = setInterval(() => {
+            const elapsed = Date.now() - start;
+            const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
+            setProgress(remaining);
+            if (remaining <= 0) {
+                clearInterval(interval);
+                handleDismiss();
+            }
+        }, 50);
+        const timer = setTimeout(handleDismiss, duration);
+        return () => {
+            clearInterval(interval);
+            clearTimeout(timer);
+        };
+    }, [duration, handleDismiss]);
 
     return (
         <div
-            className={`toast ${isExiting ? 'toast-exit' : 'toast-enter'}`}
+            className={`toast toast-${toast.type} ${isExiting ? 'toast-exit' : 'toast-enter'}`}
             role="alert"
             aria-live="assertive"
             style={{
@@ -72,14 +87,17 @@ const Toast = ({ toast, onDismiss }) => {
                 gap: 'var(--space-3)',
                 padding: '14px 16px',
                 borderRadius: 'var(--radius-lg)',
-                backgroundColor: colors.bg,
-                borderLeft: `3px solid ${colors.border}`,
+                backgroundColor: 'var(--color-bg-primary)',
+                border: '1px solid var(--color-border-default)',
+                borderLeft: `4px solid ${colors.border}`,
                 boxShadow: 'var(--shadow-lg)',
                 minWidth: '320px',
                 maxWidth: '420px',
+                position: 'relative',
+                overflow: 'hidden',
                 animation: isExiting
                     ? 'fadeOut 0.2s ease forwards'
-                    : 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                    : 'slideInRight 0.3s ease',
             }}
         >
             <Icon
@@ -122,6 +140,15 @@ const Toast = ({ toast, onDismiss }) => {
             >
                 <X className="w-4 h-4" />
             </button>
+            {duration > 0 && (
+                <div
+                    className="toast-progress"
+                    style={{
+                        width: `${progress}%`,
+                        backgroundColor: colors.border,
+                    }}
+                />
+            )}
         </div>
     );
 };
@@ -133,9 +160,8 @@ export const ToastProvider = ({ children }) => {
         const id = ++toastIdCounter;
         const newToast = { id, type: 'info', ...toast };
         setToasts(prev => {
-            // Keep max 3 toasts visible
             const kept = prev.slice(-2);
-            return [...kept, newToast];
+            return [...kept, newToast].slice(-3);
         });
         return id;
     }, []);
@@ -144,6 +170,15 @@ export const ToastProvider = ({ children }) => {
         setToasts(prev => prev.filter(t => t.id !== id));
     }, []);
 
+    useEffect(() => {
+        const handler = (e) => {
+            const { type = 'info', title, message } = e.detail || {};
+            addToast({ type, title: title || (type === 'error' ? 'Error' : type === 'success' ? 'Success' : ''), message });
+        };
+        window.addEventListener('wibe-toast', handler);
+        return () => window.removeEventListener('wibe-toast', handler);
+    }, [addToast]);
+
     return (
         <ToastContext.Provider value={{ addToast, dismissToast }}>
             {children}
@@ -151,16 +186,8 @@ export const ToastProvider = ({ children }) => {
             {/* Toast container — top-right position */}
             {toasts.length > 0 && (
                 <div
-                    style={{
-                        position: 'fixed',
-                        top: '80px',
-                        right: '16px',
-                        zIndex: 300,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '8px',
-                        pointerEvents: 'none',
-                    }}
+                    className="toast-container"
+                    style={{ pointerEvents: 'none' }}
                 >
                     {toasts.map(toast => (
                         <div key={toast.id} style={{ pointerEvents: 'auto' }}>

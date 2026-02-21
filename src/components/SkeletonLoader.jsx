@@ -77,11 +77,8 @@ const SkeletonText = ({ lines = 3, width = '100%' }) => (
     </div>
 );
 
-const SkeletonGrid = ({ count = 8, columns = 4 }) => (
-    <div
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(columns, 3)} xl:grid-cols-${columns}`}
-        style={{ gap: '16px' }}
-    >
+const SkeletonGrid = ({ count = 8 }) => (
+    <div className="grid-auto-fill-280">
         {Array.from({ length: count }).map((_, i) => (
             <SkeletonCard key={i} />
         ))}
