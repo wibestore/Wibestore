@@ -79,14 +79,15 @@ export const useUpdateListing = (id) => {
 /**
  * Hook для удаления listing'а
  */
-export const useDeleteListing = (id) => {
+export const useDeleteListing = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async () => {
-            await apiClient.delete(`/listings/${id}/`);
+        mutationFn: async (listingId) => {
+            await apiClient.delete(`/listings/${listingId}/`);
         },
-        onSuccess: () => {
+        onSuccess: (data, listingId) => {
+            queryClient.invalidateQueries(['listings', listingId]);
             queryClient.invalidateQueries(['listings']);
             queryClient.invalidateQueries(['profile', 'listings']);
         },
