@@ -22,7 +22,18 @@
     "stats": {
         "accounts": "Accounts",
         "sellers": "Sellers",
-        "success": "Success Rate"
+        "success": "Success Rate",
+        "total_users": "Total Users",
+        "total_sales": "Total Sales",
+        "avg_rating": "Avg Rating",
+        "growth": "Monthly Growth",
+        "badge": "Statistics & Rankings",
+        "title": "Top Users",
+        "subtitle": "Rankings of top sellers and most active users",
+        "top_sellers": "Top Sellers",
+        "active_users": "Active Users",
+        "sales_label": "sales",
+        "activity": "activity"
     },
     "sections": {
         "popular_games": "Popular Games",
@@ -47,6 +58,47 @@
         "subtitle": "Opportunity for premium and regular sellers. Only 10% commission. Payment via Payme, Click, Paynet.",
         "start": "Get Started",
         "get_premium": "Get Premium"
+    },
+    "premium": {
+        "badge": "Premium Plans",
+        "title": "Boost your sales",
+        "subtitle": "Get more visibility and sell faster with Premium",
+        "free_desc": "Get started for free",
+        "free_label": "Free",
+        "premium_desc": "More visibility and benefits",
+        "pro_desc": "Maximum benefits",
+        "popular": "Most Popular",
+        "feat_sell": "Sell accounts",
+        "feat_commission_10": "10% commission",
+        "feat_commission_8": "8% commission",
+        "feat_commission_5": "5% commission",
+        "feat_standard": "Standard position",
+        "feat_basic_stats": "Basic statistics",
+        "feat_badge": "Premium badge",
+        "feat_homepage": "Homepage visibility",
+        "feat_homepage_first": "Homepage first",
+        "feat_3x": "3x more visibility",
+        "feat_top": "Top position",
+        "feat_vip_badge": "VIP golden badge",
+        "feat_search": "Top search position",
+        "feat_support": "Priority support",
+        "feat_vip_support": "VIP support",
+        "feat_fast_pay": "Fast payout (24h)",
+        "feat_manager": "Personal manager",
+        "current_plan": "Current plan",
+        "buy_telegram": "Buy via Telegram",
+        "benefits_title": "Premium Benefits",
+        "benefits_subtitle": "Why sellers choose Premium?",
+        "ben_visibility": "3x visibility",
+        "ben_visibility_desc": "Your accounts appear more in search",
+        "ben_fast": "Fast sales",
+        "ben_fast_desc": "Premium sellers sell 2x faster",
+        "ben_trust": "Trust badge",
+        "ben_trust_desc": "Buyers trust Premium sellers more",
+        "ben_position": "Top position",
+        "ben_position_desc": "First in homepage and search",
+        "payment_methods": "Payment Methods",
+        "auto_renew": "Subscription auto-renews monthly. Cancel anytime."
     },
     "login": {
         "welcome": "Welcome back!",
@@ -158,7 +210,13 @@
         "withdraw": "Withdraw",
         "linked_cards": "Linked Cards",
         "no_cards": "No cards linked yet",
-        "add_card": "+ Add Card"
+        "add_card": "+ Add Card",
+        "current_password_wrong": "Current password is incorrect",
+        "user_not_found": "User not found",
+        "add_money_coming_soon": "Coming soon! Add funds feature is not available yet.",
+        "withdraw_coming_soon": "Coming soon! Withdraw feature is not available yet.",
+        "add_card_coming_soon": "Coming soon! Add card feature is in development.",
+        "generic_error": "An error occurred"
     },
     "footer": {
         "description": "The most trusted gaming account trading platform in Uzbekistan",
@@ -178,7 +236,10 @@
         "loading": "Loading...",
         "error": "Error",
         "success": "Success",
-        "home": "Home"
+        "home": "Home",
+        "products": "Products",
+        "unknown_game": "Unknown game",
+        "untitled_account": "Untitled account"
     },
     "auth": {
         "login_title": "Sign in"
@@ -282,13 +343,68 @@
     "terms": {
         "escrow_item": "Escrow — payment is held until the buyer confirms"
     },
+    "top": {
+        "badge": "Best of the best",
+        "title": "Top",
+        "accounts": "Accounts",
+        "subtitle": "Best accounts from highest rated and most trusted sellers",
+        "premium_sellers": "Premium Sellers",
+        "high_rated": "High rated only",
+        "experienced": "Experienced sellers",
+        "all": "All",
+        "premium_only": "Premium Only",
+        "results": "accounts"
+    },
+    "sort": {
+        "rating": "Best Rating",
+        "price_high": "Price: High",
+        "price_low": "Price: Low",
+        "sales": "Most Sales"
+    },
+    "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "sold": "Sold"
+    },
+    "profile": {
+        "delete_confirm": "Delete this listing?",
+        "my_listings": "My Listings",
+        "purchases": "Purchases",
+        "sales": "Sales",
+        "likes": "Liked",
+        "deleted_success": "Listing deleted successfully",
+        "delete_error": "Error deleting listing"
+    },
     "detail": {
         "link_copied": "Link copied",
         "listing_not_found": "Listing not found",
         "listing_not_found_desc": "This account does not exist or has been deleted.",
         "listing_error_desc": "Unable to load. Please check your connection and try again.",
         "back_to_products": "All products",
-        "try_again": "Try again"
+        "try_again": "Try again",
+        "description": "Description",
+        "features": "Features",
+        "reviews": "Reviews",
+        "price": "Price",
+        "buy_now": "Buy now",
+        "contact_seller": "Contact seller",
+        "seller": "Seller",
+        "related": "Related accounts",
+        "escrow_protection": "Escrow protection",
+        "verified_seller": "Verified seller",
+        "no_description": "No description",
+        "no_features": "No features listed",
+        "level": "Level",
+        "rank": "Rank",
+        "skins": "Skins",
+        "sales_count": "sales",
+        "share": "Share",
+        "copy_failed": "Copy failed",
+        "added_to_favorites": "Added to favorites",
+        "removed_from_favorites": "Removed from favorites",
+        "deleted_success": "Listing deleted successfully",
+        "delete_error": "Error deleting listing"
     },
     "notifications": {
         "title": "Notifications",

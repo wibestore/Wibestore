@@ -238,14 +238,14 @@ const AccountDetailPage = () => {
             removeFromFavorites(listing.id, {
                 onSuccess: () => {
                     setIsLiked(false);
-                    addToast({ type: 'info', title: 'Sevimlilardan olib tashlandi' });
+                    addToast({ type: 'info', title: t('detail.removed_from_favorites') });
                 }
             });
         } else {
             addToFavorites(listing.id, {
                 onSuccess: () => {
                     setIsLiked(true);
-                    addToast({ type: 'success', title: 'Sevimlilarga qo\'shildi' });
+                    addToast({ type: 'success', title: t('detail.added_to_favorites') });
                 }
             });
         }
@@ -258,7 +258,7 @@ const AccountDetailPage = () => {
             setTimeout(() => setCopied(false), 2000);
             addToast({ type: 'success', title: t('detail.link_copied') });
         } catch {
-            addToast({ type: 'error', title: 'Nusxalab bo\'lmadi' });
+            addToast({ type: 'error', title: t('detail.copy_failed') });
         }
     };
 
@@ -287,7 +287,7 @@ const AccountDetailPage = () => {
                 <div className="breadcrumbs">
                     <Link to="/">{t('common.home')}</Link>
                     <span className="breadcrumb-separator">/</span>
-                    <Link to="/products">Products</Link>
+                    <Link to="/products">{t('common.products')}</Link>
                     {listing.game?.name && (
                         <>
                             <span className="breadcrumb-separator">/</span>
@@ -333,7 +333,7 @@ const AccountDetailPage = () => {
                                 <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                                     <button
                                         onClick={handleFavorite}
-                                        aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
+                                        aria-label={isLiked ? t('detail.removed_from_favorites') : t('detail.added_to_favorites')}
                                         className="btn btn-ghost btn-md"
                                         style={{ padding: '0 10px', color: isLiked ? 'var(--color-accent-red)' : undefined }}
                                     >
@@ -341,7 +341,7 @@ const AccountDetailPage = () => {
                                     </button>
                                     <button
                                         onClick={handleShare}
-                                        aria-label="Share"
+                                        aria-label={t('detail.share')}
                                         className="btn btn-ghost btn-md"
                                         style={{ padding: '0 10px' }}
                                     >
@@ -364,13 +364,13 @@ const AccountDetailPage = () => {
                         {(listing.level || listing.rank || listing.skins_count) && (
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                 {listing.level && (
-                                    <StatItem icon={Trophy} label="Level" value={listing.level} color="var(--color-premium-gold-light)" />
+                                    <StatItem icon={Trophy} label={t('detail.level')} value={listing.level} color="var(--color-premium-gold-light)" />
                                 )}
                                 {listing.rank && (
-                                    <StatItem icon={Swords} label="Rank" value={listing.rank} color="var(--color-accent-purple)" />
+                                    <StatItem icon={Swords} label={t('detail.rank')} value={listing.rank} color="var(--color-accent-purple)" />
                                 )}
                                 {listing.skins_count > 0 && (
-                                    <StatItem icon={Layers} label="Skinlar" value={`${listing.skins_count}+`} color="var(--color-accent-blue)" />
+                                    <StatItem icon={Layers} label={t('detail.skins')} value={`${listing.skins_count}+`} color="var(--color-accent-blue)" />
                                 )}
                             </div>
                         )}
@@ -403,7 +403,7 @@ const AccountDetailPage = () => {
                                     backgroundColor: 'var(--color-success-bg)', color: 'var(--color-accent-green)',
                                     fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)',
                                 }}>
-                                    <Shield style={{ width: '14px', height: '14px' }} /> Escrow himoya
+                                    <Shield style={{ width: '14px', height: '14px' }} /> {t('detail.escrow_protection')}
                                 </span>
                                 <span style={{
                                     display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -411,7 +411,7 @@ const AccountDetailPage = () => {
                                     backgroundColor: 'var(--color-info-bg)', color: 'var(--color-accent-blue)',
                                     fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)',
                                 }}>
-                                    <CheckCircle style={{ width: '14px', height: '14px' }} /> Tasdiqlangan sotuvchi
+                                    <CheckCircle style={{ width: '14px', height: '14px' }} /> {t('detail.verified_seller')}
                                 </span>
                             </div>
 
@@ -450,7 +450,7 @@ const AccountDetailPage = () => {
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                     <p style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '2px' }}>
-                                        {listing.seller?.display_name || 'Sotuvchi'}
+                                        {listing.seller?.display_name || t('detail.seller')}
                                     </p>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                                         <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
@@ -458,7 +458,7 @@ const AccountDetailPage = () => {
                                             {listing.seller?.rating || '5.0'}
                                         </span>
                                         <span>•</span>
-                                        <span>{listing.seller?.total_sales || 0} sotuv</span>
+                                        <span>{listing.seller?.total_sales || 0} {t('detail.sales_count')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -495,7 +495,7 @@ const AccountDetailPage = () => {
                                         {listing.description}
                                     </p>
                                 ) : (
-                                    <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>Tavsif yo'q</p>
+                                    <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>{t('detail.no_description')}</p>
                                 )}
                             </div>
                         )}
@@ -508,7 +508,7 @@ const AccountDetailPage = () => {
                                         {features.map((f, i) => <FeatureTag key={i} label={f} />)}
                                     </div>
                                 ) : (
-                                    <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>Xususiyatlar ko'rsatilmagan</p>
+                                    <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>{t('detail.no_features')}</p>
                                 )}
                             </div>
                         )}

@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { Star, Crown, Heart } from 'lucide-react';
 import { formatPrice } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const AccountCard = ({ account, featured = false }) => {
     const { user, isAuthenticated } = useAuth();
+    const { t } = useLanguage();
     const [isLiked, setIsLiked] = useState(false);
 
     useEffect(() => {
@@ -38,9 +40,9 @@ const AccountCard = ({ account, featured = false }) => {
 
     // Fallback for missing data
     const accountId = account.id || crypto.randomUUID();
-    const accountTitle = account.title || 'Untitled Account';
+    const accountTitle = account.title || t('common.untitled_account');
     const accountPrice = account.price || 0;
-    const accountGameName = account.gameName || account.game?.name || 'Unknown Game';
+    const accountGameName = account.gameName || account.game?.name || t('common.unknown_game');
     const accountDescription = account.description || '';
     const accountImage = account.image;
     const accountIsPremium = account.isPremium || account.is_premium || false;

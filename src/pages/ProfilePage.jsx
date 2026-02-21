@@ -35,7 +35,7 @@ const ProfilePage = () => {
     // Helper functions for game info
     const getGameName = (gameId) => {
         const game = games.find(g => g.id === gameId);
-        return game?.name || gameId || 'Unknown Game';
+        return game?.name || gameId || t('common.unknown_game');
     };
 
     const getGameImage = (gameId) => {
@@ -71,15 +71,15 @@ const ProfilePage = () => {
                 onSuccess: () => {
                     addToast({
                         type: 'success',
-                        title: 'O\'chirildi',
-                        message: 'Listing muvaffaqiyatli o\'chirildi',
+                        title: t('common.success'),
+                        message: t('profile.deleted_success'),
                     });
                 },
                 onError: (error) => {
                     addToast({
                         type: 'error',
-                        title: 'Xatolik',
-                        message: error?.message || 'O\'chirishda xatolik yuz berdi',
+                        title: t('common.error'),
+                        message: error?.message || t('profile.delete_error'),
                     });
                 }
             });

@@ -74,7 +74,7 @@ const SettingsPage = () => {
             const userIndex = registeredUsers.findIndex(u => u.id === user.id);
 
             if (userIndex === -1) {
-                setMessage({ type: 'error', text: 'Foydalanuvchi topilmadi' });
+                setMessage({ type: 'error', text: t('settings.user_not_found') });
                 setIsSaving(false);
                 return;
             }
@@ -103,7 +103,7 @@ const SettingsPage = () => {
             setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
         } catch (err) {
             console.error(err);
-            setMessage({ type: 'error', text: 'Xatolik yuz berdi' });
+            setMessage({ type: 'error', text: t('settings.generic_error') });
         } finally {
             setIsSaving(false);
         }
@@ -433,7 +433,7 @@ const SettingsPage = () => {
                                     <div className="grid grid-cols-2" style={{ gap: '12px', marginBottom: '24px' }}>
                                         <button
                                             className="text-center"
-                                            onClick={() => alert('Tez orada ishga tushiriladi! \nPul qo\'shish funksiyasi hozircha mavjud emas.')}
+                                            onClick={() => alert(t('settings.add_money_coming_soon'))}
                                             style={{
                                                 padding: '16px',
                                                 borderRadius: 'var(--radius-lg)',
@@ -448,7 +448,7 @@ const SettingsPage = () => {
                                         </button>
                                         <button
                                             className="text-center"
-                                            onClick={() => alert('Tez orada ishga tushiriladi! \nPul yechish funksiyasi hozircha mavjud emas.')}
+                                            onClick={() => alert(t('settings.withdraw_coming_soon'))}
                                             style={{
                                                 padding: '16px',
                                                 borderRadius: 'var(--radius-lg)',
@@ -474,7 +474,7 @@ const SettingsPage = () => {
                                         }}>
                                             <CreditCard className="mx-auto" style={{ width: '40px', height: '40px', color: 'var(--color-text-muted)', marginBottom: '12px' }} />
                                             <p style={{ color: 'var(--color-text-secondary)' }}>{t('settings.no_cards')}</p>
-                                            <button onClick={() => alert('Tez orada! Karta qo\'shish funksiyasi ishlab chiqilmoqda.')} style={{ marginTop: '12px', color: 'var(--color-text-accent)', fontSize: 'var(--font-size-sm)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                            <button onClick={() => alert(t('settings.add_card_coming_soon'))} style={{ marginTop: '12px', color: 'var(--color-text-accent)', fontSize: 'var(--font-size-sm)', background: 'none', border: 'none', cursor: 'pointer' }}>
                                                 {t('settings.add_card')}
                                             </button>
                                         </div>

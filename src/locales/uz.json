@@ -22,7 +22,18 @@
     "stats": {
         "accounts": "Akkauntlar",
         "sellers": "Sotuvchilar",
-        "success": "Muvaffaqiyat"
+        "success": "Muvaffaqiyat",
+        "total_users": "Jami foydalanuvchilar",
+        "total_sales": "Jami sotuvlar",
+        "avg_rating": "O'rtacha reyting",
+        "growth": "Oylik o'sish",
+        "badge": "Statistika va reytinglar",
+        "title": "Eng yaxshi foydalanuvchilar",
+        "subtitle": "Eng yuqori reytingli sotuvchilar va faol foydalanuvchilar",
+        "top_sellers": "Eng yaxshi sotuvchilar",
+        "active_users": "Faol foydalanuvchilar",
+        "sales_label": "sotuv",
+        "activity": "faoliyat"
     },
     "sections": {
         "popular_games": "Mashhur o'yinlar",
@@ -47,6 +58,47 @@
         "subtitle": "Premium va oddiy sotuvchilar uchun imkoniyat. Faqat 10% komissiya. Payme, Click, Paynet orqali to'lov qiling.",
         "start": "Hoziroq boshlash",
         "get_premium": "Premium olish"
+    },
+    "premium": {
+        "badge": "Premium rejalar",
+        "title": "Sotuvlaringizni oshiring",
+        "subtitle": "Premium bilan ko'proq ko'rinish va tezroq sotish",
+        "free_desc": "Bepul boshlang",
+        "free_label": "Bepul",
+        "premium_desc": "Ko'proq ko'rinish va imtiyozlar",
+        "pro_desc": "Maksimal imtiyozlar",
+        "popular": "Eng mashhur",
+        "feat_sell": "Akkaunt sotish",
+        "feat_commission_10": "10% komissiya",
+        "feat_commission_8": "8% komissiya",
+        "feat_commission_5": "5% komissiya",
+        "feat_standard": "Oddiy joylashuv",
+        "feat_basic_stats": "Asosiy statistika",
+        "feat_badge": "Premium nishon",
+        "feat_homepage": "Bosh sahifada ko'rinish",
+        "feat_homepage_first": "Bosh sahifada birinchi",
+        "feat_3x": "3 marta ko'proq ko'rinish",
+        "feat_top": "Eng yuqori joylashuv",
+        "feat_vip_badge": "VIP oltin nishon",
+        "feat_search": "Qidiruvda birinchi",
+        "feat_support": "Ustuvor qo'llab-quvvatlash",
+        "feat_vip_support": "VIP qo'llab-quvvatlash",
+        "feat_fast_pay": "Tezkor to'lov (24 soat)",
+        "feat_manager": "Shaxsiy menejer",
+        "current_plan": "Joriy reja",
+        "buy_telegram": "Telegram orqali sotib olish",
+        "benefits_title": "Premium imtiyozlari",
+        "benefits_subtitle": "Nima uchun sotuvchilar Premium tanlaydi?",
+        "ben_visibility": "3x ko'rinish",
+        "ben_visibility_desc": "Akkauntlaringiz qidiruvda ko'proq chiqadi",
+        "ben_fast": "Tez sotuv",
+        "ben_fast_desc": "Premium sotuvchilar 2 marta tezroq sotadi",
+        "ben_trust": "Ishonch nishoni",
+        "ben_trust_desc": "Xaridorlar Premium sotuvchilarga ko'proq ishonadi",
+        "ben_position": "Eng yuqori joylashuv",
+        "ben_position_desc": "Bosh sahifa va qidiruvda birinchi",
+        "payment_methods": "To'lov usullari",
+        "auto_renew": "Obuna har oy avtomatik yangilanadi. Istalgan vaqtda bekor qilishingiz mumkin."
     },
     "login": {
         "welcome": "Xush kelibsiz!",
@@ -158,7 +210,13 @@
         "withdraw": "Pul yechish",
         "linked_cards": "Bog'langan kartalar",
         "no_cards": "Hozircha karta bog'lanmagan",
-        "add_card": "+ Karta qo'shish"
+        "add_card": "+ Karta qo'shish",
+        "current_password_wrong": "Joriy parol noto'g'ri",
+        "user_not_found": "Foydalanuvchi topilmadi",
+        "add_money_coming_soon": "Tez orada! Pul qo'shish funksiyasi hozircha mavjud emas.",
+        "withdraw_coming_soon": "Tez orada! Pul yechish funksiyasi hozircha mavjud emas.",
+        "add_card_coming_soon": "Tez orada! Karta qo'shish funksiyasi ishlab chiqilmoqda.",
+        "generic_error": "Xatolik yuz berdi"
     },
     "footer": {
         "description": "O'zbekistonning eng ishonchli o'yin akkauntlari savdo platformasi",
@@ -178,7 +236,10 @@
         "loading": "Yuklanmoqda...",
         "error": "Xatolik",
         "success": "Muvaffaqiyat",
-        "home": "Bosh sahifa"
+        "home": "Bosh sahifa",
+        "products": "Mahsulotlar",
+        "unknown_game": "Noma'lum o'yin",
+        "untitled_account": "Nomsiz akkaunt"
     },
     "auth": {
         "login_title": "Tizimga kirish"
@@ -282,13 +343,68 @@
     "terms": {
         "escrow_item": "Escrow tizimi — pul xaridor tasdiqlagunga qadar saytda saqlanadi"
     },
+    "top": {
+        "badge": "Eng yaxshilari",
+        "title": "Top",
+        "accounts": "Akkauntlar",
+        "subtitle": "Eng yuqori reytingli va ishonchli sotuvchilardan eng yaxshi akkauntlar",
+        "premium_sellers": "Premium sotuvchilar",
+        "high_rated": "Yuqori reytingli",
+        "experienced": "Tajribali sotuvchilar",
+        "all": "Barchasi",
+        "premium_only": "Faqat Premium",
+        "results": "akkaunt"
+    },
+    "sort": {
+        "rating": "Eng yaxshi reyting",
+        "price_high": "Narx: yuqori",
+        "price_low": "Narx: past",
+        "sales": "Ko'p sotuvlar"
+    },
+    "status": {
+        "pending": "Kutilmoqda",
+        "approved": "Tasdiqlangan",
+        "rejected": "Rad etilgan",
+        "sold": "Sotilgan"
+    },
+    "profile": {
+        "delete_confirm": "Bu listingni o'chirishni xohlaysizmi?",
+        "my_listings": "Mening e'lonlarim",
+        "purchases": "Xaridlar",
+        "sales": "Sotuvlar",
+        "likes": "Yoqqanlar",
+        "deleted_success": "Listing muvaffaqiyatli o'chirildi",
+        "delete_error": "O'chirishda xatolik yuz berdi"
+    },
     "detail": {
         "link_copied": "Havola nusxalandi",
         "listing_not_found": "Listing topilmadi",
         "listing_not_found_desc": "Bu akkaunt mavjud emas yoki o'chirilgan.",
         "listing_error_desc": "Yuklab bo'lmadi. Internetingizni tekshiring va qayta urinib ko'ring.",
         "back_to_products": "Barcha mahsulotlar",
-        "try_again": "Qayta urinish"
+        "try_again": "Qayta urinish",
+        "description": "Tavsif",
+        "features": "Xususiyatlar",
+        "reviews": "Sharhlar",
+        "price": "Narx",
+        "buy_now": "Sotib olish",
+        "contact_seller": "Sotuvchi bilan bog'lanish",
+        "seller": "Sotuvchi",
+        "related": "O'xshash akkauntlar",
+        "escrow_protection": "Escrow himoya",
+        "verified_seller": "Tasdiqlangan sotuvchi",
+        "no_description": "Tavsif yo'q",
+        "no_features": "Xususiyatlar ko'rsatilmagan",
+        "level": "Daraja",
+        "rank": "Reyting",
+        "skins": "Skinlar",
+        "sales_count": "sotuv",
+        "share": "Ulashish",
+        "copy_failed": "Nusxalab bo'lmadi",
+        "added_to_favorites": "Sevimlilarga qo'shildi",
+        "removed_from_favorites": "Sevimlilardan olib tashlandi",
+        "deleted_success": "Listing muvaffaqiyatli o'chirildi",
+        "delete_error": "O'chirishda xatolik yuz berdi"
     },
     "notifications": {
         "title": "Bildirishnomalar",
