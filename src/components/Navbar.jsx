@@ -25,17 +25,7 @@ const Navbar = () => {
     const langRef = useRef(null);
     const searchInputRef = useRef(null);
 
-    // Ctrl+K keyboard shortcut for search
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                searchInputRef.current?.focus();
-            }
-        };
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    // Ctrl+K opens CommandPalette (global search) — handled in CommandPalette.jsx only
 
     // Close dropdowns on outside click or Escape
     useEffect(() => {

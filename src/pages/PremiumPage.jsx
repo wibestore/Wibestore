@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Check, Crown, Star, Zap, Shield, TrendingUp, X } from 'lucide-react';
 import { formatPrice } from '../data/mockData';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import { useLanguage } from '../context/LanguageContext';
 
 const PremiumPage = () => {
@@ -70,12 +71,7 @@ const PremiumPage = () => {
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
             <div className="gh-container">
-                {/* Breadcrumbs */}
-                <div className="breadcrumbs">
-                    <Link to="/">Home</Link>
-                    <span className="breadcrumb-separator">/</span>
-                    <span className="breadcrumb-current">Premium</span>
-                </div>
+                <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Premium' }]} />
 
                 {/* Header */}
                 <div className="text-center" style={{ paddingTop: '32px', marginBottom: '48px' }}>

@@ -56,7 +56,7 @@ const AdminLayout = ({ children }) => {
         return 'Admin';
     };
 
-    const sidebarWidth = sidebarCollapsed ? '64px' : '260px';
+    const sidebarWidth = sidebarCollapsed ? '64px' : '280px';
 
     return (
         <div style={{ minHeight: '100vh', display: 'flex', backgroundColor: 'var(--color-bg-primary)' }}>

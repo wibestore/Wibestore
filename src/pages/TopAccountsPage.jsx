@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Crown, Star, Flame, Trophy } from 'lucide-react';
 import AccountCard from '../components/AccountCard';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import { accounts } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -36,12 +37,7 @@ const TopAccountsPage = () => {
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
             <div className="gh-container">
-                {/* Breadcrumbs */}
-                <div className="breadcrumbs">
-                    <Link to="/">Home</Link>
-                    <span className="breadcrumb-separator">/</span>
-                    <span className="breadcrumb-current">{t('nav.top') || 'Top'}</span>
-                </div>
+                <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: t('nav.top') || 'Top' }]} />
 
                 {/* Header */}
                 <div className="text-center" style={{ paddingTop: 'var(--space-8)', marginBottom: 'var(--space-10)' }}>

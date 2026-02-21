@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, TrendingUp, Users, ShoppingBag, Star, Medal, Crown, Award } from 'lucide-react';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import { useLanguage } from '../context/LanguageContext';
 
 const StatisticsPage = () => {
@@ -56,12 +57,7 @@ const StatisticsPage = () => {
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
             <div className="gh-container" style={{ maxWidth: '900px' }}>
-                {/* Breadcrumbs */}
-                <div className="breadcrumbs">
-                    <Link to="/">Home</Link>
-                    <span className="breadcrumb-separator">/</span>
-                    <span className="breadcrumb-current">{t('nav.statistics') || 'Statistics'}</span>
-                </div>
+                <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: t('nav.statistics') || 'Statistics' }]} />
 
                 {/* Header */}
                 <div className="text-center" style={{ paddingTop: '32px', marginBottom: '40px' }}>

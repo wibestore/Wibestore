@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useGame, useGameListings } from '../hooks';
 import AccountCard from '../components/AccountCard';
 import SkeletonLoader from '../components/SkeletonLoader';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+import PageHeader from '../components/ui/PageHeader';
 import { useLanguage } from '../context/LanguageContext';
 
 const GamePage = () => {
@@ -67,14 +69,13 @@ const GamePage = () => {
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
             <div className="gh-container">
-                {/* Breadcrumbs */}
-                <div className="breadcrumbs">
-                    <Link to="/">Home</Link>
-                    <span className="breadcrumb-separator">/</span>
-                    <Link to="/products">{t('nav.products') || 'Products'}</Link>
-                    <span className="breadcrumb-separator">/</span>
-                    <span className="breadcrumb-current">{game.name}</span>
-                </div>
+                <Breadcrumbs
+                    items={[
+                        { label: 'Home', to: '/' },
+                        { label: t('nav.products') || 'Products', to: '/products' },
+                        { label: game.name },
+                    ]}
+                />
 
                 {/* Game Header */}
                 <div

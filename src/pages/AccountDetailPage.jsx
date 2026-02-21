@@ -9,6 +9,7 @@ import { useListing, useAddToFavorites, useRemoveFromFavorites, useListings } fr
 import ReviewList from '../components/ReviewList';
 import AccountCard from '../components/AccountCard';
 import SkeletonLoader from '../components/SkeletonLoader';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import { useLanguage } from '../context/LanguageContext';
 import { useToast } from '../components/ToastProvider';
 
@@ -271,22 +272,16 @@ const AccountDetailPage = () => {
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '80px' }}>
             <div className="gh-container">
-                {/* Breadcrumbs */}
-                <div className="breadcrumbs">
-                    <Link to="/">Home</Link>
-                    <span className="breadcrumb-separator">/</span>
-                    <Link to="/products">Products</Link>
-                    {listing.game?.name && (
-                        <>
-                            <span className="breadcrumb-separator">/</span>
-                            <Link to={`/game/${listing.game?.slug || listing.game?.id}`}>{listing.game.name}</Link>
-                        </>
-                    )}
-                    <span className="breadcrumb-separator">/</span>
-                    <span className="breadcrumb-current" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {listing.title}
-                    </span>
-                </div>
+                <Breadcrumbs
+                    items={[
+                        { label: 'Home', to: '/' },
+                        { label: 'Products', to: '/products' },
+                        ...(listing.game?.name
+                            ? [{ label: listing.game.name, to: `/game/${listing.game?.slug || listing.game?.id}` }]
+                            : []),
+                        { label: listing.title },
+                    ]}
+                />
 
                 {/* Main grid */}
                 <div

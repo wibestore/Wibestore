@@ -80,35 +80,8 @@ const HomePage = () => {
 
     return (
         <div className="page-enter" style={{ minHeight: '100vh' }}>
-            {/* Hero Section */}
-            <section style={{ paddingTop: '80px', paddingBottom: '64px', position: 'relative', overflow: 'hidden' }}>
-                {/* Subtle background accents */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '600px',
-                        height: '600px',
-                        background: 'radial-gradient(circle, var(--color-accent-blue) 0%, transparent 70%)',
-                        opacity: 0.04,
-                        pointerEvents: 'none',
-                    }}
-                />
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '30%',
-                        right: '-10%',
-                        width: '400px',
-                        height: '400px',
-                        background: 'radial-gradient(circle, var(--color-accent-purple) 0%, transparent 70%)',
-                        opacity: 0.03,
-                        pointerEvents: 'none',
-                    }}
-                />
-
+            {/* Hero Section — no decorative gradients per design system */}
+            <section style={{ paddingTop: '80px', paddingBottom: '64px', position: 'relative' }}>
                 <div className="gh-container" style={{ position: 'relative' }}>
                     <div className="text-center" style={{ maxWidth: '720px', margin: '0 auto' }}>
                         {/* Badge */}
