@@ -14,11 +14,17 @@ export function GoogleLoginButton({ onSuccess, onError, from, children, classNam
                 await loginWithGoogle(tokenResponse.access_token);
                 if (onSuccess) onSuccess();
             } catch (err) {
-                if (onError) onError(err?.message || 'Google login failed');
+                if (onError) onError(err?.message || err?.response?.data?.error || 'Google login failed');
             }
         },
-        onError: () => {
-            if (onError) onError('Google orqali kirish xatolik berdi');
+        onError: (err) => {
+            const msg = err?.message || '';
+            const isInvalidClient = msg.includes('invalid client') || msg.includes('401') || msg.includes('OAuth client was not found');
+            if (onError) {
+                onError(isInvalidClient
+                    ? "Google kirish hozircha sozlanmagan. Iltimos email va parol bilan kiring yoki sayt administratoriga murojaat qiling."
+                    : (msg || "Google orqali kirish xatolik berdi"));
+            }
         },
     });
 

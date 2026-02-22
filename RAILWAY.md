@@ -18,7 +18,7 @@ Build vaqtida Vite bu o‘zgaruvchilarni kod ichiga yozib qo‘yadi. Shuning uch
 |-------------|--------|--------|
 | `VITE_API_BASE_URL` | Backend API manzili | `https://sizning-backend.railway.app/api/v1` |
 | `VITE_WS_BASE_URL` | WebSocket manzili | `wss://sizning-backend.railway.app` |
-| `VITE_GOOGLE_CLIENT_ID` | Google OAuth Client ID | (ixtiyoriy) |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth Client ID (Kirish/Ro'yxatdan o'tish) | [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md) bo'yicha sozlang; bo'sh qoldirsangiz Google tugmasi ko'rinmaydi. **401 invalid client** bo'lsa, shu qo'llanmani bajargan holda Client ID va Authorized origins ni tekshiring. |
 | `VITE_SENTRY_DSN` | Sentry DSN | (ixtiyoriy) |
 
 - Backend’ni avval deploy qiling, so‘ng uning **public URL**ini (masalan `https://...railway.app`) olib, yuqoridagi `VITE_API_BASE_URL` va `VITE_WS_BASE_URL` ga qo‘ying.
@@ -44,6 +44,8 @@ Build vaqtida Vite bu o‘zgaruvchilarni kod ichiga yozib qo‘yadi. Shuning uch
 
 - **O‘zgaruvchilar ishlamayapti**:  
   - `VITE_*` o‘zgaruvchilarini o‘zgartirgach **yangi deploy** (redeploy) qiling; build qayta ishlanadi.
+
+- **Google kirish: "401 invalid client"**: **GOOGLE_OAUTH_SETUP.md** da Google Cloud Console va Railway sozlamalari batafsil. Authorized JavaScript origins ga frontend URL qo‘shing, `VITE_GOOGLE_CLIENT_ID` ni to‘g‘ri yozing va Redeploy qiling.
 
 ## 6. Qisqa checklist
 
