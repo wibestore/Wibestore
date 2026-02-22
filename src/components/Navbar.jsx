@@ -120,7 +120,7 @@ const Navbar = () => {
             role="navigation"
             aria-label="Main navigation"
         >
-            <div className="gh-container h-full flex items-center justify-between gap-4">
+            <div className="gh-container h-full flex items-center justify-between gap-6 lg:gap-8">
                 {/* Logo */}
                 <Link
                     to="/"
@@ -146,12 +146,12 @@ const Navbar = () => {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="hidden lg:flex items-center gap-1">
+                <div className="hidden lg:flex items-center gap-1.5">
                     {navLinks.map((link) => (
                         <Link
                             key={link.to}
                             to={link.to}
-                            className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium nav-link-hover`}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium nav-link-hover`}
                             style={{
                                 color: isActive(link.to) ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                                 backgroundColor: isActive(link.to) ? 'var(--color-bg-secondary)' : 'transparent',
@@ -167,7 +167,7 @@ const Navbar = () => {
                     {isAdmin && (
                         <Link
                             to="/admin"
-                            className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium nav-link-hover`}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium nav-link-hover`}
                             style={{
                                 color: 'var(--color-error)',
                                 backgroundColor: 'var(--color-error-bg)',
@@ -181,7 +181,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Search Bar (Desktop) */}
-                <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-4">
+                <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-6 lg:mx-8">
                     <div className="relative w-full">
                         <Search
                             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
@@ -212,16 +212,16 @@ const Navbar = () => {
                 </form>
 
                 {/* Right Actions */}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2 lg:gap-3">
                     {/* Language Switcher: bayroq chapda, o'ngda uz/ru/eng */}
                     <div className="relative" ref={langRef}>
                         <button
                             onClick={() => setIsLangOpen(!isLangOpen)}
-                            className="btn btn-ghost btn-sm flex items-center gap-1.5"
+                            className="btn btn-ghost btn-sm flex items-center gap-2"
                             aria-label="Change language"
                             aria-haspopup="true"
                             aria-expanded={isLangOpen}
-                            style={{ padding: '0 8px' }}
+                            style={{ padding: '6px 10px' }}
                         >
                             <img
                                 src={currentLang.flagUrl}
@@ -275,7 +275,7 @@ const Navbar = () => {
                         onClick={toggleTheme}
                         className="btn btn-ghost btn-sm"
                         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-                        style={{ padding: '0 8px' }}
+                        style={{ padding: '6px 10px' }}
                     >
                         {isDark ? (
                             <Sun className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
@@ -295,7 +295,7 @@ const Navbar = () => {
                             <button
                                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                                 className="flex items-center gap-2 btn btn-ghost btn-sm"
-                                style={{ padding: '0 8px' }}
+                                style={{ padding: '6px 10px' }}
                                 aria-label="User menu"
                                 aria-haspopup="true"
                                 aria-expanded={isProfileOpen}
@@ -368,18 +368,18 @@ const Navbar = () => {
                             )}
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3 lg:gap-4">
                             <Link
                                 to="/login"
                                 className="btn btn-ghost btn-sm hidden sm:inline-flex"
-                                style={{ textDecoration: 'none', color: 'var(--color-text-primary)' }}
+                                style={{ textDecoration: 'none', color: 'var(--color-text-primary)', padding: '8px 14px' }}
                             >
                                 {t('nav.login') || 'Sign in'}
                             </Link>
                             <Link
                                 to="/signup"
                                 className="btn btn-primary btn-sm"
-                                style={{ textDecoration: 'none' }}
+                                style={{ textDecoration: 'none', padding: '8px 16px' }}
                             >
                                 {t('nav.signup') || 'Sign up'}
                             </Link>
