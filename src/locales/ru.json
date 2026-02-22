@@ -9,7 +9,8 @@
         "sell": "Продать",
         "profile": "Мой профиль",
         "settings": "Настройки",
-        "logout": "Выйти"
+        "logout": "Выйти",
+        "search": "Поиск аккаунтов..."
     },
     "hero": {
         "badge": "100% гарантия безопасной сделки",
@@ -250,7 +251,33 @@
         "untitled_account": "Без названия"
     },
     "auth": {
-        "login_title": "Войти"
+        "login_title": "Войти",
+        "login_subtitle": "Войдите в аккаунт, чтобы продолжить",
+        "email": "Электронная почта",
+        "password": "Пароль",
+        "forgot_password": "Забыли пароль?",
+        "login_btn": "Войти",
+        "or": "Или продолжить с",
+        "no_account": "Нет аккаунта?",
+        "signup_link": "Регистрация",
+        "invalid_credentials": "Неверный email или пароль",
+        "google_error": "Ошибка входа через Google",
+        "logout": "Выйти",
+        "enter_email": "Введите ваш email",
+        "valid_email": "Введите корректный email",
+        "email_sent": "Письмо отправлено!",
+        "reset_link_sent": "Ссылка для сброса пароля отправлена на",
+        "back_to_login": "Вернуться к входу",
+        "try_another": "Попробуйте другой email",
+        "reset_title": "Сброс пароля",
+        "reset_subtitle": "Введите email — мы отправим ссылку для сброса",
+        "send_link": "Отправить ссылку"
+    },
+    "game": {
+        "not_found": "Игра не найдена",
+        "not_found_desc": "Игра, которую вы ищете, не существует.",
+        "go_home": "На главную",
+        "accounts": "аккаунтов доступно"
     },
     "faq": {
         "badge": "Центр помощи",

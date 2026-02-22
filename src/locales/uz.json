@@ -9,7 +9,8 @@
         "sell": "Sotish",
         "profile": "Mening profilim",
         "settings": "Sozlamalar",
-        "logout": "Chiqish"
+        "logout": "Chiqish",
+        "search": "Akkauntlarni qidirish..."
     },
     "hero": {
         "badge": "100% xavfsiz savdo kafolati",
@@ -250,7 +251,33 @@
         "untitled_account": "Nomsiz akkaunt"
     },
     "auth": {
-        "login_title": "Tizimga kirish"
+        "login_title": "Tizimga kirish",
+        "login_subtitle": "Davom etish uchun akkauntingizga kiring",
+        "email": "Email",
+        "password": "Parol",
+        "forgot_password": "Parolni unutdingizmi?",
+        "login_btn": "Kirish",
+        "or": "Yoki",
+        "no_account": "Akkauntingiz yo'qmi?",
+        "signup_link": "Ro'yxatdan o'tish",
+        "invalid_credentials": "Email yoki parol noto'g'ri",
+        "google_error": "Google orqali kirishda xatolik",
+        "logout": "Chiqish",
+        "enter_email": "Iltimos email manzilingizni kiriting",
+        "valid_email": "Iltimos to'g'ri email kiriting",
+        "email_sent": "Email yuborildi!",
+        "reset_link_sent": "Parolni tiklash havolasi yuborildi",
+        "back_to_login": "Kirish sahifasiga qaytish",
+        "try_another": "Boshqa email urinib ko'ring",
+        "reset_title": "Parolni tiklash",
+        "reset_subtitle": "Email kiriting, sizga tiklash havolasini yuboramiz",
+        "send_link": "Havolani yuborish"
+    },
+    "game": {
+        "not_found": "O'yin topilmadi",
+        "not_found_desc": "Qidirayotgan o'yin mavjud emas.",
+        "go_home": "Bosh sahifaga",
+        "accounts": "akkaunt mavjud"
     },
     "faq": {
         "badge": "Yordam markazi",

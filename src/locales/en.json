@@ -9,7 +9,8 @@
         "sell": "Sell",
         "profile": "My Profile",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "search": "Search accounts..."
     },
     "hero": {
         "badge": "100% secure trading guarantee",
@@ -250,7 +251,33 @@
         "untitled_account": "Untitled account"
     },
     "auth": {
-        "login_title": "Sign in"
+        "login_title": "Sign in",
+        "login_subtitle": "Welcome back. Log in to continue.",
+        "email": "Email",
+        "password": "Password",
+        "forgot_password": "Forgot password?",
+        "login_btn": "Sign in",
+        "or": "Or continue with",
+        "no_account": "Don't have an account?",
+        "signup_link": "Sign up",
+        "invalid_credentials": "Invalid email or password",
+        "google_error": "Google sign-in failed",
+        "logout": "Log out",
+        "enter_email": "Please enter your email",
+        "valid_email": "Please enter a valid email",
+        "email_sent": "Email sent!",
+        "reset_link_sent": "A password reset link has been sent to",
+        "back_to_login": "Back to Sign in",
+        "try_another": "Try another email",
+        "reset_title": "Reset your password",
+        "reset_subtitle": "Enter your email and we'll send you a reset link",
+        "send_link": "Send reset link"
+    },
+    "game": {
+        "not_found": "Game not found",
+        "not_found_desc": "The game you are looking for does not exist.",
+        "go_home": "Go to homepage",
+        "accounts": "accounts available"
     },
     "faq": {
         "badge": "Help Center",
