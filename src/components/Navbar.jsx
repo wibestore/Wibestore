@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, Sun, Moon, Bell, User, LogOut, Settings, ShoppingBag, Heart, Crown, Gamepad2, ChevronDown, Globe } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon, Bell, User, LogOut, Settings, ShoppingBag, Heart, Crown, Gamepad2, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCoins } from '../context/CoinContext';
@@ -213,29 +213,29 @@ const Navbar = () => {
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-1">
-                    {/* Language Switcher */}
+                    {/* Language Switcher: bayroq chapda, o'ngda uz/ru/eng */}
                     <div className="relative" ref={langRef}>
                         <button
                             onClick={() => setIsLangOpen(!isLangOpen)}
-                            className="btn btn-ghost btn-sm flex items-center gap-1"
+                            className="btn btn-ghost btn-sm flex items-center gap-1.5"
                             aria-label="Change language"
                             aria-haspopup="true"
                             aria-expanded={isLangOpen}
                             style={{ padding: '0 8px' }}
                         >
-                            <Globe className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-                            <span className="hidden sm:inline-flex items-center gap-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                                <img
-                                    src={currentLang.flagUrl}
-                                    alt={currentLang.name}
-                                    style={{
-                                        width: '20px',
-                                        height: '14px',
-                                        objectFit: 'cover',
-                                        borderRadius: '2px',
-                                        display: 'block',
-                                    }}
-                                />
+                            <img
+                                src={currentLang.flagUrl}
+                                alt={currentLang.name}
+                                style={{
+                                    width: '20px',
+                                    height: '14px',
+                                    objectFit: 'cover',
+                                    borderRadius: '2px',
+                                    display: 'block',
+                                }}
+                            />
+                            <span className="text-xs font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                                {language === 'en' ? 'eng' : language}
                             </span>
                         </button>
 
