@@ -28,7 +28,8 @@ const ProductsPage = () => {
     // Flatten paginated data — ensure array, no undefined items
     const rawListings = data?.pages?.flatMap(page => page?.results ?? []) ?? [];
     const allListings = Array.isArray(rawListings) ? rawListings.filter(Boolean) : [];
-    const games = gamesData?.results || gamesData || [];
+    const rawGames = gamesData?.results ?? gamesData ?? [];
+    const games = Array.isArray(rawGames) ? rawGames.filter(Boolean) : [];
 
     // Filter va sort
     let filteredListings = [...allListings];
@@ -124,8 +125,8 @@ const ProductsPage = () => {
                         aria-label="Filter by game"
                     >
                         <option value="all">{t('products.all_games') || 'All Games'}</option>
-                        {games.map(game => (
-                            <option key={game.id || game.slug} value={game.slug || game.id}>{game.name}</option>
+                        {games.map((game, index) => (
+                            <option key={game?.id ?? game?.slug ?? index} value={game?.slug ?? game?.id ?? ''}>{game?.name ?? ''}</option>
                         ))}
                     </select>
 
@@ -210,19 +211,19 @@ const ProductsPage = () => {
                                 }`}
                             style={{ gap: '16px' }}
                         >
-                            {filteredAccounts.map((listing) => (
+                            {filteredAccounts.map((listing, index) => (
                                 <AccountCard
-                                    key={listing.id}
+                                    key={listing?.id ?? `listing-${index}`}
                                     account={{
-                                        id: listing.id,
-                                        gameId: listing.game?.slug || listing.game?.id,
-                                        gameName: listing.game?.name || 'Unknown',
-                                        title: listing.title,
-                                        price: parseFloat(listing.price),
-                                        seller: listing.seller,
-                                        image: listing.images?.[0]?.image || '',
-                                        isLiked: listing.is_favorited || false,
-                                        isPremium: listing.is_premium,
+                                        id: listing?.id,
+                                        gameId: listing?.game?.slug ?? listing?.game?.id,
+                                        gameName: listing?.game?.name ?? 'Unknown',
+                                        title: listing?.title ?? '',
+                                        price: Number(listing?.price) || 0,
+                                        seller: listing?.seller,
+                                        image: listing?.images?.[0]?.image ?? '',
+                                        isLiked: listing?.is_favorited ?? false,
+                                        isPremium: listing?.is_premium ?? false,
                                     }}
                                     viewMode={viewMode}
                                 />
