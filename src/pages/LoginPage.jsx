@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, Gamepad2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useGoogleAuthEnabled } from '../context/GoogleAuthContext';
 import GoogleLoginButton from '../components/GoogleLoginButton';
+import BackendUrlFix from '../components/BackendUrlFix';
 import { useLanguage } from '../context/LanguageContext';
 import { useToast } from '../components/ToastProvider';
 
@@ -96,6 +97,9 @@ const LoginPage = () => {
                         {t('auth.login_subtitle') || 'Welcome back'}
                     </p>
                 </div>
+
+                {/* Backend URL sozlashi (405 / production) */}
+                <BackendUrlFix showFor405={error.includes('405')} />
 
                 {/* Form Card */}
                 <div

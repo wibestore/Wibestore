@@ -27,6 +27,14 @@ function getEffectiveBaseURL() {
   return BUILD_TIME_API_BASE_URL;
 }
 
+/** Production'da API nisbiy yoki frontend domeniga yo'naltirilgan bo'lsa true (405 sababi) */
+export function isApiUrlLikelyWrong() {
+  if (typeof window === 'undefined') return false;
+  const base = getEffectiveBaseURL();
+  if (base.startsWith('http') && !base.startsWith(window.location.origin)) return false;
+  return window.location.hostname.includes('railway.app') || window.location.hostname !== 'localhost';
+}
+
 const API_BASE_URL = BUILD_TIME_API_BASE_URL;
 
 // Retry logic для временных ошибок (502, 503, network)
@@ -232,5 +240,5 @@ export const createPublicClient = () => {
   return client;
 };
 
-// Экспорт базового URL
-export { API_BASE_URL };
+// Экспорт базового URL и хелперов для UI
+export { API_BASE_URL, getEffectiveBaseURL };
