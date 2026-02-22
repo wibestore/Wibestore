@@ -1,4 +1,4 @@
-# Railway va boshqa platformalar uchun: PORT runtime da almashtiriladi
+# Railway: PORT runtime da almashtiriladi (BACKEND_URL bo'lmasa proxy yo'q)
 server {
     listen ${PORT};
     server_name _;
@@ -7,6 +7,8 @@ server {
 
     gzip on;
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+
+    add_header Cross-Origin-Opener-Policy "same-origin-allow-popups" always;
 
     location / {
         try_files $uri $uri/ /index.html;

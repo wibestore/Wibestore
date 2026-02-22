@@ -29,7 +29,7 @@ RUN apk add --no-cache gettext
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
-# Eski default.conf o'chiriladi, entrypoint yangisini yaratadi
+COPY nginx.proxy.template /etc/nginx/conf.d/default.proxy.template
 RUN rm -f /etc/nginx/conf.d/default.conf
 
 COPY entrypoint.sh /entrypoint.sh

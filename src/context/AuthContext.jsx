@@ -108,7 +108,7 @@ export const AuthProvider = ({ children }) => {
             console.error('[Auth] Google login failed:', error);
             if (error.response?.status === 405) {
                 throw new Error(
-                    "Backend manzili sozlanmagan (405). Railway → Frontend → Variables → VITE_API_BASE_URL = https://BACKEND.railway.app/api/v1, keyin Redeploy. Vaqtinchalik: F12 → Console → localStorage.setItem('wibe_api_base_url', 'https://BACKEND.railway.app/api/v1'); location.reload();"
+                    "Backend proxy sozlanmagan (405). Railway → Frontend Service → Variables → BACKEND_URL = https://sizning-backend.railway.app (slashsiz) qo‘shing va Redeploy qiling. RAILWAY.md bo‘lim 3.1."
                 );
             }
             throw error.response?.data?.error || error.response?.data || new Error('Google login failed');

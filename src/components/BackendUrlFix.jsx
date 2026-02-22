@@ -70,7 +70,7 @@ export function BackendUrlFix({ showFor405 = false, compact = false }) {
                 }}
             >
                 <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
-                    Backend manzili sozlanmagan (405). Quyida backend API manzilingizni kiriting:
+                    Backend sozlanmagan (405). Railway’da <code>BACKEND_URL</code> qo‘ying yoki quyida manzilni kiriting:
                 </p>
                 <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <input
@@ -115,9 +115,9 @@ export function BackendUrlFix({ showFor405 = false, compact = false }) {
                 </span>
             </div>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', marginBottom: '12px' }}>
-                Railway dashboarddan backend service ning URL ini nusxalang (masalan{' '}
-                <code style={{ fontSize: '12px' }}>https://...-backend.railway.app</code>) va quyida <strong>/api/v1</strong> bilan
-                kiriting. Saqlash tugmasidan keyin sahifa qayta yuklanadi va Google kirish ishlashi kerak.
+                <strong>Mukammal yechim:</strong> Railway → Frontend Service → Variables → <code>BACKEND_URL</code> = <code>https://sizning-backend.railway.app</code> (slashsiz) qo‘shing va Redeploy qiling. Keyin 405 ketadi.
+                <br />
+                Vaqtinchalik (Redeploy qilmasdan): quyida backend manzilini kiriting va Saqlash bosing.
             </p>
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <input

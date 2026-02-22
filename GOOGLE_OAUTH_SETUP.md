@@ -73,7 +73,7 @@ So'ng **Create** bosing va **Client ID** ni nusxalang (masalan `123456789-xxx.ap
 
 Bu holda Google oynasi yopiladi, lekin **backend** javobda xato qaytaradi. Quyidagilarni tekshiring:
 
-1. **405 Method Not Allowed** — so‘rov frontend domeniga boradi (nginx POST ni backend’ga yubormaydi). **Yechim:** Railway → Frontend Service → Variables da `VITE_API_BASE_URL` ni **to‘liq backend URL** ga o‘rnating (masalan `https://sizning-backend.railway.app/api/v1`), **nisbiy** `/api/v1` emas. Saqlang va **Redeploy** qiling.
+1. **405 Method Not Allowed** — backend proxy yoqilmagan. **Yechim:** Railway → Frontend Service → **Variables** → `BACKEND_URL` = `https://sizning-backend.railway.app` (slashsiz) qo‘shing → **Redeploy**. Nginx `/api/*` ni backend’ga yo‘naltiradi. Batafsil: **RAILWAY.md** bo‘lim 3.1.
 
 2. **Backend ishlayaptimi?**  
    Railway’da **backend** service ham deploy qilingan bo‘lishi kerak. Frontend **Variables** da `VITE_API_BASE_URL` aniq shu backend manziliga yo‘naltirilgan bo‘lishi kerak (masalan `https://sizning-backend.railway.app/api/v1`).

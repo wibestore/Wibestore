@@ -12,16 +12,25 @@
 
 ## 3. Environment variables (muhim)
 
-Build vaqtida Vite bu o‘zgaruvchilarni kod ichiga yozib qo‘yadi. Shuning uchun ularni **Railway → Frontend Service → Variables** da **build oldidan** qo‘shing:
+**Frontend Service → Variables** da quyidagilarni qo‘shing.
+
+### 3.1 Runtime (container ishga tushganda) — 405 ni bartaraf qilish
 
 | O‘zgaruvchi | Tavsif | Misol |
 |-------------|--------|--------|
-| `VITE_API_BASE_URL` | Backend API manzili | `https://sizning-backend.railway.app/api/v1` |
+| `BACKEND_URL` | Backend ning **asosiy** manzili (protocol + host, yo‘l siz). Nginx `/api/*` so‘rovlarni shu hostga proxy qiladi. **Buni qo‘shmasangiz Google kirish 405 qaytaradi.** | `https://sizning-backend.railway.app` |
+
+- Backend’ni avval deploy qiling, so‘ng uning **public URL**ini (slashsiz: `https://...railway.app`) `BACKEND_URL` ga yozing. Redeploy **kerak emas** — faqat **Redeploy** bosing (container qayta ishga tushadi).
+
+### 3.2 Build vaqtida (Vite)
+
+| O‘zgaruvchi | Tavsif | Misol |
+|-------------|--------|--------|
+| `VITE_API_BASE_URL` | Brauzer qaysi prefiksga so‘rov yuboradi. **BACKEND_URL** ishlatilsa, default `/api/v1` qoldiring (nginx proxy qiladi). | `/api/v1` yoki `https://...railway.app/api/v1` |
 | `VITE_WS_BASE_URL` | WebSocket manzili | `wss://sizning-backend.railway.app` |
-| `VITE_GOOGLE_CLIENT_ID` | Google OAuth Client ID (Kirish/Ro'yxatdan o'tish) | [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md) bo'yicha sozlang; bo'sh qoldirsangiz Google tugmasi ko'rinmaydi. **401 invalid client** bo'lsa, shu qo'llanmani bajargan holda Client ID va Authorized origins ni tekshiring. |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth Client ID | [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md) |
 | `VITE_SENTRY_DSN` | Sentry DSN | (ixtiyoriy) |
 
-- Backend’ni avval deploy qiling, so‘ng uning **public URL**ini (masalan `https://...railway.app`) olib, yuqoridagi `VITE_API_BASE_URL` va `VITE_WS_BASE_URL` ga qo‘ying.
 - **HTTP/HTTPS**: production’da `https://` va `wss://` ishlating.
 
 ## 4. Port sozlamasi
@@ -47,11 +56,10 @@ Build vaqtida Vite bu o‘zgaruvchilarni kod ichiga yozib qo‘yadi. Shuning uch
 
 - **Google kirish: "401 invalid client"**: **GOOGLE_OAUTH_SETUP.md** da Google Cloud Console va Railway sozlamalari batafsil. Authorized JavaScript origins ga frontend URL qo‘shing, `VITE_GOOGLE_CLIENT_ID` ni to‘g‘ri yozing va Redeploy qiling.
 
-- **405 Method Not Allowed** (masalan `api/v1/auth/google/` da): So‘rov frontend domeniga boradi (nginx faqat statik beradi, POST qabul qilmaydi). **Yechim:** Railway → Frontend Service → **Variables** → `VITE_API_BASE_URL` = **to‘liq backend URL** (masalan `https://sizning-backend.railway.app/api/v1`), nisbiy `/api/v1` emas → **Save** → **Redeploy**. Vaqtinchalik (qayta deploy qilmasdan): brauzerda F12 → Console → `localStorage.setItem('wibe_api_base_url', 'https://BACKEND.railway.app/api/v1'); location.reload();` (BACKEND o‘rniga backend service URL).
+- **405 Method Not Allowed** (masalan `api/v1/auth/google/` da): Frontend container’da **BACKEND_URL** o‘rnatilmagan. **Yechim:** Railway → Frontend Service → **Variables** → `BACKEND_URL` = `https://sizning-backend.railway.app` (slashsiz) → **Save** → **Redeploy**. Keyin nginx `/api/*` ni backend’ga proxy qiladi va 405 ketadi.
 
 ## 6. Qisqa checklist
 
-1. Backend Railway’da deploy qiling va public URL ni oling.
-2. Frontend Service’da `VITE_API_BASE_URL` va `VITE_WS_BASE_URL` ni backend URL ga qo‘ying.
-3. O‘zgaruvchilarni saqlang va **Redeploy** bosing.
-4. Frontend service’ning public URL ini ochib, sahifa va API chaqiriqlarini tekshiring.
+1. Backend Railway’da deploy qiling va public URL ni oling (masalan `https://xxx.railway.app`).
+2. Frontend Service → **Variables**: `BACKEND_URL` = backend URL (slashsiz), `VITE_GOOGLE_CLIENT_ID` = Google Client ID, kerak bo‘lsa `VITE_WS_BASE_URL` = `wss://xxx.railway.app`.
+3. **Redeploy** (yoki yangi deploy). Frontend sahifasini ochib, Google kirish va boshqa API’larni tekshiring.
