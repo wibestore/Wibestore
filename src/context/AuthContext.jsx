@@ -107,9 +107,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('[Auth] Google login failed:', error);
             if (error.response?.status === 405) {
-                throw new Error(
-                    "Backend proxy sozlanmagan (405). Railway → Frontend Service → Variables → BACKEND_URL = https://sizning-backend.railway.app (slashsiz) qo‘shing va Redeploy qiling. RAILWAY.md bo‘lim 3.1."
-                );
+                throw new Error("Backend ulanishi sozlanmagan (405). Quyidagi blokda sozlashingiz mumkin.");
             }
             throw error.response?.data?.error || error.response?.data || new Error('Google login failed');
         }

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
-import { getEffectiveBaseURL, isApiUrlLikelyWrong } from '../lib/apiClient';
+import { getEffectiveBaseURL } from '../lib/apiClient';
 
 /**
- * 405 yoki "backend sozlanmagan" bo'lganda ko'rsatiladi.
- * Foydalanuvchi backend URL ni kiriting, Saqlash → sahifa qayta yuklanadi va API shu URL ga boradi.
+ * Faqat 405 xatolik yuz berganda ko'rsatiladi (masalan Google kirish 405 qaytarganda).
+ * Sahifa yuklanganda ko'rinmaydi — oddiy foydalanuvchilar backend sozlamalarini ko'rmaydi.
  */
 export function BackendUrlFix({ showFor405 = false, compact = false }) {
     const [url, setUrl] = useState(() => {
@@ -18,8 +18,7 @@ export function BackendUrlFix({ showFor405 = false, compact = false }) {
     const [saving, setSaving] = useState(false);
     const [localError, setLocalError] = useState('');
 
-    const shouldShow = showFor405 || isApiUrlLikelyWrong();
-    if (!shouldShow) return null;
+    if (!showFor405) return null;
 
     const handleSave = (e) => {
         e.preventDefault();
