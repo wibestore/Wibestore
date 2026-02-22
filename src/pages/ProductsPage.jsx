@@ -25,41 +25,46 @@ const ProductsPage = () => {
         ordering: sortBy === 'price-low' ? 'price' : sortBy === 'price-high' ? '-price' : '-created_at',
     });
 
-    // Flatten paginated data
-    const allListings = data?.pages?.flatMap(page => page.results) || [];
+    // Flatten paginated data — ensure array, no undefined items
+    const rawListings = data?.pages?.flatMap(page => page?.results ?? []) ?? [];
+    const allListings = Array.isArray(rawListings) ? rawListings.filter(Boolean) : [];
     const games = gamesData?.results || gamesData || [];
-    
+
     // Filter va sort
     let filteredListings = [...allListings];
-    
+
     if (selectedGame !== 'all' && selectedGame) {
-        filteredListings = filteredListings.filter(l => l.game?.slug === selectedGame || l.game?.id === selectedGame);
+        filteredListings = filteredListings.filter(l => l && (l.game?.slug === selectedGame || l.game?.id === selectedGame));
     }
-    
+
     if (searchQuery) {
-        filteredListings = filteredListings.filter(l => 
-            l.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            l.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        filteredListings = filteredListings.filter(l =>
+            l && (
+                l.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                l.description?.toLowerCase().includes(searchQuery.toLowerCase())
+            )
         );
     }
-    
+
     if (priceRange.min || priceRange.max < 10000000) {
         filteredListings = filteredListings.filter(l => {
+            if (!l) return false;
             const price = parseFloat(l.price);
             return price >= priceRange.min && price <= priceRange.max;
         });
     }
-    
+
     // Sort
     filteredListings.sort((a, b) => {
+        if (!a || !b) return 0;
         if (sortBy === 'price-low') return parseFloat(a.price) - parseFloat(b.price);
         if (sortBy === 'price-high') return parseFloat(b.price) - parseFloat(a.price);
         return 0;
     });
-    
+
     // Premium first
-    const premium = filteredListings.filter(l => l.is_premium);
-    const regular = filteredListings.filter(l => !l.is_premium);
+    const premium = filteredListings.filter(l => l?.is_premium);
+    const regular = filteredListings.filter(l => !l?.is_premium);
     const filteredAccounts = [...premium, ...regular];
 
     const sortOptions = [

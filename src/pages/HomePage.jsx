@@ -49,17 +49,21 @@ const HomePage = () => {
     const { data: gamesData, isLoading: gamesLoading } = useGames();
     const { data: listingsData, isLoading: listingsLoading } = useListings({ limit: 8 });
 
-    // Use API data or fallback to mock data
-    const games = gamesData?.results || gamesData || mockGames;
+    // Use API data or fallback to mock data — ensure array, no undefined items
+    const rawGames = gamesData?.results ?? gamesData ?? mockGames;
+    const games = Array.isArray(rawGames) ? rawGames.filter(Boolean) : [];
 
-    // Handle different response structures
-    const allListings = listingsData?.pages?.flatMap?.(page => page.results) || listingsData?.results || listingsData || mockAccounts;
-    const premiumAccounts = allListings.filter(l => l.is_premium)?.slice(0, 6) || [];
-    const recommendedAccounts = allListings.slice(0, 8) || [];
-    
+    // Handle different response structures — ensure array and no undefined items
+    const rawListings = listingsData?.pages?.flatMap?.(page => page?.results ?? []) ?? listingsData?.results ?? listingsData ?? mockAccounts;
+    const allListings = Array.isArray(rawListings) ? rawListings.filter(Boolean) : [];
+
+    const premiumAccounts = allListings.filter(l => l?.is_premium).slice(0, 6);
+    const recommendedAccounts = allListings.slice(0, 8);
+
     // Top accounts - sorted by premium status and rating
     const topAccounts = [...allListings]
         .sort((a, b) => {
+            if (!a || !b) return 0;
             if (a.is_premium && !b.is_premium) return -1;
             if (!a.is_premium && b.is_premium) return 1;
             return (b.seller?.rating || 0) - (a.seller?.rating || 0);

@@ -18,21 +18,23 @@ const GamePage = () => {
         ordering: sortBy === 'price-low' ? 'price' : sortBy === 'price-high' ? '-price' : '-created_at',
     });
     
-    const listings = data?.pages?.flatMap(page => page.results) || [];
-    
+    const rawListings = data?.pages?.flatMap(page => page?.results ?? []) ?? [];
+    const listings = Array.isArray(rawListings) ? rawListings.filter(Boolean) : [];
+
     // Filter and sort
     const filteredListings = listings.filter(listing =>
-        searchQuery === '' || listing.title.toLowerCase().includes(searchQuery.toLowerCase())
+        listing && (searchQuery === '' || listing.title?.toLowerCase().includes(searchQuery.toLowerCase()))
     );
-    
+
     const sortedListings = [...filteredListings].sort((a, b) => {
+        if (!a || !b) return 0;
         if (sortBy === 'price-low') return parseFloat(a.price) - parseFloat(b.price);
         if (sortBy === 'price-high') return parseFloat(b.price) - parseFloat(a.price);
         return 0;
     });
-    
-    const premiumListings = sortedListings.filter(l => l.is_premium);
-    const regularListings = sortedListings.filter(l => !l.is_premium);
+
+    const premiumListings = sortedListings.filter(l => l?.is_premium);
+    const regularListings = sortedListings.filter(l => !l?.is_premium);
     const finalAccounts = [...premiumListings, ...regularListings];
 
     if (gameLoading) {
