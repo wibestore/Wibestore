@@ -14,7 +14,10 @@ export function GoogleLoginButton({ onSuccess, onError, from, children, classNam
                 await loginWithGoogle(tokenResponse.access_token);
                 if (onSuccess) onSuccess();
             } catch (err) {
-                if (onError) onError(err?.message || err?.response?.data?.error || 'Google login failed');
+                const data = err?.response?.data;
+                const backendMsg = data?.error?.message || data?.error;
+                const msg = typeof backendMsg === 'string' ? backendMsg : (err?.message || 'Google orqali kirish amalga oshmadi.');
+                if (onError) onError(msg);
             }
         },
         onError: (err) => {

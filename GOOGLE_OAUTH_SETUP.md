@@ -69,6 +69,29 @@ So'ng **Create** bosing va **Client ID** ni nusxalang (masalan `123456789-xxx.ap
 
 ---
 
+## 6. Agar Google ruxsat berildi, lekin "Google login failed" chiqsa
+
+Bu holda Google oynasi yopiladi, lekin **backend** javobda xato qaytaradi. Quyidagilarni tekshiring:
+
+1. **405 Method Not Allowed** — so‘rov frontend domeniga boradi (nginx POST ni backend’ga yubormaydi). **Yechim:** Railway → Frontend Service → Variables da `VITE_API_BASE_URL` ni **to‘liq backend URL** ga o‘rnating (masalan `https://sizning-backend.railway.app/api/v1`), **nisbiy** `/api/v1` emas. Saqlang va **Redeploy** qiling.
+
+2. **Backend ishlayaptimi?**  
+   Railway’da **backend** service ham deploy qilingan bo‘lishi kerak. Frontend **Variables** da `VITE_API_BASE_URL` aniq shu backend manziliga yo‘naltirilgan bo‘lishi kerak (masalan `https://sizning-backend.railway.app/api/v1`).
+
+3. **Xabar aniqroq bo‘lishi**  
+   Endi sahifada backend yuborgan xabar ko‘rsatiladi (masalan *"Invalid Google access token"*). Agar shunday chiqsa, backend tokenni Google’ga yuborib, javob 200 emas. Shunda:
+   - Frontend va backend bir xil **HTTPS** domenida bo‘lsin (masalan ikkalasi Railway’da).
+   - Google Console da **Authorized JavaScript origins** ga frontend manzilini qo‘shgan bo‘ling (yuqoridagi 2-qadam).
+   - **Redeploy**: frontend va kerak bo‘lsa backend ni qayta deploy qilib, yangi token bilan qayta urinib ko‘ring.
+
+4. **Tarmoq / CORS**  
+   Brauzerda **F12** → **Network** ochib, "Google" tugmasini bosing. `auth/google` yoki `google` so‘rovini toping. Agar u **qizil** (failed) bo‘lsa, **Status** va **Response** ni ko‘ring: 4xx/5xx yoki CORS xabari bo‘lishi mumkin.
+
+5. **Vaqtincha email bilan ro‘yxatdan o‘tish**  
+   Google ishlamaguncha **Ro‘yxatdan o‘tish** formasida **To‘liq ism**, **Email**, **Parol** kiritib, **Ro‘yxatdan o‘tish** tugmasi orqali hisob yarating.
+
+---
+
 ## Qisqacha
 
 | Qayerda           | Nima qilish |
