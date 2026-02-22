@@ -44,7 +44,7 @@ function useCounter(target, duration = 2000) {
 
 const HomePage = () => {
     const { t } = useLanguage();
-    
+
     // API hooks
     const { data: gamesData, isLoading: gamesLoading } = useGames();
     const { data: listingsData, isLoading: listingsLoading } = useListings({ limit: 8 });
@@ -58,15 +58,17 @@ const HomePage = () => {
     let allListings = Array.isArray(rawListings) ? rawListings.filter(Boolean) : [];
     if (allListings.length === 0) allListings = mockAccounts;
 
-    const premiumAccounts = allListings.filter(l => l?.is_premium).slice(0, 6);
+    const premiumAccounts = allListings.filter(l => l?.is_premium || l?.isPremium).slice(0, 6);
     const recommendedAccounts = allListings.slice(0, 8);
 
     // Top accounts - sorted by premium status and rating
     const topAccounts = [...allListings]
         .sort((a, b) => {
             if (!a || !b) return 0;
-            if (a.is_premium && !b.is_premium) return -1;
-            if (!a.is_premium && b.is_premium) return 1;
+            const aPremium = a.is_premium || a.isPremium;
+            const bPremium = b.is_premium || b.isPremium;
+            if (aPremium && !bPremium) return -1;
+            if (!aPremium && bPremium) return 1;
             return (b.seller?.rating || 0) - (a.seller?.rating || 0);
         })
         .slice(0, 8);

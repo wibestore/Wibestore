@@ -6,8 +6,8 @@ const GameCard = ({ game }) => {
     const gameName = game.name;
     const gameIcon = game.icon;
     const gameImage = game.image || game.banner;
-    const accountCount = game.accountCount || game.listingsCount || 0;
-    
+    const accountCount = game.accountCount || game.listingsCount || game.active_listings_count || 0;
+
     return (
         <Link
             to={`/game/${gameId}`}
@@ -43,7 +43,7 @@ const GameCard = ({ game }) => {
                 {/* Account count badge */}
                 {accountCount > 0 && (
                     <div
-                        className="absolute rounded-full"
+                        className="rounded-full"
                         style={{
                             bottom: '8px',
                             right: '8px',
@@ -52,6 +52,7 @@ const GameCard = ({ game }) => {
                             color: '#ffffff',
                             fontSize: 'var(--font-size-xs)',
                             fontWeight: 'var(--font-weight-semibold)',
+                            position: 'absolute',
                         }}
                     >
                         {accountCount}
