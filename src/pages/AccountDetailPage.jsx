@@ -173,9 +173,23 @@ const AccountDetailPage = () => {
     const { mutate: addToFavorites } = useAddToFavorites();
     const { mutate: removeFromFavorites } = useRemoveFromFavorites();
     // API bo'sh/error bo'lsa mock akkauntlardan ko'rsatamiz (test uchun)
-    const listing = apiListing || (!isLoading && accountId
+    const rawListing = apiListing || (!isLoading && accountId
         ? mockAccounts.find((a) => String(a.id) === String(accountId)) || null
         : null);
+    const mockFallback = accountId ? mockAccounts.find((a) => String(a.id) === String(accountId)) : null;
+    // Tavsif, rasm va sotuvchi API/mock farqini bartaraf etish — hammasi mukammal ko'rinsin
+    const listing = rawListing ? {
+        ...rawListing,
+        description: rawListing.description || mockFallback?.description || '',
+        images: rawListing.images?.length ? rawListing.images : (rawListing.image ? [{ image: rawListing.image }] : (mockFallback?.images?.length ? mockFallback.images : (mockFallback?.image ? [{ image: mockFallback.image }] : []))),
+        seller: {
+            ...rawListing.seller,
+            display_name: rawListing.seller?.display_name ?? rawListing.seller?.name,
+            total_sales: rawListing.seller?.total_sales ?? rawListing.seller?.sales ?? 0,
+        },
+        price: rawListing.price ?? mockFallback?.price,
+        features: rawListing.features?.length ? rawListing.features : (mockFallback ? ['Escrow himoya', 'Tez yetkazish', mockFallback.game?.name || mockFallback.gameName].filter(Boolean) : []),
+    } : null;
     const { data: relatedData } = useListings({ game: listing?.game?.id, limit: 4 });
 
     const [isLiked, setIsLiked] = useState(false);

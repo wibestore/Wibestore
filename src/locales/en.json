@@ -144,7 +144,8 @@
         "login_link": "Log In",
         "password_mismatch": "Passwords do not match",
         "password_short": "Password must be at least 6 characters",
-        "agree_terms": "Please accept the terms of service"
+        "agree_terms": "Please accept the terms of service",
+        "google": "Sign up with Google"
     },
     "products": {
         "title": "All Products",

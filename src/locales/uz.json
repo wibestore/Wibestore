@@ -144,7 +144,8 @@
         "login_link": "Kirish",
         "password_mismatch": "Parollar mos kelmaydi",
         "password_short": "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
-        "agree_terms": "Foydalanish shartlariga rozilik bering"
+        "agree_terms": "Foydalanish shartlariga rozilik bering",
+        "google": "Google bilan ro'yxatdan o'tish"
     },
     "products": {
         "title": "Barcha mahsulotlar",
