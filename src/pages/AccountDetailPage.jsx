@@ -18,7 +18,10 @@ import { accounts as mockAccounts } from '../data/mockData';
 /* ─── Image Carousel ──────────────────────────────────────────── */
 const ImageCarousel = ({ images, title }) => {
     const [current, setCurrent] = useState(0);
+    const [imgError, setImgError] = useState(false);
     const total = images?.length || 0;
+    const imgSrc = images?.[current]?.image || images?.[current];
+    useEffect(() => setImgError(false), [current]);
 
     if (!total) {
         return (
@@ -51,11 +54,24 @@ const ImageCarousel = ({ images, title }) => {
                 backgroundColor: 'var(--color-bg-secondary)',
                 aspectRatio: '16/9',
             }}>
-                <img
-                    src={images[current]?.image || images[current]}
-                    alt={`${title} - ${current + 1}`}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                />
+                {!imgError && imgSrc ? (
+                    <img
+                        src={imgSrc}
+                        alt={`${title} - ${current + 1}`}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        onError={() => setImgError(true)}
+                    />
+                ) : (
+                    <div style={{
+                        width: '100%', height: '100%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexDirection: 'column', gap: '12px',
+                        color: 'var(--color-text-muted)',
+                    }}>
+                        <Gamepad2 style={{ width: '48px', height: '48px', opacity: 0.3 }} />
+                        <span style={{ fontSize: 'var(--font-size-sm)' }}>Rasm yuklanmadi</span>
+                    </div>
+                )}
 
                 {/* Nav arrows */}
                 {total > 1 && (
@@ -178,20 +194,21 @@ const AccountDetailPage = () => {
     const { data: apiListing, isLoading, isError, error, refetch } = useListing(accountId);
     const { mutate: addToFavorites } = useAddToFavorites();
     const { mutate: removeFromFavorites } = useRemoveFromFavorites();
-    // API bo'sh/error bo'lsa mock akkauntlardan ko'rsatamiz (test uchun)
-    const rawListing = apiListing || (!isLoading && accountId
-        ? mockAccounts.find((a) => String(a.id) === String(accountId)) || null
-        : null);
+    // API yoki darhol mock — sotuvdagi akkauntlar har doim ko‘rinsin (API kutmasdan)
     const mockFallback = accountId ? mockAccounts.find((a) => String(a.id) === String(accountId)) : null;
-    // Tavsif, rasm va sotuvchi API/mock farqini bartaraf etish — hammasi mukammal ko'rinsin
+    const rawListing = apiListing || mockFallback;
+    // API va mock formatini birlashtirish — bitta listing obyekti, hammasi mukammal ko‘rinsin
     const listing = rawListing ? {
         ...rawListing,
         description: rawListing.description || mockFallback?.description || '',
         images: rawListing.images?.length ? rawListing.images : (rawListing.image ? [{ image: rawListing.image }] : (mockFallback?.images?.length ? mockFallback.images : (mockFallback?.image ? [{ image: mockFallback.image }] : []))),
+        image: rawListing.image || rawListing.images?.[0]?.image || mockFallback?.image,
         seller: {
-            ...rawListing.seller,
-            display_name: rawListing.seller?.display_name ?? rawListing.seller?.name,
-            total_sales: rawListing.seller?.total_sales ?? rawListing.seller?.sales ?? 0,
+            ...(rawListing.seller || {}),
+            display_name: rawListing.seller?.display_name ?? rawListing.seller?.name ?? mockFallback?.seller?.name,
+            name: rawListing.seller?.name ?? rawListing.seller?.display_name ?? mockFallback?.seller?.name,
+            total_sales: rawListing.seller?.total_sales ?? rawListing.seller?.sales ?? mockFallback?.seller?.sales ?? 0,
+            rating: rawListing.seller?.rating ?? mockFallback?.seller?.rating ?? 5,
         },
         price: rawListing.price ?? mockFallback?.price,
         features: rawListing.features?.length ? rawListing.features : (mockFallback ? ['Escrow himoya', 'Tez yetkazish', mockFallback.game?.name || mockFallback.gameName].filter(Boolean) : []),
@@ -215,8 +232,8 @@ const AccountDetailPage = () => {
         }
     }, [listing?.id, isAuthenticated]);
 
-    /* ── Loading ── */
-    if (isLoading) {
+    /* ── Loading: faqat listing yo‘q bo‘lsa (API ham, mock ham yo‘q) skeleton ko‘rsatamiz ── */
+    if (isLoading && !rawListing) {
         return (
             <div className="page-enter" style={{ minHeight: 'calc(100vh - 64px)', padding: '32px' }}>
                 <div className="gh-container">
@@ -619,12 +636,13 @@ const AccountDetailPage = () => {
                             {relatedListings.map((acc) => (
                                 <AccountCard key={acc.id} account={{
                                     id: acc.id,
+                                    gameId: acc.game?.slug || acc.game?.id || acc.gameId,
+                                    gameName: acc.game?.name || acc.gameName,
                                     title: acc.title,
-                                    price: parseFloat(acc.price),
-                                    gameName: acc.game?.name,
-                                    image: acc.images?.[0]?.image || '',
-                                    isPremium: acc.is_premium,
-                                    seller: acc.seller,
+                                    price: parseFloat(acc.price) || 0,
+                                    image: acc.images?.[0]?.image || acc.image || acc.primary_image || '',
+                                    isPremium: acc.is_premium ?? acc.isPremium,
+                                    seller: acc.seller ?? {},
                                 }} />
                             ))}
                         </div>
