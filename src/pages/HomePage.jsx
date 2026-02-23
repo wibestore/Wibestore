@@ -346,17 +346,17 @@ const HomePage = () => {
                         </Link>
                     </div>
 
-                    {/* Horizontal scroll slider */}
+                    {/* Horizontal scroll slider — ma'lumot bor bo'lsa darhol ko'rsatamiz, API kutmaymiz */}
                     <div
                         className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
                         style={{ margin: '0 -16px', padding: '0 16px 16px' }}
                     >
-                        {listingsLoading ? (
-                            Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-                        ) : premiumAccounts.length > 0 ? (
+                        {premiumAccounts.length > 0 ? (
                             premiumAccounts.map((account) => (
                                 <AccountCard key={account?.id ?? account?.title} account={toAccountCard(account)} featured />
                             ))
+                        ) : listingsLoading ? (
+                            Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : null}
                     </div>
                 </div>
@@ -397,12 +397,12 @@ const HomePage = () => {
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-stagger"
                         style={{ gap: '16px' }}
                     >
-                        {listingsLoading ? (
-                            Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-                        ) : topAccounts.length > 0 ? (
+                        {topAccounts.length > 0 ? (
                             topAccounts.map((account) => (
                                 <AccountCard key={account?.id ?? account?.title} account={toAccountCard(account)} />
                             ))
+                        ) : listingsLoading ? (
+                            Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : null}
                     </div>
                 </div>
@@ -437,12 +437,12 @@ const HomePage = () => {
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-stagger"
                         style={{ gap: '16px' }}
                     >
-                        {listingsLoading ? (
-                            Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-                        ) : recommendedAccounts.length > 0 ? (
+                        {recommendedAccounts.length > 0 ? (
                             recommendedAccounts.map((account) => (
                                 <AccountCard key={account?.id ?? account?.title} account={toAccountCard(account)} />
                             ))
+                        ) : listingsLoading ? (
+                            Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : null}
                     </div>
                 </div>
