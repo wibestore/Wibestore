@@ -58,6 +58,8 @@
 
 - **405 Method Not Allowed** (masalan `api/v1/auth/google/` da): Frontend container’da **BACKEND_URL** o‘rnatilmagan. **Yechim:** Railway → Frontend Service → **Variables** → `BACKEND_URL` = `https://sizning-backend.railway.app` (slashsiz) → **Save** → **Redeploy**. Keyin nginx `/api/*` ni backend’ga proxy qiladi va 405 ketadi.
 
+- **503 Service Unavailable** ("Server vaqtincha ishlamayapti"): Backend vaqtincha javob bermayapti (qayta ishga tushmoqda, overload yoki uxlab qolgan). **Yechim:** Bir necha soniyadan keyin qayta urinib ko‘ring. Railway’da backend service **Deployments** va **Logs** ni tekshiring; kerak bo‘lsa backend ni **Redeploy** qiling.
+
 ## 6. Qisqa checklist
 
 1. Backend Railway’da deploy qiling va public URL ni oling (masalan `https://xxx.railway.app`).

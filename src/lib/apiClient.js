@@ -210,6 +210,13 @@ apiClient.interceptors.response.use(
       });
     }
 
+    // 502/503/504 — foydalanuvchiga tushunarli xabar
+    const status = error.response?.status;
+    if (status === 502 || status === 503 || status === 504) {
+      error.message = "Server vaqtincha ishlamayapti. Bir necha soniyadan keyin qayta urinib ko‘ring.";
+    } else if (!error.response) {
+      error.message = "Internet yoki server bilan bog‘lanishda xatolik. Qayta urinib ko‘ring.";
+    }
     return Promise.reject(error);
   }
 );
@@ -237,6 +244,19 @@ export const createPublicClient = () => {
     config.baseURL = getEffectiveBaseURL();
     return config;
   }, (err) => Promise.reject(err));
+  // 502/503/504 va tarmoq xatolari uchun tushunarli xabar
+  client.interceptors.response.use(
+    (res) => res,
+    (err) => {
+      const status = err.response?.status;
+      if (status === 502 || status === 503 || status === 504) {
+        err.message = "Server vaqtincha ishlamayapti. Bir necha soniyadan keyin qayta urinib ko‘ring.";
+      } else if (!err.response) {
+        err.message = "Internet yoki server bilan bog‘lanishda xatolik. Qayta urinib ko‘ring.";
+      }
+      return Promise.reject(err);
+    }
+  );
   return client;
 };
 
