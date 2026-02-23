@@ -6,7 +6,7 @@ export function Card({
   children,
   variant = 'default',
   className = '',
-  as: Component = 'div',
+  as: ComponentTag = 'div',
   ...props
 }) {
   const variantClass =
@@ -19,12 +19,12 @@ export function Card({
           : 'card';
 
   return (
-    <Component
+    <ComponentTag
       className={`${variantClass} ${className}`.trim()}
       {...props}
     >
       {children}
-    </Component>
+    </ComponentTag>
   );
 }
 

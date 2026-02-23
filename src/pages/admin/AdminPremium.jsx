@@ -26,7 +26,7 @@ const AdminPremium = () => {
     }, []);
 
     useEffect(() => {
-        loadUsers();
+        queueMicrotask(() => loadUsers());
     }, [loadUsers]);
 
     const filteredUsers = users.filter(user =>

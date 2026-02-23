@@ -1,6 +1,69 @@
 import { useState } from 'react';
 import { Settings, Shield, Bell, Globe, Save, Check } from 'lucide-react';
 
+const Section = ({ title, icon: Icon, children }) => (
+    <div style={{
+        borderRadius: 'var(--radius-xl)',
+        backgroundColor: 'var(--color-bg-secondary)',
+        border: '1px solid var(--color-border-default)',
+        marginBottom: '20px',
+        overflow: 'hidden',
+    }}>
+        <div style={{
+            padding: '16px 20px',
+            borderBottom: '1px solid var(--color-border-muted)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+        }}>
+            <Icon style={{ width: '18px', height: '18px', color: 'var(--color-text-muted)' }} />
+            <h2 style={{
+                fontWeight: 'var(--font-weight-semibold)',
+                color: 'var(--color-text-primary)',
+                fontSize: 'var(--font-size-base)',
+            }}>{title}</h2>
+        </div>
+        <div style={{ padding: '20px' }}>
+            {children}
+        </div>
+    </div>
+);
+
+const Toggle = ({ label, desc, checked, onChange }) => (
+    <div className="flex items-center justify-between" style={{
+        padding: '12px 0',
+        borderBottom: '1px solid var(--color-border-muted)',
+    }}>
+        <div>
+            <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{label}</p>
+            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{desc}</p>
+        </div>
+        <button
+            onClick={() => onChange(!checked)}
+            style={{
+                width: '44px', height: '24px',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: checked ? 'var(--color-accent-blue)' : 'var(--color-bg-tertiary)',
+                border: `1px solid ${checked ? 'var(--color-accent-blue)' : 'var(--color-border-default)'}`,
+                cursor: 'pointer',
+                position: 'relative',
+                transition: 'all 0.2s ease',
+                flexShrink: 0,
+            }}
+        >
+            <div style={{
+                width: '18px', height: '18px',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: '#ffffff',
+                position: 'absolute', top: '2px',
+                left: checked ? '22px' : '2px',
+                transition: 'left 0.2s ease',
+                boxShadow: 'var(--shadow-xs)',
+            }} />
+        </button>
+    </div>
+);
+
 const AdminSettings = () => {
     const [settings, setSettings] = useState({
         siteName: 'WibeStore',
@@ -20,69 +83,6 @@ const AdminSettings = () => {
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
     };
-
-    const Section = ({ title, icon: Icon, children }) => (
-        <div style={{
-            borderRadius: 'var(--radius-xl)',
-            backgroundColor: 'var(--color-bg-secondary)',
-            border: '1px solid var(--color-border-default)',
-            marginBottom: '20px',
-            overflow: 'hidden',
-        }}>
-            <div style={{
-                padding: '16px 20px',
-                borderBottom: '1px solid var(--color-border-muted)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-            }}>
-                <Icon style={{ width: '18px', height: '18px', color: 'var(--color-text-muted)' }} />
-                <h2 style={{
-                    fontWeight: 'var(--font-weight-semibold)',
-                    color: 'var(--color-text-primary)',
-                    fontSize: 'var(--font-size-base)',
-                }}>{title}</h2>
-            </div>
-            <div style={{ padding: '20px' }}>
-                {children}
-            </div>
-        </div>
-    );
-
-    const Toggle = ({ label, desc, checked, onChange }) => (
-        <div className="flex items-center justify-between" style={{
-            padding: '12px 0',
-            borderBottom: '1px solid var(--color-border-muted)',
-        }}>
-            <div>
-                <p style={{ fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>{label}</p>
-                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{desc}</p>
-            </div>
-            <button
-                onClick={() => onChange(!checked)}
-                style={{
-                    width: '44px', height: '24px',
-                    borderRadius: 'var(--radius-full)',
-                    backgroundColor: checked ? 'var(--color-accent-blue)' : 'var(--color-bg-tertiary)',
-                    border: `1px solid ${checked ? 'var(--color-accent-blue)' : 'var(--color-border-default)'}`,
-                    cursor: 'pointer',
-                    position: 'relative',
-                    transition: 'all 0.2s ease',
-                    flexShrink: 0,
-                }}
-            >
-                <div style={{
-                    width: '18px', height: '18px',
-                    borderRadius: 'var(--radius-full)',
-                    backgroundColor: '#ffffff',
-                    position: 'absolute', top: '2px',
-                    left: checked ? '22px' : '2px',
-                    transition: 'left 0.2s ease',
-                    boxShadow: 'var(--shadow-xs)',
-                }} />
-            </button>
-        </div>
-    );
 
     return (
         <div>

@@ -100,7 +100,7 @@ export const useAdminRejectListing = () => {
 /**
  * Hook для получения списка listing'ов (admin) — alias для pending
  */
-export const useAdminListings = (filters = {}) => {
+export const useAdminListings = (_filters = {}) => {
     return useAdminPendingListings();
 };
 

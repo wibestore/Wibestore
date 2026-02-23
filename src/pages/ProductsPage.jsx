@@ -13,11 +13,11 @@ const ProductsPage = () => {
     const [selectedGame, setSelectedGame] = useState('all');
     const [sortBy, setSortBy] = useState('newest');
     const [viewMode, setViewMode] = useState('grid');
-    const [showFilters, setShowFilters] = useState(false);
+    const [_showFilters, _setShowFilters] = useState(false);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
 
     // API hooks
-    const { data: gamesData, isLoading: gamesLoading } = useGames();
+    const { data: gamesData } = useGames();
     const { data, isLoading, fetchNextPage, hasNextPage } = useListings({
         game: selectedGame !== 'all' ? selectedGame : undefined,
         search: searchQuery || undefined,

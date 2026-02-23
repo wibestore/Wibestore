@@ -9,7 +9,7 @@ import NotificationWidget from './NotificationWidget';
 
 const Navbar = () => {
     const { user, isAuthenticated, logout } = useAuth();
-    const { theme, toggleTheme, isDark } = useTheme();
+    const { toggleTheme, isDark } = useTheme();
     const { coins } = useCoins();
     const { t, language, setLanguage } = useLanguage();
     const location = useLocation();
@@ -70,10 +70,12 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close mobile menu on route change
+    // Close mobile menu on route change (defer to avoid sync setState in effect)
     useEffect(() => {
-        setIsMobileMenuOpen(false);
-        setIsProfileOpen(false);
+        queueMicrotask(() => {
+            setIsMobileMenuOpen(false);
+            setIsProfileOpen(false);
+        });
     }, [location.pathname]);
 
     const handleLogout = () => {

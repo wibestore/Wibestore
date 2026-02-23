@@ -9,7 +9,7 @@ import { useToast } from '../components/ToastProvider';
 
 const LoginPage = () => {
     const { t } = useLanguage();
-    const { login, loginWithGoogle } = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const { addToast } = useToast();

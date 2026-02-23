@@ -49,9 +49,9 @@ const CommandPalette = () => {
         ).slice(0, 8);
     }, [query, allItems]);
 
-    // Reset active index when results change
+    // Reset active index when results change (defer to avoid sync setState in effect)
     useEffect(() => {
-        setActiveIndex(0);
+        queueMicrotask(() => setActiveIndex(0));
     }, [filteredItems.length]);
 
     // Open/close with Ctrl+K
@@ -73,8 +73,10 @@ const CommandPalette = () => {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = '';
-            setQuery('');
-            setActiveIndex(0);
+            queueMicrotask(() => {
+                setQuery('');
+                setActiveIndex(0);
+            });
         }
         return () => { document.body.style.overflow = ''; };
     }, [isOpen]);

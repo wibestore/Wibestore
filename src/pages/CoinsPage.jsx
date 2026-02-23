@@ -7,14 +7,17 @@ import { useLanguage } from '../context/LanguageContext';
 
 const CoinsPage = () => {
     const { t } = useLanguage();
-    const { user, isAuthenticated } = useAuth();
-    const { balance, monthlyEarned, monthlyTransactions, history, COINS_PER_TRANSACTION, MAX_MONTHLY_TRANSACTIONS, PREMIUM_COST_IN_COINS, getVoucherDiscount } = useCoins();
+    const { isAuthenticated } = useAuth();
+    const { balance, monthlyEarned, monthlyTransactions, history, COINS_PER_TRANSACTION, MAX_MONTHLY_TRANSACTIONS, PREMIUM_COST_IN_COINS } = useCoins();
     const [activeTab, setActiveTab] = useState('about');
-
-    const vouchers = [
-        { id: 1, type: 'premium', discount: 50, expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), status: 'active' },
-        { id: 2, type: 'pro', discount: 20, expiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(), status: 'active' },
-    ];
+    const [vouchers] = useState(() => {
+        const now = Date.now();
+        const day = 24 * 60 * 60 * 1000;
+        return [
+            { id: 1, type: 'premium', discount: 50, expiresAt: new Date(now + 90 * day).toISOString(), status: 'active' },
+            { id: 2, type: 'pro', discount: 20, expiresAt: new Date(now + 60 * day).toISOString(), status: 'active' },
+        ];
+    });
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('uz-UZ', { year: 'numeric', month: 'long', day: 'numeric' });

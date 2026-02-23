@@ -9,7 +9,7 @@ import { games } from '../data/mockData';
 
 const SellPage = () => {
     const navigate = useNavigate();
-    const { user, isAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth();
     const { t } = useLanguage();
     const { addToast } = useToast();
     const [step, setStep] = useState(1);
@@ -19,8 +19,8 @@ const SellPage = () => {
     const [modalGameSearch, setModalGameSearch] = useState('');
     
     // API hooks
-    const { mutate: createListing, isLoading: isCreating } = useCreateListing();
-    const { mutate: uploadImage, isLoading: isUploading } = useUploadImage();
+    const { mutate: createListing, isLoading: _isCreating } = useCreateListing();
+    const { mutate: _uploadImage, isLoading: _isUploading } = useUploadImage();
 
     const filteredModalGames = modalGameSearch
         ? games.filter(g => g.name.toLowerCase().includes(modalGameSearch.toLowerCase()))

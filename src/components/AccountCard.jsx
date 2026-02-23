@@ -11,12 +11,12 @@ const AccountCard = ({ account, featured = false }) => {
     const [isLiked, setIsLiked] = useState(false);
 
     useEffect(() => {
-        if (user) {
-            const savedLikes = localStorage.getItem(`wibeLikes_${user.id}`);
-            if (savedLikes) {
-                const likedIds = JSON.parse(savedLikes);
-                setIsLiked(likedIds.includes(account.id));
-            }
+        if (!user) return;
+        const savedLikes = localStorage.getItem(`wibeLikes_${user.id}`);
+        if (savedLikes) {
+            const likedIds = JSON.parse(savedLikes);
+            const liked = likedIds.includes(account.id);
+            queueMicrotask(() => setIsLiked(liked));
         }
     }, [user, account.id]);
 

@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
  * Faqat VITE_GOOGLE_CLIENT_ID o'rnatilganda render qilinadi (useGoogleAuthEnabled),
  * shunda useGoogleLogin faqat GoogleOAuthProvider ichida chaqiriladi.
  */
-export function GoogleLoginButton({ onSuccess, onError, from, children, className, style }) {
+export function GoogleLoginButton({ onSuccess, onError, from: _from, children, className, style }) {
     const { loginWithGoogle } = useAuth();
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {

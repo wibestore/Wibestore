@@ -21,7 +21,9 @@ const ImageCarousel = ({ images, title }) => {
     const [imgError, setImgError] = useState(false);
     const total = images?.length || 0;
     const imgSrc = images?.[current]?.image || images?.[current];
-    useEffect(() => setImgError(false), [current]);
+    useEffect(() => {
+        queueMicrotask(() => setImgError(false));
+    }, [current]);
 
     if (!total) {
         return (
@@ -191,7 +193,7 @@ const AccountDetailPage = () => {
     const { user, isAuthenticated } = useAuth();
     const { startConversation, openChat } = useChat();
 
-    const { data: apiListing, isLoading, isError, error, refetch } = useListing(accountId);
+    const { data: apiListing, isLoading, error, refetch } = useListing(accountId);
     const { mutate: addToFavorites } = useAddToFavorites();
     const { mutate: removeFromFavorites } = useRemoveFromFavorites();
     // API yoki darhol mock — sotuvdagi akkauntlar har doim ko‘rinsin (API kutmasdan)
@@ -219,16 +221,16 @@ const AccountDetailPage = () => {
     const [copied, setCopied] = useState(false);
     const [activeTab, setActiveTab] = useState('description');
 
-    // Sevimlilar: API yoki localStorage (kirish qilmaganida)
+    // Sevimlilar: API yoki localStorage (kirish qilmaganida) — defer to avoid sync setState in effect
     const FAV_STORAGE_KEY = 'wibeFavoriteListingIds';
     useEffect(() => {
-        if (!listing?.id) return;
-        if (isAuthenticated) return;
+        if (!listing?.id || isAuthenticated) return;
         try {
             const saved = JSON.parse(localStorage.getItem(FAV_STORAGE_KEY) || '[]');
-            setIsLiked(saved.includes(String(listing.id)));
+            const liked = saved.includes(String(listing.id));
+            queueMicrotask(() => setIsLiked(liked));
         } catch {
-            setIsLiked(false);
+            queueMicrotask(() => setIsLiked(false));
         }
     }, [listing?.id, isAuthenticated]);
 

@@ -36,7 +36,7 @@ export function useAnimatedCounter(target, duration = 2000, suffix = '') {
 
 function animateValue(start, end, duration, suffix, setter) {
     const startTime = performance.now();
-    const isPercentage = typeof end === 'string' && end.includes('%');
+    const _isPercentage = typeof end === 'string' && end.includes('%');
     const numericEnd = parseFloat(String(end).replace(/[^0-9.]/g, ''));
 
     function update(currentTime) {

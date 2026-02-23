@@ -2,34 +2,34 @@ import { Shield, AlertTriangle, CreditCard, Users, Lock, FileText, CheckCircle, 
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 
+const Section = ({ icon: Icon, iconColor, title, children, highlight }) => (
+    <section
+        style={{
+            backgroundColor: highlight ? 'var(--color-error-bg)' : 'var(--color-bg-primary)',
+            border: `1px solid ${highlight ? 'var(--color-error)' : 'var(--color-border-default)'}`,
+            borderRadius: 'var(--radius-xl)',
+            padding: '32px',
+        }}
+    >
+        <div className="flex items-center justify-center gap-3" style={{ marginBottom: '20px' }}>
+            <Icon className="w-5 h-5" style={{ color: iconColor }} />
+            <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>{title}</h2>
+        </div>
+        <div style={{ color: 'var(--color-text-secondary)', lineHeight: 'var(--line-height-lg)', textAlign: 'center' }}>
+            {children}
+        </div>
+    </section>
+);
+
+const ListItem = ({ icon: Icon, color, children }) => (
+    <li className="flex items-start gap-3">
+        <Icon className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color }} />
+        <span>{children}</span>
+    </li>
+);
+
 const TermsPage = () => {
     const { t } = useLanguage();
-
-    const Section = ({ icon: Icon, iconColor, title, children, highlight }) => (
-        <section
-            style={{
-                backgroundColor: highlight ? 'var(--color-error-bg)' : 'var(--color-bg-primary)',
-                border: `1px solid ${highlight ? 'var(--color-error)' : 'var(--color-border-default)'}`,
-                borderRadius: 'var(--radius-xl)',
-                padding: '32px',
-            }}
-        >
-            <div className="flex items-center justify-center gap-3" style={{ marginBottom: '20px' }}>
-                <Icon className="w-5 h-5" style={{ color: iconColor }} />
-                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>{title}</h2>
-            </div>
-            <div style={{ color: 'var(--color-text-secondary)', lineHeight: 'var(--line-height-lg)', textAlign: 'center' }}>
-                {children}
-            </div>
-        </section>
-    );
-
-    const ListItem = ({ icon: Icon, color, children }) => (
-        <li className="flex items-start gap-3">
-            <Icon className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color }} />
-            <span>{children}</span>
-        </li>
-    );
 
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>

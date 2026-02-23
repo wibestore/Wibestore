@@ -21,9 +21,9 @@ const fallbackReports = [
 ];
 
 const AdminDashboard = () => {
-    const { data: dashboardData, isLoading: dashboardLoading } = useAdminDashboard();
-    const { data: pendingListings = [], isLoading: listingsLoading } = useAdminPendingListings();
-    const { data: reportsList = [], isLoading: reportsLoading } = useAdminReports();
+    const { data: dashboardData, isLoading: _dashboardLoading } = useAdminDashboard();
+    const { data: pendingListings = [], isLoading: _listingsLoading } = useAdminPendingListings();
+    const { data: reportsList = [], isLoading: _reportsLoading } = useAdminReports();
 
     const apiStats = dashboardData && typeof dashboardData === 'object' ? {
         users: dashboardData.users,

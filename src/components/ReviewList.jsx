@@ -1,21 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Star, MessageSquare, User } from 'lucide-react';
+import { useMemo } from 'react';
+import { Star, MessageSquare } from 'lucide-react';
 
 const ReviewList = ({ userId, type = 'received' }) => {
-    const [reviews, setReviews] = useState([]);
-
-    useEffect(() => {
+    const reviews = useMemo(() => {
         const savedReviews = localStorage.getItem('wibeReviews');
-        if (savedReviews) {
-            const allReviews = JSON.parse(savedReviews);
-
-            // Filter reviews based on type
-            const filtered = type === 'received'
-                ? allReviews.filter(r => r.sellerId === userId)
-                : allReviews.filter(r => r.reviewerId === userId);
-
-            setReviews(filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-        }
+        if (!savedReviews) return [];
+        const allReviews = JSON.parse(savedReviews);
+        const filtered = type === 'received'
+            ? allReviews.filter(r => r.sellerId === userId)
+            : allReviews.filter(r => r.reviewerId === userId);
+        return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }, [userId, type]);
 
     const formatDate = (dateString) => {

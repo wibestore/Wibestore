@@ -5,7 +5,7 @@ import { Package } from 'lucide-react';
  * EmptyState — design system empty state: icon 64–96px, title, description, optional CTA
  */
 const EmptyState = ({
-    icon: Icon = Package,
+    icon: IconComponent = Package,
     title,
     message,
     actionLabel,
@@ -20,7 +20,7 @@ const EmptyState = ({
             borderRadius: 'var(--radius-full)',
             backgroundColor: 'var(--color-bg-tertiary)',
         }}>
-            <Icon style={{
+            <IconComponent style={{
                 width: compact ? 24 : 32,
                 height: compact ? 24 : 32,
                 color: 'var(--color-text-muted)',

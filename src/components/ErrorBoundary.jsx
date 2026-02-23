@@ -14,7 +14,7 @@ class ErrorBoundary extends Component {
         };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError(_error) {
         return { hasError: true };
     }
 
@@ -29,7 +29,9 @@ class ErrorBoundary extends Component {
                 if (typeof window !== 'undefined' && window.Sentry) {
                     window.Sentry.captureException(error, { extra: errorInfo });
                 }
-            } catch (_) {}
+            } catch {
+                // Sentry may be unavailable; ignore
+            }
         }
     }
 

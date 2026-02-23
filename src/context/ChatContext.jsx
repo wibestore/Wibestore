@@ -25,11 +25,13 @@ export const ChatProvider = ({ children }) => {
     const [activeChat, setActiveChat] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    // Sync conversations when user changes
+    // Sync conversations when user changes (defer to avoid sync setState in effect)
     useEffect(() => {
         if (!user) {
-            setConversations([]);
-            setActiveChat(null);
+            queueMicrotask(() => {
+                setConversations([]);
+                setActiveChat(null);
+            });
         }
     }, [user]);
 

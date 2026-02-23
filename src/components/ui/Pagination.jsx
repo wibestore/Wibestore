@@ -20,7 +20,6 @@ export function Pagination({
     const delta = 1;
     const range = [];
     const rangeWithDots = [];
-    let l;
     for (let i = 1; i <= totalPages; i++) {
       if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
         range.push(i);

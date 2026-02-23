@@ -9,6 +9,7 @@ import { games, formatPrice } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
 import { useToast } from '../components/ToastProvider';
 import SkeletonLoader from '../components/SkeletonLoader';
+import EmptyState from '../components/EmptyState';
 
 const ProfilePage = () => {
     const { t } = useLanguage();
@@ -103,18 +104,6 @@ const ProfilePage = () => {
             </div>
         );
     }
-
-    const EmptyState = ({ icon: Icon, text, actionLabel, actionTo }) => (
-        <div className="text-center" style={{ padding: '64px 16px' }}>
-            <Icon className="mx-auto" style={{ width: '48px', height: '48px', color: 'var(--color-text-muted)', marginBottom: '16px' }} />
-            <p style={{ color: 'var(--color-text-secondary)', marginBottom: '16px' }}>{text}</p>
-            {actionTo && (
-                <Link to={actionTo} className="btn btn-primary btn-md" style={{ textDecoration: 'none' }}>
-                    {actionLabel}
-                </Link>
-            )}
-        </div>
-    );
 
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
@@ -315,7 +304,7 @@ const ProfilePage = () => {
                                     })}
                                 </div>
                             ) : (
-                                <EmptyState icon={Package} text={t('profile.no_listings') || 'No listings yet'} actionLabel={t('profile.create_listing') || 'Create listing'} actionTo="/sell" />
+                                <EmptyState icon={Package} title={t('profile.no_listings') || 'No listings yet'} actionLabel={t('profile.create_listing') || 'Create listing'} actionTo="/sell" />
                             )}
                         </>
                     )}
@@ -329,7 +318,7 @@ const ProfilePage = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ gap: '16px' }}>
                                     {purchases.map((account) => <AccountCard key={account.id} account={account} />)}
                                 </div>
-                            ) : <EmptyState icon={ShoppingBag} text={t('profile.no_purchases') || 'No purchases yet'} actionLabel={t('profile.browse') || 'Browse accounts'} actionTo="/" />}
+                            ) : <EmptyState icon={ShoppingBag} title={t('profile.no_purchases') || 'No purchases yet'} actionLabel={t('profile.browse') || 'Browse accounts'} actionTo="/" />}
                         </>
                     )}
 

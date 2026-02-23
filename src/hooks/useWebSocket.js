@@ -11,6 +11,7 @@ export const useWebSocket = (url, options = {}) => {
     const [lastMessage, setLastMessage] = useState(null);
     const [error, setError] = useState(null);
     const [retryCount, setRetryCount] = useState(0);
+    const [readyState, setReadyState] = useState(3); // WebSocket.CLOSED
 
     const {
         onOpen,
@@ -44,8 +45,10 @@ export const useWebSocket = (url, options = {}) => {
             const wsUrl = token ? `${url}${separator}token=${token}` : url;
 
             wsRef.current = new WebSocket(wsUrl, protocols);
+            setReadyState(WebSocket.CONNECTING);
 
             wsRef.current.onopen = (event) => {
+                setReadyState(WebSocket.OPEN);
                 setIsConnected(true);
                 setError(null);
                 setRetryCount(0);
@@ -64,6 +67,7 @@ export const useWebSocket = (url, options = {}) => {
             };
 
             wsRef.current.onclose = (event) => {
+                setReadyState(WebSocket.CLOSED);
                 setIsConnected(false);
                 if (onClose) onClose(event);
                 console.log('[WebSocket] Disconnected:', url);
@@ -101,6 +105,7 @@ export const useWebSocket = (url, options = {}) => {
             wsRef.current = null;
         }
 
+        setReadyState(WebSocket.CLOSED);
         setIsConnected(false);
         setLastMessage(null);
         setError(null);
@@ -117,9 +122,9 @@ export const useWebSocket = (url, options = {}) => {
         return false;
     }, []);
 
-    // Auto-connect on mount
+    // Auto-connect on mount (defer to avoid sync setState in effect)
     useEffect(() => {
-        connect();
+        queueMicrotask(() => connect());
 
         return () => {
             disconnect();
@@ -129,7 +134,7 @@ export const useWebSocket = (url, options = {}) => {
     // Retry connection when retryCount changes
     useEffect(() => {
         if (retryCount > 0 && retryCount <= maxReconnectAttempts && !isConnected) {
-            connect();
+            queueMicrotask(() => connect());
         }
     }, [retryCount, maxReconnectAttempts, isConnected, connect]);
 
@@ -141,7 +146,7 @@ export const useWebSocket = (url, options = {}) => {
         sendMessage,
         connect,
         disconnect,
-        readyState: wsRef.current?.readyState,
+        readyState,
     };
 };
 

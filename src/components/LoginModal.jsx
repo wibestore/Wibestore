@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Mail, Lock, Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -9,7 +9,7 @@ import { useLanguage } from '../context/LanguageContext';
 
 const LoginModal = ({ isOpen, onClose, onSuccess, message }) => {
     const { t } = useLanguage();
-    const { login, loginWithGoogle } = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -42,6 +42,20 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }) => {
         };
     }, [isOpen]);
 
+    const handleCloseImmediate = useCallback(() => {
+        document.body.style.overflow = '';
+        onClose();
+    }, [onClose]);
+
+    const handleClose = useCallback(() => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsClosing(false);
+            document.body.style.overflow = '';
+            onClose();
+        }, 250);
+    }, [onClose]);
+
     // Close on Escape key
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -51,21 +65,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }) => {
         };
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen]);
-
-    const handleCloseImmediate = () => {
-        document.body.style.overflow = '';
-        onClose();
-    };
-
-    const handleClose = () => {
-        setIsClosing(true);
-        setTimeout(() => {
-            setIsClosing(false);
-            document.body.style.overflow = '';
-            onClose();
-        }, 250);
-    };
+    }, [isOpen, handleClose]);
 
     // Close on overlay click
     const handleOverlayClick = (e) => {

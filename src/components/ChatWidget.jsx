@@ -5,7 +5,7 @@ import { useChat } from '../context/ChatContext';
 import { Link } from 'react-router-dom';
 
 const ChatWidget = () => {
-    const { user, isAuthenticated } = useAuth();
+    const { user } = useAuth();
     const {
         conversations,
         activeChat,

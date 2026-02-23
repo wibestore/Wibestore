@@ -19,7 +19,7 @@ const AdminAccounts = () => {
     }, []);
 
     useEffect(() => {
-        loadListings();
+        queueMicrotask(() => loadListings());
     }, [loadListings]);
 
     const statusFilters = [
