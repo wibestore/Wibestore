@@ -189,10 +189,10 @@ const Navbar = () => {
                                     {/* Active Indicator */}
                                     {isActive(link.to) && (
                                         <div
-                                            className="absolute inset-0 rounded-xl"
+                                            className="absolute inset-0 rounded-lg"
                                             style={{
-                                                background: `linear-gradient(135deg, ${isActive(link.to) ? 'rgba(59, 130, 246, 0.1)' : 'transparent'})`,
-                                                border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+                                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.12), transparent)',
+                                                border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'}`,
                                             }}
                                         />
                                     )}
@@ -260,56 +260,53 @@ const Navbar = () => {
                         />
 
                         {/* ─── O‘rta blok: Qidiruv ─── */}
-                        <div className="flex-1 min-w-0 hidden md:flex justify-center max-w-xs lg:max-w-sm">
-                            {/* Search Bar - Desktop */}
-                            <form 
-                                onSubmit={handleSearch} 
-                                className={`hidden md:flex items-center transition-all duration-300 ${
-                                    searchFocused ? 'w-64' : 'w-48'
-                                }`}
+                        <div className="flex-1 min-w-0 hidden md:flex justify-center max-w-[200px] lg:max-w-[260px]">
+                            <form
+                                onSubmit={handleSearch}
+                                className="w-full flex items-center"
                             >
                                 <div className="relative w-full">
                                     <Search
-                                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors"
-                                        style={{ 
-                                            color: searchFocused ? 'var(--color-text-accent)' : 'var(--color-text-muted)' 
-                                        }}
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors flex-shrink-0"
+                                        style={{ color: searchFocused ? 'var(--color-text-accent)' : 'var(--color-text-muted)' }}
                                     />
                                     <input
                                         type="text"
-                                        placeholder={t('nav.search') || 'Поиск...'}
+                                        placeholder={t('nav.search') || 'Qidirish...'}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         onFocus={() => setSearchFocused(true)}
                                         onBlur={() => setSearchFocused(false)}
                                         ref={searchInputRef}
-                                        className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm font-medium transition-all outline-none"
+                                        className="w-full px-4 py-2 pl-9 pr-8 rounded-lg text-sm font-medium transition-all outline-none"
                                         style={{
                                             backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
                                             color: 'var(--color-text-primary)',
-                                            border: `2px solid ${searchFocused ? 'var(--color-accent-blue)' : 'transparent'}`,
+                                            border: `1px solid ${searchFocused ? 'var(--color-accent-blue)' : 'transparent'}`,
                                         }}
                                         aria-label="Search"
                                     />
                                     <kbd
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center px-2 py-1 rounded-md text-xs font-medium transition-all"
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 hidden xl:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium"
                                         style={{
                                             backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
                                             color: 'var(--color-text-muted)',
-                                            fontSize: '10px',
                                         }}
                                     >
                                         ⌘K
                                     </kbd>
                                 </div>
                             </form>
+                        </div>
 
-                            {/* Divider */}
-                            <div 
-                                className="hidden md:block w-px h-6"
-                                style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}
-                            />
+                        {/* Ajratgich: Qidiruv | O‘ng blok */}
+                        <div
+                            className="hidden md:block flex-shrink-0 w-px h-8"
+                            style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)' }}
+                        />
 
+                        {/* ─── O‘ng blok: Til, tema, bildirishnoma, auth, menyu ─── */}
+                        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                             {/* Language Switcher */}
                             <div className="relative" ref={langRef}>
                                 <button
