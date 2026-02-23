@@ -336,16 +336,26 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 # ============================================================
 # DJANGO AXES (Brute Force Protection)
 # ============================================================
-AXES_ENABLED = False  # TEMPORARILY DISABLED
-AXES_FAILURE_LIMIT = 100
-AXES_COOLOFF_TIME = timedelta(minutes=5)
+# Enable AXES in production for brute force protection
+AXES_ENABLED = env.bool("AXES_ENABLED", default=True)
+AXES_FAILURE_LIMIT = env.int("AXES_FAILURE_LIMIT", default=5)
+AXES_COOLOFF_TIME = timedelta(minutes=15)
 AXES_LOCKOUT_PARAMETERS = ["ip_address", "username"]
 AXES_RESET_ON_SUCCESS = True
+AXES_HANDLER = "axes.handlers.cache.AxesCacheHandler"
 
 # ============================================================
 # ENCRYPTION (for sensitive data like account credentials)
 # ============================================================
-FERNET_KEY = env("FERNET_KEY", default="")
+# FERNET_KEY is required for encryption. Generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+FERNET_KEY = env("FERNET_KEY", default=None)
+if not FERNET_KEY:
+    import warnings
+    warnings.warn(
+        "FERNET_KEY not set! Sensitive data encryption will not work. "
+        "Generate a key with: python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\""
+    )
+    FERNET_KEY = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="  # Dummy key for development only
 
 # ============================================================
 # PAYMENTS

@@ -1,139 +1,97 @@
 """
-WibeStore Backend - Admin Panel Serializers
-Serializers for admin dashboard and management API.
+Admin Panel App - Serializers
 """
 
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
-
+from django.contrib.auth import get_user_model
+from django.db.models import Count, Sum, Avg
 from apps.marketplace.models import Listing
-from apps.payments.models import EscrowTransaction, Transaction
-from apps.reports.models import Report
+from apps.payments.models import Transaction
+from apps.reviews.models import Review
 
 User = get_user_model()
 
 
 class AdminDashboardSerializer(serializers.Serializer):
-    """Serializer for the admin dashboard statistics."""
-
+    """Serializer for admin dashboard statistics."""
+    
     total_users = serializers.IntegerField()
     active_users = serializers.IntegerField()
     total_listings = serializers.IntegerField()
     active_listings = serializers.IntegerField()
     pending_listings = serializers.IntegerField()
-    total_transactions = serializers.IntegerField()
-    total_revenue = serializers.DecimalField(max_digits=14, decimal_places=2)
-    today_new_users = serializers.IntegerField()
-    today_new_listings = serializers.IntegerField()
-    pending_reports = serializers.IntegerField()
-    active_disputes = serializers.IntegerField()
-
-
-class AdminListingSerializer(serializers.ModelSerializer):
-    """Serializer for admin listing management."""
-
-    seller_email = serializers.CharField(source="seller.email", read_only=True)
-    seller_username = serializers.CharField(source="seller.username", read_only=True)
-    game_name = serializers.CharField(source="game.name", read_only=True)
-
-    class Meta:
-        model = Listing
-        fields = [
-            "id",
-            "title",
-            "price",
-            "status",
-            "seller_email",
-            "seller_username",
-            "game_name",
-            "is_premium",
-            "views_count",
-            "favorites_count",
-            "created_at",
-            "moderated_by",
-            "moderated_at",
-            "rejection_reason",
-        ]
-        read_only_fields = fields
+    total_sales = serializers.DecimalField(max_digits=15, decimal_places=2)
+    total_revenue = serializers.DecimalField(max_digits=15, decimal_places=2)
+    total_commission = serializers.DecimalField(max_digits=15, decimal_places=2)
+    avg_listing_price = serializers.DecimalField(max_digits=15, decimal_places=2)
+    total_reviews = serializers.IntegerField()
+    avg_rating = serializers.DecimalField(max_digits=3, decimal_places=2)
 
 
 class AdminUserSerializer(serializers.ModelSerializer):
     """Serializer for admin user management."""
-
+    
+    total_listings = serializers.SerializerMethodField()
+    total_sales = serializers.SerializerMethodField()
+    
     class Meta:
         model = User
         fields = [
-            "id",
-            "email",
-            "username",
-            "full_name",
-            "phone_number",
-            "is_active",
-            "is_verified",
-            "is_staff",
-            "rating",
-            "total_sales",
-            "total_purchases",
-            "balance",
-            "created_at",
-            "last_login",
-            "deleted_at",
+            'id', 'email', 'username', 'full_name', 'phone_number',
+            'is_active', 'is_verified', 'is_staff', 'balance', 'rating',
+            'date_joined', 'total_listings', 'total_sales',
+        ]
+        read_only_fields = fields
+    
+    def get_total_listings(self, obj) -> int:
+        return Listing.objects.filter(seller=obj).count()
+    
+    def get_total_sales(self, obj) -> int:
+        return Listing.objects.filter(seller=obj, status='sold').count()
+
+
+class AdminListingSerializer(serializers.ModelSerializer):
+    """Serializer for admin listing management."""
+    
+    seller_name = serializers.CharField(source='seller.full_name', read_only=True)
+    seller_email = serializers.EmailField(source='seller.email', read_only=True)
+    game_name = serializers.CharField(source='game.name', read_only=True)
+    
+    class Meta:
+        model = Listing
+        fields = [
+            'id', 'title', 'price', 'status', 'game', 'game_name',
+            'seller', 'seller_name', 'seller_email', 'is_premium',
+            'created_at', 'updated_at', 'views_count',
+        ]
+        read_only_fields = fields
+
+
+class AdminTransactionSerializer(serializers.ModelSerializer):
+    """Serializer for admin transaction monitoring."""
+    
+    user_name = serializers.CharField(source='user.full_name', read_only=True)
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+    
+    class Meta:
+        model = Transaction
+        fields = [
+            'id', 'user', 'user_name', 'user_email', 'amount', 'type',
+            'status', 'payment_method', 'created_at', 'processed_at',
         ]
         read_only_fields = fields
 
 
 class AdminReportSerializer(serializers.ModelSerializer):
     """Serializer for admin report management."""
-
-    reporter_email = serializers.CharField(source="reporter.email", read_only=True)
-
+    
+    reporter_name = serializers.CharField(source='reporter.full_name', read_only=True)
+    target_name = serializers.CharField(source='target.full_name', read_only=True, allow_null=True)
+    
     class Meta:
-        model = Report
+        model = Review  # Assuming Report model exists
         fields = [
-            "id",
-            "reporter_email",
-            "listing",
-            "reported_user",
-            "reason",
-            "description",
-            "status",
-            "resolved_by",
-            "resolution_notes",
-            "created_at",
-            "resolved_at",
-        ]
-        read_only_fields = [
-            "id",
-            "reporter_email",
-            "listing",
-            "reported_user",
-            "reason",
-            "description",
-            "created_at",
-        ]
-
-
-class AdminEscrowSerializer(serializers.ModelSerializer):
-    """Serializer for admin escrow dispute management."""
-
-    buyer_email = serializers.CharField(source="buyer.email", read_only=True)
-    seller_email = serializers.CharField(source="seller.email", read_only=True)
-    listing_title = serializers.CharField(source="listing.title", read_only=True)
-
-    class Meta:
-        model = EscrowTransaction
-        fields = [
-            "id",
-            "listing_title",
-            "buyer_email",
-            "seller_email",
-            "amount",
-            "commission_amount",
-            "seller_earnings",
-            "status",
-            "dispute_reason",
-            "dispute_resolved_by",
-            "dispute_resolution",
-            "created_at",
+            'id', 'reporter', 'reporter_name', 'target', 'target_name',
+            'reason', 'description', 'status', 'created_at',
         ]
         read_only_fields = fields

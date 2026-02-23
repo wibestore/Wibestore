@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, Eye, EyeOff, Shield, AlertCircle } from 'lucide-react';
 
-const ADMIN_CREDENTIALS = {
-    username: import.meta.env.VITE_ADMIN_USERNAME || 'admin',
-    password: import.meta.env.VITE_ADMIN_PASSWORD || ''
-};
+// Admin credentials from environment variables (not hardcoded)
+const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
+
+// Check if admin password is configured
+const isAdminConfigured = ADMIN_PASSWORD && ADMIN_PASSWORD !== '';
 
 const AdminLogin = () => {
     const navigate = useNavigate();
@@ -24,20 +26,31 @@ const AdminLogin = () => {
         setIsLoading(true);
         setError('');
 
+        // Warn if admin password is not configured
+        if (!isAdminConfigured) {
+            setError("Admin paroli so'zlanmagan! Iltimos, .env faylga VITE_ADMIN_PASSWORD ni kiriting.");
+            setIsLoading(false);
+            return;
+        }
+
         setTimeout(() => {
-            if (formData.username === ADMIN_CREDENTIALS.username &&
-                formData.password === ADMIN_CREDENTIALS.password) {
+            if (formData.username === ADMIN_USERNAME &&
+                formData.password === ADMIN_PASSWORD) {
+                // Store admin session with timestamp and simple hash
+                const sessionToken = btoa(`${formData.username}:${Date.now()}:${Math.random()}`);
                 localStorage.setItem('adminAuth', JSON.stringify({
                     isAuthenticated: true,
                     username: formData.username,
-                    loginTime: new Date().toISOString()
+                    sessionToken: sessionToken,
+                    loginTime: new Date().toISOString(),
+                    expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString() // 8 hours
                 }));
                 navigate('/admin');
             } else {
                 setError("Login yoki parol noto'g'ri!");
             }
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     };
 
     return (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Search, Eye, EyeOff, Check, X, Crown, Ban, Key, AlertCircle, RefreshCw } from 'lucide-react';
 import { formatPrice, games } from '../../data/mockData';
 
@@ -11,14 +11,16 @@ const AdminAccounts = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    const loadListings = () => {
+    const loadListings = useCallback(() => {
         const savedListings = localStorage.getItem('wibeListings');
         if (savedListings) {
             setListings(JSON.parse(savedListings));
         }
-    };
+    }, []);
 
-    useEffect(() => { loadListings(); }, []);
+    useEffect(() => {
+        loadListings();
+    }, [loadListings]);
 
     const statusFilters = [
         { value: 'all', label: 'Barchasi' },

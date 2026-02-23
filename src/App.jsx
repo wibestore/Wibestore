@@ -90,6 +90,49 @@ const PageLoader = () => (
   </div>
 );
 
+// Main layout component for public routes
+const PublicLayout = ({ children }) => (
+  <div
+    className="min-h-screen"
+    style={{
+      backgroundColor: 'var(--color-bg-primary)',
+      color: 'var(--color-text-primary)',
+    }}
+  >
+    <ScrollToTop />
+    {/* Skip to content for keyboard users */}
+    <a
+      href="#main-content"
+      className="skip-to-content"
+      style={{
+        position: 'absolute',
+        top: '-100%',
+        left: '16px',
+        padding: '8px 16px',
+        backgroundColor: 'var(--color-accent-blue)',
+        color: '#ffffff',
+        borderRadius: 'var(--radius-md)',
+        fontSize: 'var(--font-size-sm)',
+        fontWeight: 'var(--font-weight-semibold)',
+        zIndex: 100,
+        textDecoration: 'none',
+        transition: 'top 0.2s ease',
+      }}
+      onFocus={(e) => { e.currentTarget.style.top = '8px'; }}
+      onBlur={(e) => { e.currentTarget.style.top = '-100%'; }}
+    >
+      Skip to content
+    </a>
+    <Navbar />
+    <main id="main-content" role="main" style={{ paddingTop: '64px' }}>
+      {children}
+    </main>
+    <Footer />
+    <ChatWidget />
+    <CommandPalette />
+  </div>
+);
+
 function App() {
   return (
     <ErrorBoundary>
@@ -101,121 +144,147 @@ function App() {
                 <CoinProvider>
                   <ChatProvider>
                     <NotificationProvider>
-                    <Routes>
-                      {/* Admin Login - No layout, only for guests */}
-                      <Route path="/admin/login" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <GuestGuard><AdminLogin /></GuestGuard>
-                        </Suspense>
-                      } />
+                      <Routes>
+                        {/* Admin Login - No layout, only for guests */}
+                        <Route path="/admin/login" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <GuestGuard><AdminLogin /></GuestGuard>
+                          </Suspense>
+                        } />
 
-                      {/* Admin Routes - protected by AdminGuard */}
-                      <Route path="/admin" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <AdminGuard><AdminLayout><AdminDashboard /></AdminLayout></AdminGuard>
-                        </Suspense>
-                      } />
-                      <Route path="/admin/accounts" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <AdminGuard><AdminLayout><AdminAccounts /></AdminLayout></AdminGuard>
-                        </Suspense>
-                      } />
-                      <Route path="/admin/users" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <AdminGuard><AdminLayout><AdminUsers /></AdminLayout></AdminGuard>
-                        </Suspense>
-                      } />
-                      <Route path="/admin/reports" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <AdminGuard><AdminLayout><AdminReports /></AdminLayout></AdminGuard>
-                        </Suspense>
-                      } />
-                      <Route path="/admin/premium" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <AdminGuard><AdminLayout><AdminPremium /></AdminLayout></AdminGuard>
-                        </Suspense>
-                      } />
-                      <Route path="/admin/finance" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <AdminGuard><AdminLayout><AdminFinance /></AdminLayout></AdminGuard>
-                        </Suspense>
-                      } />
-                      <Route path="/admin/settings" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <AdminGuard><AdminLayout><AdminSettings /></AdminLayout></AdminGuard>
-                        </Suspense>
-                      } />
+                        {/* Admin Routes - protected by AdminGuard */}
+                        <Route path="/admin" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <AdminGuard><AdminLayout><AdminDashboard /></AdminLayout></AdminGuard>
+                          </Suspense>
+                        } />
+                        <Route path="/admin/accounts" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <AdminGuard><AdminLayout><AdminAccounts /></AdminLayout></AdminGuard>
+                          </Suspense>
+                        } />
+                        <Route path="/admin/users" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <AdminGuard><AdminLayout><AdminUsers /></AdminLayout></AdminGuard>
+                          </Suspense>
+                        } />
+                        <Route path="/admin/reports" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <AdminGuard><AdminLayout><AdminReports /></AdminLayout></AdminGuard>
+                          </Suspense>
+                        } />
+                        <Route path="/admin/premium" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <AdminGuard><AdminLayout><AdminPremium /></AdminLayout></AdminGuard>
+                          </Suspense>
+                        } />
+                        <Route path="/admin/finance" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <AdminGuard><AdminLayout><AdminFinance /></AdminLayout></AdminGuard>
+                          </Suspense>
+                        } />
+                        <Route path="/admin/settings" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <AdminGuard><AdminLayout><AdminSettings /></AdminLayout></AdminGuard>
+                          </Suspense>
+                        } />
 
-                      {/* Public Routes */}
-                      <Route path="/*" element={
-                        <div
-                          className="min-h-screen"
-                          style={{
-                            backgroundColor: 'var(--color-bg-primary)',
-                            color: 'var(--color-text-primary)',
-                          }}
-                        >
-                          <ScrollToTop />
-                          {/* Skip to content for keyboard users */}
-                          <a
-                            href="#main-content"
-                            className="skip-to-content"
-                            style={{
-                              position: 'absolute',
-                              top: '-100%',
-                              left: '16px',
-                              padding: '8px 16px',
-                              backgroundColor: 'var(--color-accent-blue)',
-                              color: '#ffffff',
-                              borderRadius: 'var(--radius-md)',
-                              fontSize: 'var(--font-size-sm)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              zIndex: 100,
-                              textDecoration: 'none',
-                              transition: 'top 0.2s ease',
-                            }}
-                            onFocus={(e) => { e.currentTarget.style.top = '8px'; }}
-                            onBlur={(e) => { e.currentTarget.style.top = '-100%'; }}
-                          >
-                            Skip to content
-                          </a>
-                          <Navbar />
-                          <main id="main-content" role="main" style={{ paddingTop: '64px' }}>
-                            <Suspense fallback={<PageLoader />}>
-                              <Routes>
-                                <Route path="/" element={<HomePage />} />
-                                <Route path="/game/:gameId" element={<GamePage />} />
-                                <Route path="/account/:accountId" element={<AccountDetailPage />} />
-                                <Route path="/products" element={<ProductsPage />} />
-                                <Route path="/premium" element={<PremiumPage />} />
-                                <Route path="/top" element={<TopAccountsPage />} />
-                                <Route path="/login" element={<GuestGuard><LoginPage /></GuestGuard>} />
-                                <Route path="/signup" element={<GuestGuard><SignupPage /></GuestGuard>} />
-                                <Route path="/profile" element={<AuthGuard><ProfilePage /></AuthGuard>} />
-                                <Route path="/terms" element={<TermsPage />} />
-                                <Route path="/sell" element={<AuthGuard><SellPage /></AuthGuard>} />
-                                <Route path="/faq" element={<FAQPage />} />
-                                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                                <Route path="/settings" element={<AuthGuard><SettingsPage /></AuthGuard>} />
-                                <Route path="/statistics" element={<StatisticsPage />} />
-                                <Route path="/coins" element={<AuthGuard><CoinsPage /></AuthGuard>} />
-                                <Route path="*" element={<NotFoundPage />} />
-                              </Routes>
-                            </Suspense>
-                          </main>
-                          <Footer />
-                          <ChatWidget />
-                          <CommandPalette />
-                        </div>
-                      } />
-                    </Routes>
-                  </NotificationProvider>
-                </ChatProvider>
-              </CoinProvider>
-            </AuthProvider>
-          </LanguageProvider>
-        </ThemeProvider>
-      </Router>
+                        {/* Public Routes with Layout */}
+                        <Route path="/" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><HomePage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/game/:gameId" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><GamePage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/account/:accountId" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><AccountDetailPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/products" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><ProductsPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/premium" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><PremiumPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/top" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><TopAccountsPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/login" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><GuestGuard><LoginPage /></GuestGuard></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/signup" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><GuestGuard><SignupPage /></GuestGuard></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/profile" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><AuthGuard><ProfilePage /></AuthGuard></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/terms" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><TermsPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/sell" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><AuthGuard><SellPage /></AuthGuard></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/faq" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><FAQPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/forgot-password" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><ForgotPasswordPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/settings" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><AuthGuard><SettingsPage /></AuthGuard></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/statistics" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><StatisticsPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                        <Route path="/coins" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><AuthGuard><CoinsPage /></AuthGuard></PublicLayout>
+                          </Suspense>
+                        } />
+                        
+                        {/* 404 Not Found */}
+                        <Route path="*" element={
+                          <Suspense fallback={<PageLoader />}>
+                            <PublicLayout><NotFoundPage /></PublicLayout>
+                          </Suspense>
+                        } />
+                      </Routes>
+                    </NotificationProvider>
+                  </ChatProvider>
+                </CoinProvider>
+              </AuthProvider>
+            </LanguageProvider>
+          </ThemeProvider>
+        </Router>
       </ToastProvider>
     </ErrorBoundary>
   );

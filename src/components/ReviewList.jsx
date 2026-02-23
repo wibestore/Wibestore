@@ -86,7 +86,7 @@ const ReviewList = ({ userId, type = 'received' }) => {
                         ))}
                     </div>
                 </div>
-                <div style={{ color: 'var(--color-text-muted)' }}>
+                <div style={{ color: 'var(--color-text-secondary)' }}>
                     <span style={{ color: 'var(--color-text-primary)', fontWeight: 'var(--font-weight-medium)' }}>
                         {reviews.length}
                     </span>{' '}

@@ -126,7 +126,7 @@ const ChatWidget = () => {
                     <div
                         style={{
                             padding: 'var(--space-4)',
-                            backgroundColor: 'var(--color-bg-secondary)',
+                            backgroundColor: 'var(--color-bg-primary)',
                             borderBottom: '1px solid var(--color-border-muted)',
                             display: 'flex',
                             alignItems: 'center',

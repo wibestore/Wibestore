@@ -67,43 +67,21 @@ const SettingsPage = () => {
         setIsSaving(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Get all users
-            const registeredUsers = JSON.parse(localStorage.getItem('wibeRegisteredUsers') || '[]');
-            const userIndex = registeredUsers.findIndex(u => u.id === user.id);
-
-            if (userIndex === -1) {
-                setMessage({ type: 'error', text: t('settings.user_not_found') });
-                setIsSaving(false);
-                return;
-            }
-
-            const currentUser = registeredUsers[userIndex];
-
-            // Hash function (must match AuthContext)
-            const hashPassword = (password) => btoa(password + '_wibe_salt_2024');
-
-            // Check current password (support both hashed and legacy plain text for transition)
-            const inputHash = hashPassword(passwordData.currentPassword);
-            const isPasswordValid = currentUser.password === inputHash || currentUser.password === passwordData.currentPassword;
-
-            if (!isPasswordValid) {
-                setMessage({ type: 'error', text: t('settings.current_password_wrong') || 'Joriy parol noto\'g\'ri' });
-                setIsSaving(false);
-                return;
-            }
-
-            // Update password
-            currentUser.password = hashPassword(passwordData.newPassword);
-            registeredUsers[userIndex] = currentUser;
-            localStorage.setItem('wibeRegisteredUsers', JSON.stringify(registeredUsers));
+            // Use backend API for password change
+            const { createPublicClient } = await import('../lib/apiClient');
+            const publicClient = createPublicClient();
+            
+            await publicClient.post('/auth/password/change/', {
+                current_password: passwordData.currentPassword,
+                new_password: passwordData.newPassword,
+            });
 
             setMessage({ type: 'success', text: t('settings.password_changed') });
             setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
         } catch (err) {
             console.error(err);
-            setMessage({ type: 'error', text: t('settings.generic_error') });
+            const errorMsg = err.response?.data?.error || err.response?.data?.detail || t('settings.generic_error');
+            setMessage({ type: 'error', text: errorMsg });
         } finally {
             setIsSaving(false);
         }

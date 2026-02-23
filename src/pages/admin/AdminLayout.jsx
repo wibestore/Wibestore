@@ -4,6 +4,7 @@ import {
     LayoutDashboard, Users, Package, AlertTriangle, Star,
     DollarSign, Settings, LogOut, Menu, X, Gamepad2, Bell, Search, ChevronLeft
 } from 'lucide-react';
+import { getAdminSession, refreshAdminSession } from '../../hooks/useAdminAuth';
 import './admin.css';
 
 const AdminLayout = ({ children }) => {
@@ -11,25 +12,32 @@ const AdminLayout = ({ children }) => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const [session, setSession] = useState(null);
 
+    // Check admin authentication
     useEffect(() => {
-        const authData = localStorage.getItem('adminAuth');
-        if (!authData) {
-            navigate('/admin/login');
-            return;
-        }
-        try {
-            const { isAuthenticated } = JSON.parse(authData);
-            if (!isAuthenticated) {
+        const checkAuth = () => {
+            const currentSession = getAdminSession();
+            if (!currentSession) {
                 navigate('/admin/login');
+                return;
             }
-        } catch {
-            navigate('/admin/login');
-        }
+            setSession(currentSession);
+            
+            // Refresh session if active
+            refreshAdminSession();
+        };
+        
+        checkAuth();
+        
+        // Check session every minute
+        const interval = setInterval(checkAuth, 60000);
+        return () => clearInterval(interval);
     }, [navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('adminAuth');
+        setSession(null);
         navigate('/admin/login');
     };
 
@@ -44,15 +52,7 @@ const AdminLayout = ({ children }) => {
     ];
 
     const getAdminName = () => {
-        try {
-            const authData = localStorage.getItem('adminAuth');
-            if (authData) {
-                const { username } = JSON.parse(authData);
-                return username || 'Admin';
-            }
-        } catch {
-            return 'Admin';
-        }
+        if (session?.username) return session.username;
         return 'Admin';
     };
 

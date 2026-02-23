@@ -3,7 +3,7 @@ import axios from 'axios';
 /**
  * WibeStore API Client
  * Централизованный клиент для всех API запросов
- * 
+ *
  * Features:
  * - Автоматическое добавление JWT токена
  * - Refresh токена при 401 ошибке
@@ -13,29 +13,68 @@ import axios from 'axios';
  */
 
 // Базовый URL из environment variables (relative для proxy в dev)
-const BUILD_TIME_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
-// Runtime override: production'da qayta deploy qilmasdan backend URL berish (Railway'da VITE_API_BASE_URL unutilsa).
-// Brauzer konsolida: localStorage.setItem('wibe_api_base_url', 'https://YOUR-BACKEND.railway.app/api/v1'); location.reload();
-function getEffectiveBaseURL() {
-  if (typeof window === 'undefined') return BUILD_TIME_API_BASE_URL;
-  const fromStorage = localStorage.getItem('wibe_api_base_url');
-  if (fromStorage?.startsWith('http')) return fromStorage.replace(/\/$/, '');
-  if (typeof window.__VITE_API_BASE_URL__ === 'string' && window.__VITE_API_BASE_URL__?.startsWith('http')) {
-    return window.__VITE_API_BASE_URL__.replace(/\/$/, '');
+// Allowed API domains for security (prevent MITM attacks)
+const ALLOWED_API_DOMAINS = [
+  'localhost',
+  '127.0.0.1',
+  'wibestore.uz',
+  'api.wibestore.uz',
+  'railway.app',  // Railway backend
+  'netlify.app',  // Netlify frontend
+].filter(Boolean);
+
+/**
+ * Validate API URL for security
+ * Only allows predefined domains to prevent MITM attacks
+ */
+function validateApiUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  
+  // Allow relative URLs (for Vite proxy in development)
+  if (!url.startsWith('http')) return true;
+  
+  try {
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase();
+    
+    // Check if hostname matches allowed domains
+    return ALLOWED_API_DOMAINS.some(allowed => 
+      hostname === allowed || hostname.endsWith(`.${allowed}`)
+    );
+  } catch {
+    return false;
   }
-  return BUILD_TIME_API_BASE_URL;
 }
 
-/** Production'da API nisbiy yoki frontend domeniga yo'naltirilgan bo'lsa true (405 sababi) */
+/**
+ * Get effective API base URL
+ * SECURITY: Runtime override removed to prevent MITM attacks
+ * Use environment variables only
+ */
+function getEffectiveBaseURL() {
+  // Always use build-time configured URL
+  return API_BASE_URL;
+}
+
+/**
+ * Check if API URL is likely wrong (for debugging only)
+ * Does NOT allow override, just logs warning
+ */
 export function isApiUrlLikelyWrong() {
   if (typeof window === 'undefined') return false;
+  
   const base = getEffectiveBaseURL();
-  if (base.startsWith('http') && !base.startsWith(window.location.origin)) return false;
-  return window.location.hostname.includes('railway.app') || window.location.hostname !== 'localhost';
+  
+  // In production, if using relative URL on custom domain, might need absolute
+  if (!base.startsWith('http') && window.location.hostname !== 'localhost') {
+    console.warn('[API] Using relative API URL in production. Consider setting VITE_API_BASE_URL environment variable.');
+    return true;
+  }
+  
+  return false;
 }
-
-const API_BASE_URL = BUILD_TIME_API_BASE_URL;
 
 // Retry logic для временных ошибок (502, 503, network)
 const RETRYABLE_STATUSES = [502, 503, 504];
@@ -98,26 +137,31 @@ const saveTokens = (tokens) => {
 const clearTokensAndLogout = () => {
   localStorage.removeItem('wibeTokens');
   localStorage.removeItem('wibeUser');
-  
+
   // Dispatch custom event for auth context
   window.dispatchEvent(new CustomEvent('wibe-logout'));
-  
+
   // Redirect to login
   if (!window.location.pathname.includes('/login')) {
     window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
   }
 };
 
-// Request interceptor - runtime API URL + токен
+// Request interceptor - добавляем токен
 apiClient.interceptors.request.use(
   (config) => {
-    config.baseURL = getEffectiveBaseURL();
-    const tokens = getTokens();
+    // SECURITY: Validate API URL before each request
+    if (!validateApiUrl(config.baseURL)) {
+      console.error('[API] Invalid API URL detected. Request blocked for security.');
+      throw new Error('Invalid API URL configuration');
+    }
     
+    const tokens = getTokens();
+
     if (tokens?.access) {
       config.headers.Authorization = `Bearer ${tokens.access}`;
     }
-    
+
     return config;
   },
   (error) => {
@@ -136,7 +180,7 @@ apiClient.interceptors.response.use(
       // Если уже идет refresh, добавляем запрос в очередь
       if (isRefreshing) {
         originalRequest._retry = true;
-        
+
         return new Promise((resolve, reject) => {
           subscribeTokenRefresh((newToken) => {
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -149,7 +193,7 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       const tokens = getTokens();
-      
+
       if (!tokens?.refresh) {
         clearTokensAndLogout();
         return Promise.reject(error);
@@ -165,10 +209,10 @@ apiClient.interceptors.response.use(
         const refresh = newRefresh ?? tokens.refresh;
 
         saveTokens({ access, refresh });
-        
+
         // Уведомляем ожидающие запросы
         onTokenRefreshed(access);
-        
+
         // Повторяем оригинальный запрос с новым токеном
         originalRequest.headers.Authorization = `Bearer ${access}`;
         return apiClient(originalRequest);
@@ -184,12 +228,12 @@ apiClient.interceptors.response.use(
 
     // Обработка 403 ошибки (нет доступа)
     if (error.response?.status === 403) {
-      console.error('[API] Access denied:', error.response.data);
+      console.error('[API] Access denied:', error.response?.data);
     }
 
     // Обработка 500 ошибки (серверная ошибка)
     if (error.response?.status === 500) {
-      console.error('[API] Server error:', error.response.data);
+      console.error('[API] Server error:', error.response?.data);
     }
 
     // Обработка network ошибок
@@ -213,9 +257,9 @@ apiClient.interceptors.response.use(
     // 502/503/504 — foydalanuvchiga tushunarli xabar
     const status = error.response?.status;
     if (status === 502 || status === 503 || status === 504) {
-      error.message = "Server vaqtincha ishlamayapti. Bir necha soniyadan keyin qayta urinib ko‘ring.";
+      error.message = "Server vaqtincha ishlamayapti. Bir necha soniyadan keyin qayta urinib ko'ring.";
     } else if (!error.response) {
-      error.message = "Internet yoki server bilan bog‘lanishda xatolik. Qayta urinib ko‘ring.";
+      error.message = "Internet yoki server bilan bog'lanishda xatolik. Qayta urinib ko'ring.";
     }
     return Promise.reject(error);
   }
@@ -241,18 +285,24 @@ export const createPublicClient = () => {
     timeout: 30000,
   });
   client.interceptors.request.use((config) => {
+    // SECURITY: Validate API URL
+    if (!validateApiUrl(config.baseURL)) {
+      console.error('[API] Invalid API URL detected. Request blocked for security.');
+      throw new Error('Invalid API URL configuration');
+    }
     config.baseURL = getEffectiveBaseURL();
     return config;
   }, (err) => Promise.reject(err));
+  
   // 502/503/504 va tarmoq xatolari uchun tushunarli xabar
   client.interceptors.response.use(
     (res) => res,
     (err) => {
       const status = err.response?.status;
       if (status === 502 || status === 503 || status === 504) {
-        err.message = "Server vaqtincha ishlamayapti. Bir necha soniyadan keyin qayta urinib ko‘ring.";
+        err.message = "Server vaqtincha ishlamayapti. Bir necha soniyadan keyin qayta urinib ko'ring.";
       } else if (!err.response) {
-        err.message = "Internet yoki server bilan bog‘lanishda xatolik. Qayta urinib ko‘ring.";
+        err.message = "Internet yoki server bilan bog'lanishda xatolik. Qayta urinib ko'ring.";
       }
       return Promise.reject(err);
     }

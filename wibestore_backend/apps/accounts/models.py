@@ -115,9 +115,27 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.is_active = False
         self.save(update_fields=["deleted_at", "is_active"])
 
-    def update_rating(self, new_rating: float) -> None:
-        """Update user rating based on new review."""
-        self.rating = new_rating
+    def update_rating(self, new_rating: float = None) -> None:
+        """
+        Update user rating based on all reviews.
+        If new_rating is provided, it will be used directly.
+        Otherwise, calculates average from all reviews.
+        """
+        from apps.reviews.models import Review
+        from django.db.models import Avg
+        
+        if new_rating is not None:
+            # Use provided rating directly (for backward compatibility)
+            self.rating = round(new_rating, 2)
+        else:
+            # Calculate average from all reviews
+            avg_rating = Review.objects.filter(
+                seller=self,
+                listing__status='sold'  # Only count reviews for sold listings
+            ).aggregate(avg=Avg('rating'))['avg']
+            
+            self.rating = round(avg_rating, 2) if avg_rating is not None else 5.0
+        
         self.save(update_fields=["rating"])
 
 

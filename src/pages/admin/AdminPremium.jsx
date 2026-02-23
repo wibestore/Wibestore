@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Search, Crown, User, Check, X, Clock, Star } from 'lucide-react';
 
 const AdminPremium = () => {
@@ -10,7 +10,7 @@ const AdminPremium = () => {
     const [premiumDays, setPremiumDays] = useState(30);
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    const loadUsers = () => {
+    const loadUsers = useCallback(() => {
         const savedUsers = localStorage.getItem('wibeUsers');
         if (savedUsers) {
             setUsers(JSON.parse(savedUsers));
@@ -23,9 +23,11 @@ const AdminPremium = () => {
             localStorage.setItem('wibeUsers', JSON.stringify(demoUsers));
             setUsers(demoUsers);
         }
-    };
+    }, []);
 
-    useEffect(() => { loadUsers(); }, []);
+    useEffect(() => {
+        loadUsers();
+    }, [loadUsers]);
 
     const filteredUsers = users.filter(user =>
         user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||

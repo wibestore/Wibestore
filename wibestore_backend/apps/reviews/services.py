@@ -1,104 +1,75 @@
 """
-WibeStore Backend - Reviews Services
-Business logic for reviews and rating recalculation.
+Reviews App - Services
 """
 
 import logging
-from decimal import Decimal
+from django.db import transaction
+from django.db.models import Avg
+from apps.reviews.models import Review
 
-from django.db import models, transaction
-from django.utils import timezone
-
-from core.exceptions import BusinessLogicError
-
-from .models import Review
-
-logger = logging.getLogger("apps.reviews")
+logger = logging.getLogger(__name__)
 
 
 class ReviewService:
-    """Service layer for review operations."""
+    """Service for review-related operations."""
 
     @staticmethod
     @transaction.atomic
     def create_review(
+        seller,
         reviewer,
-        reviewee,
         listing,
-        escrow,
         rating: int,
-        comment: str = "",
+        comment: str = ""
     ) -> Review:
-        """
-        Create a review after a completed escrow transaction.
-        Only the buyer can leave a review, and only once per transaction.
-        """
-        # Validate buyer
-        if escrow.buyer != reviewer:
-            raise BusinessLogicError("Only the buyer can leave a review.")
-
-        # Validate escrow status
-        if escrow.status != "confirmed":
-            raise BusinessLogicError(
-                "Review can only be left after a confirmed transaction."
-            )
-
-        # Check for existing review
-        if Review.objects.filter(reviewer=reviewer, escrow=escrow).exists():
-            raise BusinessLogicError(
-                "You have already left a review for this transaction."
-            )
-
-        review = Review.objects.create(
+        """Create a new review for a seller."""
+        # Check if review already exists
+        existing = Review.objects.filter(
+            seller=seller,
             reviewer=reviewer,
-            reviewee=reviewee,
+            listing=listing
+        ).first()
+        
+        if existing:
+            raise ValueError("Review already exists for this listing")
+        
+        if rating < 1 or rating > 5:
+            raise ValueError("Rating must be between 1 and 5")
+        
+        review = Review.objects.create(
+            seller=seller,
+            reviewer=reviewer,
             listing=listing,
-            escrow=escrow,
             rating=rating,
-            comment=comment,
-            is_moderated=True,  # Auto-moderate for now
+            comment=comment
         )
-
-        # Recalculate seller rating
-        ReviewService.recalculate_user_rating(reviewee)
-
-        logger.info(
-            "Review created: %s reviewed %s (rating=%d)",
-            reviewer.email,
-            reviewee.email,
-            rating,
-        )
+        
+        # Update seller rating
+        ReviewService.update_seller_rating(seller)
+        
+        logger.info(f"Review created: {review.id} for seller {seller.id}")
         return review
 
     @staticmethod
-    def recalculate_user_rating(user) -> Decimal:
-        """
-        Recalculate a user's average rating from all their moderated reviews.
-        Updates the user's rating field.
-        """
+    def update_seller_rating(seller) -> None:
+        """Recalculate seller's average rating."""
         avg = Review.objects.filter(
-            reviewee=user, is_moderated=True
-        ).aggregate(avg_rating=models.Avg("rating"))["avg_rating"]
-
-        new_rating = Decimal(str(round(avg, 2))) if avg else Decimal("5.0")
-        user.rating = new_rating
-        user.save(update_fields=["rating"])
-
-        logger.info("Rating recalculated for %s: %s", user.email, new_rating)
-        return new_rating
+            seller=seller
+        ).aggregate(Avg('rating'))['rating__avg']
+        
+        if avg is not None:
+            seller.rating = round(avg, 2)
+            seller.save(update_fields=['rating'])
+            logger.info(f"Seller {seller.id} rating updated to {seller.rating}")
 
     @staticmethod
-    def add_reply(review: Review, seller, response_text: str) -> Review:
-        """Seller replies to a review."""
-        if review.reviewee != seller:
-            raise BusinessLogicError("Only the reviewed seller can reply.")
-
-        if review.reply:
-            raise BusinessLogicError("You have already replied to this review.")
-
-        review.reply = response_text
-        review.reply_at = timezone.now()
-        review.save(update_fields=["reply", "reply_at"])
-
-        logger.info("Seller replied to review: %s", review.id)
-        return review
+    @transaction.atomic
+    def delete_review(review: Review) -> None:
+        """Delete a review and recalculate seller rating."""
+        seller = review.seller
+        review.delete()
+        
+        # Recalculate rating
+        ReviewService.update_seller_rating(seller)
+        
+        logger.info(f"Review {review.id} deleted")

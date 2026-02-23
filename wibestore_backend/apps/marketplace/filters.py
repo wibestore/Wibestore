@@ -1,51 +1,102 @@
 """
-WibeStore Backend - Marketplace Filters
-Advanced filtering for listing queries.
+Marketplace App - Filters
 """
 
-from django_filters import rest_framework as filters
-
-from core.filters import BaseFilterSet
-
-from .models import Listing
+import django_filters
+from django.db.models import Q
+from apps.marketplace.models import Listing
 
 
-class ListingFilterSet(BaseFilterSet):
-    """
-    FilterSet for Listing model.
-    Supports filtering by game, price range, status, premium, and search.
-    """
-
-    game = filters.CharFilter(field_name="game__slug", lookup_expr="exact")
-    status = filters.CharFilter(field_name="status", lookup_expr="exact")
-    min_price = filters.NumberFilter(field_name="price", lookup_expr="gte")
-    max_price = filters.NumberFilter(field_name="price", lookup_expr="lte")
-    is_premium = filters.BooleanFilter(field_name="is_premium")
-    seller = filters.CharFilter(field_name="seller__username", lookup_expr="exact")
-    has_images = filters.BooleanFilter(method="filter_has_images")
-    search = filters.CharFilter(method="filter_search")
-
+class ListingFilter(django_filters.FilterSet):
+    """FilterSet for advanced listing filtering."""
+    
+    # Search filter
+    search = django_filters.CharFilter(
+        method='filter_search',
+        label='Search'
+    )
+    
+    # Price range filters
+    min_price = django_filters.NumberFilter(
+        field_name='price',
+        lookup_expr='gte',
+        label='Min Price'
+    )
+    max_price = django_filters.NumberFilter(
+        field_name='price',
+        lookup_expr='lte',
+        label='Max Price'
+    )
+    
+    # Game filter
+    game = django_filters.CharFilter(
+        field_name='game__slug',
+        label='Game Slug'
+    )
+    
+    # Category filter
+    category = django_filters.CharFilter(
+        field_name='categories__slug',
+        label='Category Slug'
+    )
+    
+    # Status filter
+    status = django_filters.ChoiceFilter(
+        choices=[
+            ('active', 'Active'),
+            ('pending', 'Pending'),
+            ('sold', 'Sold'),
+            ('reserved', 'Reserved'),
+        ],
+        label='Status'
+    )
+    
+    # Premium filter
+    is_premium = django_filters.BooleanFilter(
+        field_name='is_premium',
+        label='Premium Only'
+    )
+    
+    # Seller filter
+    seller = django_filters.UUIDFilter(
+        field_name='seller__id',
+        label='Seller ID'
+    )
+    
+    # Level filter
+    level = django_filters.CharFilter(
+        field_name='level',
+        lookup_expr='icontains',
+        label='Level'
+    )
+    
+    # Rank filter
+    rank = django_filters.CharFilter(
+        field_name='rank',
+        lookup_expr='icontains',
+        label='Rank'
+    )
+    
     class Meta:
         model = Listing
         fields = [
-            "game",
-            "status",
-            "min_price",
-            "max_price",
-            "is_premium",
-            "seller",
+            'search', 'min_price', 'max_price', 'game', 'category',
+            'status', 'is_premium', 'seller', 'level', 'rank',
         ]
-
-    def filter_has_images(self, queryset, name, value):
-        if value:
-            return queryset.filter(images__isnull=False).distinct()
-        return queryset.filter(images__isnull=True)
-
+    
     def filter_search(self, queryset, name, value):
-        from django.db.models import Q
+        """Filter by search term across multiple fields."""
+        if value:
+            return queryset.filter(
+                Q(title__icontains=value) |
+                Q(description__icontains=value) |
+                Q(game__name__icontains=value) |
+                Q(seller__full_name__icontains=value)
+            )
+        return queryset
 
-        return queryset.filter(
-            Q(title__icontains=value)
-            | Q(description__icontains=value)
-            | Q(game__name__icontains=value)
-        )
+
+class ListingBackend(django_filters.rest_framework.Backend):
+    """Custom filter backend for listings."""
+    
+    filterset_class = ListingFilter
