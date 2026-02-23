@@ -51,7 +51,21 @@ const HomePage = () => {
 
     // Use API data or fallback to mock data — ensure array, no undefined items
     const rawGames = gamesData?.results ?? gamesData ?? mockGames;
-    const games = Array.isArray(rawGames) ? rawGames.filter(Boolean) : [];
+    const allGames = Array.isArray(rawGames) ? rawGames.filter(Boolean) : [];
+    // Bosh sahifada doim 8 ta mashhur o'yin rasmlari bilan
+    const games = (allGames.length > 0 ? allGames : mockGames).slice(0, 8);
+
+    // Mashhur o'yinlar uchun rasmlar (slug bo‘yicha) — API da image bo‘lmasa ishlatiladi
+    const popularGameImages = {
+        'pubg-mobile': '/img/icons/Pubg-icon.webp',
+        'steam': '/img/icons/steam.png',
+        'free-fire': '/img/icons/free.webp',
+        'standoff2': '/img/icons/st.webp',
+        'mobile-legends': '/img/icons/ml.webp',
+        'clash-of-clans': '/img/icons/cc.webp',
+        'codm': '/img/icons/cal.webp',
+        'roblox': '/img/icons/roblox.webp',
+    };
 
     // API bo'sh bo'lsa mock akkauntlar ko'rinsin (sotuvchi/xaridor va xatolik tekshiruvi uchun)
     const rawListings = listingsData?.pages?.flatMap?.(page => page?.results ?? []) ?? listingsData?.results ?? listingsData ?? [];
@@ -267,15 +281,22 @@ const HomePage = () => {
                         {gamesLoading ? (
                             Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : games.length > 0 ? (
-                            games.slice(0, 8).map((game) => (
-                                <GameCard key={game.id || game.slug} game={{
-                                    id: game.id || game.slug,
-                                    name: game.name,
-                                    slug: game.slug,
-                                    icon: game.icon,
-                                    listingsCount: game.listings_count,
-                                }} />
-                            ))
+                            games.map((game) => {
+                                const slug = game.slug || game.id;
+                                return (
+                                    <GameCard
+                                        key={game.id || game.slug}
+                                        game={{
+                                            id: game.id || game.slug,
+                                            name: game.name,
+                                            slug: game.slug || game.id,
+                                            icon: game.icon,
+                                            image: game.image || game.banner || popularGameImages[slug],
+                                            listingsCount: game.listings_count ?? game.listingsCount ?? game.accountCount ?? 0,
+                                        }}
+                                    />
+                                );
+                            })
                         ) : null}
                     </div>
                 </div>

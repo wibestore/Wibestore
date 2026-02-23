@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const GameCard = ({ game }) => {
@@ -6,7 +7,9 @@ const GameCard = ({ game }) => {
     const gameName = game.name;
     const gameIcon = game.icon;
     const gameImage = game.image || game.banner;
-    const accountCount = game.accountCount || game.listingsCount || game.active_listings_count || 0;
+    const accountCount = game.accountCount ?? game.listingsCount ?? game.active_listings_count ?? 0;
+    const [imageError, setImageError] = useState(false);
+    const showImage = gameImage && !gameImage.includes('placeholder') && !imageError;
 
     return (
         <Link
@@ -20,7 +23,7 @@ const GameCard = ({ game }) => {
                 textDecoration: 'none',
             }}
         >
-            {/* Image */}
+            {/* O'yin rasmi (iconka) — bosilsa shu o'yin akkauntlari sahifasiga o'tadi */}
             <div
                 className="relative flex items-center justify-center overflow-hidden"
                 style={{
@@ -28,11 +31,12 @@ const GameCard = ({ game }) => {
                     backgroundColor: 'var(--color-bg-tertiary)',
                 }}
             >
-                {gameImage && !gameImage.includes('placeholder') ? (
+                {showImage ? (
                     <img
                         src={gameImage}
                         alt={gameName}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={() => setImageError(true)}
                     />
                 ) : gameIcon ? (
                     <span className="text-4xl opacity-40">{gameIcon}</span>
