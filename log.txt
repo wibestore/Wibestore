@@ -1,0 +1,764 @@
+2026-02-23T17:37:21.211405122Z [inf]  Starting Container
+2026-02-23T17:37:21.890890314Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:21.890895521Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:22.535778332Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:22.535792019Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:22.535798299Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.535804252Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:22.535809481Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:22.535833643Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:22.535837968Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:22.535961966Z [err]      main()
+2026-02-23T17:37:22.535969440Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:22.535973909Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:22.535978518Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:22.535983082Z [err]      utility.execute()
+2026-02-23T17:37:22.535987755Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:22.535992778Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:22.535997775Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:22.536002295Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:22.536006715Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:22.536011707Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:22.537026926Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.537030677Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:22.537034059Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:22.537037421Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.537041151Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:22.537044473Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:22.537049048Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.537053764Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:22.537057940Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:22.538906057Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.538915657Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:22.538922022Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:22.538927615Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.538932323Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:22.538937603Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:22.538942550Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.538946850Z [err]  ^
+2026-02-23T17:37:22.538951797Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:22.538956385Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:22.538960821Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:22.538965991Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:22.538970958Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:22.540172427Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:22.540179483Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:22.540184201Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:22.540189275Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.540195205Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:22.540200361Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:22.540205012Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.540210358Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:22.540215057Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:22.541612197Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.541623219Z [err]  ^^^
+2026-02-23T17:37:22.541628279Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:22.541633174Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:22.541655492Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:22.541661067Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:22.541665786Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:22.541670128Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:22.541674910Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:22.541679969Z [err]      from . import views
+2026-02-23T17:37:22.541686537Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:22.541691173Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:22.541695500Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:22.541701048Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:22.541706221Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:22.542692199Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:23.266591110Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:23.266596607Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:24.519359500Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:24.519364651Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:24.519370050Z [err]      main()
+2026-02-23T17:37:24.519376001Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:24.519381199Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:24.519386123Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:24.521552948Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:24.521565908Z [err]      utility.execute()
+2026-02-23T17:37:24.521571565Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:24.521576353Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:24.521580621Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:24.521585427Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:24.521590281Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:24.521597973Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:24.521602527Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:24.521607316Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:24.521612062Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.521616528Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:24.521620482Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:24.521624363Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.521628654Z [err]  ^^^^^^
+2026-02-23T17:37:24.522862141Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:24.522872479Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.522879963Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:24.522886550Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:24.522893004Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.522899406Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:24.522905852Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:24.522912430Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.522918828Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:24.524079765Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:24.524086714Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.524092968Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:24.524164002Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:24.524174505Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.524180183Z [err]  ^
+2026-02-23T17:37:24.524185320Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:24.524191380Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:24.524197596Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:24.524202703Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:24.524208223Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:24.524213953Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:24.524219471Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:24.524225668Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:24.525421442Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.525426030Z [err]  
+2026-02-23T17:37:24.525430811Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:24.525434390Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:24.525437625Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.525441035Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:24.525444617Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:24.525448071Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.525451672Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:24.526891006Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:24.526896163Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:24.526901023Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:24.526906375Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:24.526911200Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:24.526915586Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:24.526920516Z [err]      from . import views
+2026-02-23T17:37:24.526925017Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:24.526929397Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:24.526933720Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:24.526937932Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:24.526942039Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:24.526946364Z [err]  ^^^
+2026-02-23T17:37:24.526951066Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:25.172165677Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:25.172171410Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:26.400923964Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:26.400930713Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:26.400938149Z [err]      main()
+2026-02-23T17:37:26.400942813Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:26.400946824Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:26.400950576Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:26.400954895Z [err]      utility.execute()
+2026-02-23T17:37:26.400959079Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:26.400963944Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:26.400969847Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:26.400974786Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:26.400978362Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:26.400981897Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:26.400985510Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:26.400989253Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:26.400993452Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.400997868Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:26.402318578Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:26.402331372Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.402338658Z [err]  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.402344838Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:26.402350723Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:26.402356711Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.402363995Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:26.402369608Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:26.403787299Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.403790841Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:26.403794633Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:26.403799216Z [err]                                           ^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.403803112Z [err]  ^^^
+2026-02-23T17:37:26.403807039Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:26.403811774Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:26.403815410Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.403819337Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:26.403822856Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:26.405487992Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.405493357Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:26.405497757Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:26.405502346Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:26.405506616Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:26.405511112Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:26.405515350Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:26.405519472Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:26.405524210Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:26.405566025Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.405570509Z [err]  ^^^
+2026-02-23T17:37:26.405574790Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:26.405579346Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:26.406669739Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.406676032Z [err]  ^
+2026-02-23T17:37:26.406679788Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:26.406683085Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:26.406686459Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.406703118Z [err]  ^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.406707146Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:26.406710910Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:26.406714669Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:26.406718136Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:26.406723792Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:26.406727228Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:26.406730865Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:26.408011695Z [err]      from . import views
+2026-02-23T17:37:26.408016693Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:26.408020096Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:26.408023288Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:26.408026943Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:26.408030339Z [err]                           ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.408033800Z [err]  ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:26.408037177Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:27.100054666Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:27.100061279Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:28.537693005Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.537706112Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:28.537714430Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:28.537725337Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:28.537732941Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:28.537741660Z [err]      main()
+2026-02-23T17:37:28.537757702Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:28.537764405Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:28.537770667Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:28.537776226Z [err]      utility.execute()
+2026-02-23T17:37:28.537781959Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:28.537787454Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:28.537799390Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:28.537805132Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:28.537810469Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:28.537816003Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:28.537821257Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:28.537826768Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:28.539209705Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.539217281Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:28.539224610Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:28.539229075Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.539233442Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:28.539237950Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:28.539241827Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.539246210Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:28.539250121Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:28.539254645Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.539259114Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:28.539263769Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:28.540922837Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.540930399Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:28.540935404Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:28.540940113Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.540945123Z [err]  ^^^
+2026-02-23T17:37:28.540950121Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:28.540954748Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:28.540959246Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:28.540963124Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:28.540967778Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:28.540971908Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:28.540975977Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:28.540980366Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:28.542611754Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.542621862Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:28.542627525Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:28.542638005Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.542643187Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:28.542649241Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:28.542655085Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.542663003Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:28.542670342Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:28.542676965Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:28.542682146Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:28.544175325Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:28.544185920Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:28.544228485Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:28.544233443Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:28.544238051Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:28.544243071Z [err]      from . import views
+2026-02-23T17:37:28.544247192Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:28.544251008Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:28.544255714Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:28.544259867Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:29.270797146Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:29.270800525Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:30.547505797Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:30.547511247Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:30.547516153Z [err]      main()
+2026-02-23T17:37:30.547520824Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:30.547525192Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:30.547529311Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:30.547533714Z [err]      utility.execute()
+2026-02-23T17:37:30.547537663Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:30.547541574Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:30.547545275Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:30.547549120Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:30.547552644Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:30.547558009Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:30.547561520Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:30.547565243Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:30.547569254Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.547573537Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:30.548811614Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:30.548817353Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.548821138Z [err]  ^^^^^^^^^^
+2026-02-23T17:37:30.548824680Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:30.548828036Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:30.548832649Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.548836758Z [err]  
+2026-02-23T17:37:30.548841928Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:30.548845573Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:30.550566431Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.550571002Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:30.550574976Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:30.550579391Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.550582910Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:30.550586435Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:30.550590111Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.550593484Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:30.550597819Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:30.550601334Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.552119775Z [err]  ^^^^^^^^
+2026-02-23T17:37:30.552126725Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:30.552132957Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:30.552138792Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:30.552144861Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:30.552150047Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:30.552157971Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:30.552164487Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:30.552169759Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:30.552175866Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.552181163Z [err]  ^^^
+2026-02-23T17:37:30.552186482Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:30.552192346Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:30.552197340Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.552202699Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:30.552207659Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:30.553852879Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:30.553876601Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.553886300Z [err]  ^^^^
+2026-02-23T17:37:30.553892094Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:30.553897539Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:30.553902847Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:30.553908441Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:30.553918388Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:30.553923508Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:30.553928741Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:30.553935859Z [err]      from . import views
+2026-02-23T17:37:30.553941167Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:30.553945718Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:30.553950769Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:30.554599851Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:30.554605636Z [err]  ^
+2026-02-23T17:37:30.554609519Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:31.207106738Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:31.207111162Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:32.504882798Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:32.504888939Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:32.504892480Z [err]      main()
+2026-02-23T17:37:32.504896340Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:32.504900483Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:32.504903924Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:32.504907609Z [err]      utility.execute()
+2026-02-23T17:37:32.504912587Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:32.506710354Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:32.506714589Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:32.506719242Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:32.506723671Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:32.506728604Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:32.506732854Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:32.506736962Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:32.506741319Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.506745484Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:32.506748989Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:32.506754793Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.508258168Z [err]  ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.508263401Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:32.508268566Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:32.508274825Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.508279363Z [err]  ^^^
+2026-02-23T17:37:32.508283222Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:32.508287618Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:32.508291932Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.508296586Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:32.508300465Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:32.510140733Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.510150381Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:32.510155993Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:32.510160833Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.510165487Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:32.510171218Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:32.510176304Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.510180769Z [err]  ^^^^^^^^
+2026-02-23T17:37:32.510185831Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:32.511518268Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:32.511612535Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:32.511618571Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:32.511623903Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:32.511629403Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:32.511635025Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:32.511641316Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:32.511646055Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:32.511651089Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.511655947Z [err]  ^^^^^^^
+2026-02-23T17:37:32.511661388Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:32.513165909Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.513176273Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:32.513183542Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:32.513189583Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.513197203Z [err]  ^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.513203714Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:32.513209996Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:32.513215853Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:32.513220956Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:32.513226453Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:32.513231108Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:32.513235407Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:32.513240838Z [err]      from . import views
+2026-02-23T17:37:32.513244674Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:32.513248786Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:32.514422739Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:32.514428181Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:32.514431995Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:32.514435538Z [err]  ^^^^
+2026-02-23T17:37:32.514439309Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:33.216040972Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:33.216047289Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:34.493400020Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:34.493404713Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:34.493409301Z [err]      main()
+2026-02-23T17:37:34.493418786Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:34.493423114Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:34.493427090Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:34.493430738Z [err]      utility.execute()
+2026-02-23T17:37:34.493434224Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:34.493440189Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:34.493443679Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:34.493447422Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:34.493451199Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:34.493454699Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:34.493458017Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:34.493461346Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:34.493465357Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.493469352Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:34.493472893Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:34.495307153Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.495312195Z [err]  ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.495315739Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:34.495319062Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:34.495322653Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.495325980Z [err]  ^^^^^^^^^^^
+2026-02-23T17:37:34.495329357Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:34.495332587Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:34.496822674Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.496832621Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:34.496837410Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:34.496841502Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.496846221Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:34.496850768Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:34.496856746Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.496861017Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:34.496865397Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:34.498130945Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.498139881Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:34.498146226Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:34.498151041Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:34.498156059Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:34.498160053Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:34.498164800Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:34.498169038Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:34.498173859Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:34.498177961Z [err]                               ^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.498182635Z [err]  ^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.498186709Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:34.499443662Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:34.499449060Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.499452882Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:34.499457120Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:34.499462582Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.499468022Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:34.499472293Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:34.499476929Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:34.499492001Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:34.499496926Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:34.499505079Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:34.499509693Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:34.499514772Z [err]      from . import views
+2026-02-23T17:37:34.499519047Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:34.499524631Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:34.499529002Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:34.499533343Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:34.500426392Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:34.500430516Z [err]  ^^^^^^^^^
+2026-02-23T17:37:34.500433964Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:35.196238835Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:35.196244327Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:36.516352140Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:36.516363064Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:36.516366705Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:36.516371442Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:36.516375942Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:36.516381755Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:36.516384002Z [err]      main()
+2026-02-23T17:37:36.516392495Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:36.516392579Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:36.516398933Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:36.516403973Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.516406660Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:36.516412968Z [err]      utility.execute()
+2026-02-23T17:37:36.516415795Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:36.516420157Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:36.516426633Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:36.516428865Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:36.516433083Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:36.518061589Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.518075098Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:36.518083146Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:36.518089624Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.518097847Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:36.518104778Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:36.518112316Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.518116936Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:36.518121462Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:36.519441551Z [err]                                           ^^^^^^^^^^
+2026-02-23T17:37:36.519447735Z [err]  ^^^^^^^^^
+2026-02-23T17:37:36.519453106Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:36.519457677Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:36.519462227Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.519466759Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:36.519471391Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:36.519476394Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.519481198Z [err]  ^^^^^^^
+2026-02-23T17:37:36.519485551Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:36.519489803Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:36.519494857Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:36.519499442Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:36.519503805Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:36.520972404Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:36.520979633Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:36.520984507Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:36.520989144Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.520993644Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:36.520998224Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:36.521003257Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.521008295Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:36.521012904Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:36.521017206Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.521022324Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:36.521027189Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:36.521032311Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:36.521037387Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:36.522284975Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:36.522290958Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:36.522294973Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:36.522298473Z [err]      from . import views
+2026-02-23T17:37:36.522303317Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:36.522308202Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:36.522311874Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:36.522315673Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:36.522319427Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:36.522323303Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:37.232876698Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:37.232880571Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:38.533516432Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:38.533517133Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:38.533525453Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:38.533528230Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:38.533532275Z [err]      main()
+2026-02-23T17:37:38.533535327Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:38.533541000Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:38.533544330Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:38.533547498Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:38.533552493Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.533555532Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:38.533560462Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:38.533563103Z [err]      utility.execute()
+2026-02-23T17:37:38.533567306Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:38.533570681Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:38.533574481Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:38.533578222Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:38.535890756Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:38.535897341Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.535900946Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:38.535904457Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:38.535908082Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.535911562Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:38.535915374Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:38.535919064Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.535922547Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:38.535926459Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:38.537316970Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.537329404Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:38.537337282Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:38.537353550Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.537357836Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:38.537362563Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:38.537368445Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.537374533Z [err]  ^^^^^^^^^^^^
+2026-02-23T17:37:38.537380289Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:38.537386433Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:38.537392104Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:38.537400343Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:38.538619513Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:38.538624726Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:38.538629895Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:38.538633439Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:38.538636700Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.538640877Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:38.538644265Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:38.538647420Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.538650692Z [err]  ^^^^^^
+2026-02-23T17:37:38.538654374Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:38.538657572Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:38.540604830Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.540611330Z [err]  ^^^^^^
+2026-02-23T17:37:38.540615699Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:38.540621399Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:38.540626938Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:38.540631610Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:38.540636000Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:38.540640476Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:38.540645146Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:38.540648524Z [err]      from . import views
+2026-02-23T17:37:38.540654880Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:38.540658719Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:38.540662840Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:38.540666855Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:38.540670309Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:38.540673882Z [err]  ^^^^^
+2026-02-23T17:37:38.541744686Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:39.196013431Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:39.196018725Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:40.489683900Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:40.489687633Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:40.489691697Z [err]      main()
+2026-02-23T17:37:40.489694903Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:40.489698461Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:40.489701972Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:40.489705310Z [err]      utility.execute()
+2026-02-23T17:37:40.489708788Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:40.489713126Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:40.489717251Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:40.489720636Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:40.489724043Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:40.489728187Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:40.489731276Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:40.489734509Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:40.489737856Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.489746280Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:40.491501647Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:40.491505998Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.491509621Z [err]  ^^^^^^^^^^^^
+2026-02-23T17:37:40.491513029Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:40.491516536Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:40.491519927Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.491523738Z [err]  ^^^
+2026-02-23T17:37:40.491527239Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:40.491530463Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:40.494697003Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.494702759Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:40.494707936Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:40.494712066Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.494716599Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:40.494720516Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:40.494724543Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.494728346Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:40.494732734Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:40.494736947Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.494741182Z [err]  ^^^^^^^
+2026-02-23T17:37:40.494745213Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:40.494749118Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:40.494753116Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:40.496203929Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:40.496208336Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:40.496211629Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:40.496214858Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:40.496218622Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:40.496222086Z [err]                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.496227064Z [err]  ^^^^
+2026-02-23T17:37:40.496233538Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:40.496237908Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:40.496242529Z [err]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.496246724Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:40.496252140Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:40.501656972Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:40.501698371Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.501703602Z [err]  ^^^^^^
+2026-02-23T17:37:40.501709559Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:40.501714543Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:40.501720018Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:40.501725091Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:40.501730430Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:40.501735443Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:40.501740222Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:40.501744959Z [err]      from . import views
+2026-02-23T17:37:40.501749909Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:40.501754701Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:40.501759350Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:40.502829379Z [err]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:40.502835067Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?
+2026-02-23T17:37:41.198550805Z [inf]  ==> WibeStore Entrypoint Started (PORT=8000)
+2026-02-23T17:37:41.198555367Z [inf]  ==> Applying migrations...
+2026-02-23T17:37:42.508736238Z [err]  Traceback (most recent call last):
+2026-02-23T17:37:42.508740903Z [err]    File "/app/manage.py", line 22, in <module>
+2026-02-23T17:37:42.508745662Z [err]      main()
+2026-02-23T17:37:42.508750381Z [err]    File "/app/manage.py", line 18, in main
+2026-02-23T17:37:42.508754349Z [err]      execute_from_command_line(sys.argv)
+2026-02-23T17:37:42.508758348Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+2026-02-23T17:37:42.508762817Z [err]      utility.execute()
+2026-02-23T17:37:42.508767108Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+2026-02-23T17:37:42.508772249Z [err]      self.fetch_command(subcommand).run_from_argv(self.argv)
+2026-02-23T17:37:42.508776283Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 420, in run_from_argv
+2026-02-23T17:37:42.508780843Z [err]      self.execute(*args, **cmd_options)
+2026-02-23T17:37:42.508786641Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 461, in execute
+2026-02-23T17:37:42.508791623Z [err]      self.check(**check_kwargs)
+2026-02-23T17:37:42.508796187Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/management/base.py", line 496, in check
+2026-02-23T17:37:42.508800469Z [err]      all_issues = checks.run_checks(
+2026-02-23T17:37:42.508806022Z [err]                   ^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.508810985Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/registry.py", line 89, in run_checks
+2026-02-23T17:37:42.508815572Z [err]      new_errors = check(app_configs=app_configs, databases=databases)
+2026-02-23T17:37:42.510255339Z [err]                   ^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.510260358Z [err]  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.510263667Z [err]    File "/usr/local/lib/python3.12/site-packages/django/core/checks/urls.py", line 136, in check_custom_error_handlers
+2026-02-23T17:37:42.510267789Z [err]      handler = resolver.resolve_error_handler(status_code)
+2026-02-23T17:37:42.510271296Z [err]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.510276441Z [err]  ^^^^^^^^^^^^^
+2026-02-23T17:37:42.510280061Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 732, in resolve_error_handler
+2026-02-23T17:37:42.510283677Z [err]      callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+2026-02-23T17:37:42.512187180Z [err]                         ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.512192400Z [err]    File "/usr/local/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+2026-02-23T17:37:42.512197906Z [err]      res = instance.__dict__[self.name] = self.func(instance)
+2026-02-23T17:37:42.512203260Z [err]                                           ^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.512208867Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/resolvers.py", line 711, in urlconf_module
+2026-02-23T17:37:42.512214066Z [err]      return import_module(self.urlconf_name)
+2026-02-23T17:37:42.512219228Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.512225192Z [err]  ^
+2026-02-23T17:37:42.512230207Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:42.512234388Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:42.512239465Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.513465903Z [err]  ^^^^^^^^
+2026-02-23T17:37:42.513471445Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:42.513476920Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:42.513482331Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:42.513487477Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:42.513492121Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:42.513496919Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:42.513501606Z [err]    File "/app/config/urls.py", line 66, in <module>
+2026-02-23T17:37:42.513506723Z [err]      path("api/v1/listings/", include("apps.marketplace.urls")),
+2026-02-23T17:37:42.513512345Z [err]                               ^^^^
+2026-02-23T17:37:42.513516605Z [err]  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.513521050Z [err]    File "/usr/local/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+2026-02-23T17:37:42.514982036Z [err]      urlconf_module = import_module(urlconf_module)
+2026-02-23T17:37:42.514985473Z [err]                       ^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.514988651Z [err]  ^^^^^^^^
+2026-02-23T17:37:42.514992170Z [err]    File "/usr/local/lib/python3.12/importlib/__init__.py", line 90, in import_module
+2026-02-23T17:37:42.514995505Z [err]      return _bootstrap._gcd_import(name[level:], package, level)
+2026-02-23T17:37:42.514999527Z [err]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.515004069Z [err]  ^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.515007489Z [err]    File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+2026-02-23T17:37:42.515010869Z [err]    File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+2026-02-23T17:37:42.515014065Z [err]    File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+2026-02-23T17:37:42.516214907Z [err]    File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+2026-02-23T17:37:42.516219334Z [err]    File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+2026-02-23T17:37:42.516222669Z [err]    File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+2026-02-23T17:37:42.516226208Z [err]    File "/app/apps/marketplace/urls.py", line 7, in <module>
+2026-02-23T17:37:42.516229809Z [err]      from . import views
+2026-02-23T17:37:42.516233445Z [err]    File "/app/apps/marketplace/views.py", line 15, in <module>
+2026-02-23T17:37:42.516236961Z [err]      from .filters import ListingFilterSet
+2026-02-23T17:37:42.516240740Z [err]    File "/app/apps/marketplace/filters.py", line 99, in <module>
+2026-02-23T17:37:42.516244272Z [err]      class ListingBackend(django_filters.rest_framework.Backend):
+2026-02-23T17:37:42.516248019Z [err]                           ^^^^^^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.516251606Z [err]  ^^^^^^^^^^^^^^^^
+2026-02-23T17:37:42.516255427Z [err]  AttributeError: module 'django_filters.rest_framework' has no attribute 'Backend'. Did you mean: 'backends'?

@@ -96,7 +96,7 @@ class ListingFilter(django_filters.FilterSet):
         return queryset
 
 
-class ListingBackend(django_filters.rest_framework.Backend):
+class ListingBackend(django_filters.rest_framework.backends.DjangoFilterBackend):
     """Custom filter backend for listings."""
-    
+
     filterset_class = ListingFilter
