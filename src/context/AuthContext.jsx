@@ -106,10 +106,16 @@ export const AuthProvider = ({ children }) => {
             return userData;
         } catch (error) {
             console.error('[Auth] Google login failed:', error);
-            if (error.response?.status === 405) {
+            const data = error.response?.data;
+            const status = error.response?.status;
+            if (status === 405) {
                 throw new Error("Xatolik yuz berdi. Keyinroq qayta urinib ko‘ring.");
             }
-            throw error.response?.data?.error || error.response?.data || new Error('Google login failed');
+            const msg = data?.error?.message || (typeof data?.error === 'string' ? data.error : null) || data?.detail;
+            if (msg && typeof msg === 'string') {
+                throw new Error(msg);
+            }
+            throw new Error(error.message || "Google orqali kirish amalga oshmadi.");
         }
     };
 
