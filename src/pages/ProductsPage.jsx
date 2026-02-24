@@ -16,13 +16,28 @@ const ProductsPage = () => {
     const [selectedGame, setSelectedGame] = useState('all');
     const [sortBy, setSortBy] = useState('newest');
     const [viewMode, setViewMode] = useState('grid');
-    const [_showFilters, _setShowFilters] = useState(false);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
 
-    // URL dan search ni sinxronlashtirish
+    // URL dan search ni sinxronlashtirish (sahifa ochilganda yoki link orqali)
     useEffect(() => {
         setSearchQuery(urlSearch);
     }, [urlSearch]);
+
+    // Qidiruv matnini URL ga debounce bilan yozish (ulashiladigan link uchun)
+    useEffect(() => {
+        const t = setTimeout(() => {
+            const q = searchQuery.trim();
+            setSearchParams((prev) => {
+                const cur = prev.get('search') ?? '';
+                if (q === cur) return prev;
+                const next = new URLSearchParams(prev);
+                if (q) next.set('search', q);
+                else next.delete('search');
+                return next;
+            }, { replace: true });
+        }, 400);
+        return () => clearTimeout(t);
+    }, [searchQuery, setSearchParams]);
 
     // API hooks — faqat aniq filterlar yuboriladi (undefined yo‘q, tez cache)
     const { data: gamesData } = useGames();
@@ -179,7 +194,7 @@ const ProductsPage = () => {
                     <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: '16px' }}>
                         {selectedGame !== 'all' && (
                             <span className="badge badge-blue flex items-center gap-1" style={{ padding: '4px 10px' }}>
-                                {games.find(g => g.id === selectedGame)?.name}
+                                {games.find(g => (g?.slug ?? g?.id) === selectedGame)?.name ?? selectedGame}
                                 <button
                                     onClick={() => setSelectedGame('all')}
                                     style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}
@@ -190,7 +205,7 @@ const ProductsPage = () => {
                         )}
                         {searchQuery && (
                             <span className="badge badge-blue flex items-center gap-1" style={{ padding: '4px 10px' }}>
-                                "{searchQuery}"
+                                {searchQuery}
                                 <button
                                     onClick={() => setSearchQuery('')}
                                     style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}
@@ -200,7 +215,11 @@ const ProductsPage = () => {
                             </span>
                         )}
                         <button
-                            onClick={() => { setSelectedGame('all'); setSearchQuery(''); }}
+                            onClick={() => {
+                                setSelectedGame('all');
+                                setSearchQuery('');
+                                setSearchParams({}, { replace: true });
+                            }}
                             className="text-sm"
                             style={{ color: 'var(--color-text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
                         >
@@ -264,7 +283,12 @@ const ProductsPage = () => {
                             {t('products.no_results_desc') || 'Try adjusting your search or filters'}
                         </p>
                         <button
-                            onClick={() => { setSearchQuery(''); setSelectedGame('all'); setPriceRange({ min: 0, max: 10000000 }); }}
+                            onClick={() => {
+                                setSearchQuery('');
+                                setSelectedGame('all');
+                                setPriceRange({ min: 0, max: 10000000 });
+                                setSearchParams({}, { replace: true });
+                            }}
                             className="btn btn-primary btn-md"
                         >
                             {t('products.clear_filters') || 'Clear filters'}

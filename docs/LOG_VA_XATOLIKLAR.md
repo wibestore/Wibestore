@@ -21,7 +21,7 @@ So‘rovlar shunday chiqardi:
 `/api/v1/listings/?page=1&game=undefined&search=undefined&min_price=undefined&max_price=10000000&ordering=-created_at`
 
 **Tuzatildi (frontend):**
-- `useListings` hookida filterlar **tozalanadi**: `undefined`, `null`, bo‘sh string URL ga yuborilmaydi.
+- `useListings` da `cleanFilters()`: `undefined`, `null`, bo‘sh string URL ga yuborilmaydi.
 - Endi faqat berilgan (aniq) parametrlar yuboriladi, masalan:  
   `/api/v1/listings/?page=1&limit=24&ordering=-created_at`
 
@@ -33,10 +33,11 @@ Bu logdagi “noto‘g‘ri” URL xatolarini kamaytiradi va backend uchun ham y
 
 ---
 
-## Boshqa mahsulotlar sahifasi tezlashtirildi
+## Boshqa mahsulotlar sahifasi (to'liq yaxshilangan)
 
-- **Cache:** Listings uchun `staleTime` 3 min, `gcTime` 10 min — qayta kirganda tez ko‘rinadi.
-- **Prefetch:** Bosh sahifa yuklanganda products sahifasi uchun birinchi sahifa **prefetch** qilinadi; `/products` ga o‘tganida ko‘p hollarda ma’lumot cache dan chiqadi.
-- **Bitta so‘rovda ko‘proq yozuv:** Bir sahifa uchun `limit=24` (oldingi 8 o‘rniga) — kamroq so‘rov, tezroq to‘ldirish.
-- **Retry:** 502/network da 2 marta qayta urinish, keyin tez xato ko‘rsatish (juda uzoq kutish kamayadi).
-- **URL parametrlari:** `?search=...` dan qidiruv sinxron; filterlar tozalanib yuboriladi.
+- **Cache:** staleTime 3 min, gcTime 10 min; bitta listing uchun ham retry + cache.
+- **Prefetch:** Bosh sahifa yuklanganda `['listings', { ordering: '-created_at' }]` prefetch — /products cache dan tez.
+- **Limit:** Products 24 ta/sahifa, bosh sahifa 8 ta; cleanFilters va queryFn to'g'ri.
+- **Retry:** useListings/useListing 2 marta, apiClient MAX_RETRIES=2 — 502 da tez xato.
+- **URL:** /products?search=... debounce 400ms; Clear all/filters URL ni tozalaydi.
+- **Badge:** O'yin filtri slug/id bo'yicha to'g'ri; skeleton 12 ta.

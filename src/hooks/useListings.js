@@ -1,14 +1,16 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import apiClient from '../lib/apiClient';
 
-/** Фильтрдан faqat aniq qiymatlar qoldiradi (URL va cache uchun) */
-const cleanFilters = (filters) => {
+/** Filterdan faqat aniq qiymatlar qoldiradi (URL va cache uchun, "undefined" yuborilmaydi) */
+function cleanFilters(filters) {
     const out = {};
     for (const [k, v] of Object.entries(filters || {})) {
-        if (v !== undefined && v !== null && v !== '') out[k] = v;
+        if (v === undefined || v === null) continue;
+        if (typeof v === 'string' && v.trim() === '') continue;
+        out[k] = v;
     }
     return out;
-};
+}
 
 /**
  * Hook для получения списка listing'ов с фильтрами
@@ -18,7 +20,10 @@ export const useListings = (filters = {}) => {
     return useInfiniteQuery({
         queryKey: ['listings', safeFilters],
         queryFn: async ({ pageParam = 1 }) => {
-            const params = new URLSearchParams({ page: String(pageParam), limit: '24', ...safeFilters });
+            const limit = safeFilters.limit ?? 24;
+            const rest = { ...safeFilters };
+            delete rest.limit;
+            const params = new URLSearchParams({ page: String(pageParam), limit: String(limit), ...rest });
             const { data } = await apiClient.get(`/listings/?${params}`);
             return data;
         },
@@ -53,7 +58,10 @@ export const useListing = (id) => {
             return data;
         },
         enabled: !!id,
-        staleTime: 1 * 60 * 1000, // 1 minute
+        staleTime: 2 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+        retry: 2,
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     });
 };
 

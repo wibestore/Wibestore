@@ -51,10 +51,10 @@ const HomePage = () => {
     const { data: gamesData, isLoading: gamesLoading } = useGames();
     const { data: listingsData, isLoading: listingsLoading } = useListings({ limit: 8 });
 
-    // Prefetch products page (Boshqa mahsulotlar) — /products ochilganda cache dan tez chiqadi
+    // Prefetch products page (Boshqa mahsulotlar) — cache key ProductsPage default bilan bir xil
     useEffect(() => {
         queryClient.prefetchInfiniteQuery({
-            queryKey: ['listings', { ordering: '-created_at', limit: 24 }],
+            queryKey: ['listings', { ordering: '-created_at' }],
         });
     }, [queryClient]);
 

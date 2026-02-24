@@ -76,9 +76,9 @@ export function isApiUrlLikelyWrong() {
   return false;
 }
 
-// Retry logic для временных ошибок (502, 503, network)
+// Retry logic для временных ошибок (502, 503, network) — kamroq urinish, tezroq xato
 const RETRYABLE_STATUSES = [502, 503, 504];
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 2;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
