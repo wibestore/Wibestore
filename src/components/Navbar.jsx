@@ -121,7 +121,7 @@ const Navbar = () => {
                 role="navigation"
                 aria-label="Main navigation"
             >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+                <div className="max-w-7xl mx-auto pl-4 sm:pl-6 lg:pl-8 pr-6 sm:pr-8 lg:pr-12 h-full">
                     <div className="h-full flex items-center gap-4 sm:gap-5 lg:gap-6">
                         {/* ─── Chap blok: Logo ─── */}
                         <Link
@@ -265,7 +265,7 @@ const Navbar = () => {
                         />
 
                         {/* ─── O‘rta blok: Qidiruv ─── */}
-                        <div className="flex-1 min-w-0 hidden md:flex justify-center items-center max-w-[200px] lg:max-w-[280px]">
+                        <div className="flex-1 min-w-0 hidden md:flex justify-center items-center max-w-[260px] lg:max-w-[340px]">
                             <form
                                 onSubmit={handleSearch}
                                 className="w-full flex items-center h-10"
@@ -283,7 +283,7 @@ const Navbar = () => {
                                         onFocus={() => setSearchFocused(true)}
                                         onBlur={() => setSearchFocused(false)}
                                         ref={searchInputRef}
-                                        className="w-full h-10 px-4 pl-11 pr-8 rounded-lg text-sm font-medium transition-all outline-none"
+                                        className="w-full h-10 px-4 pl-[3.25rem] pr-8 rounded-lg text-sm font-medium transition-all outline-none"
                                         style={{
                                             backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
                                             color: 'var(--color-text-primary)',
