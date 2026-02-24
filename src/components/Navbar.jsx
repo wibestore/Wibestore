@@ -123,26 +123,28 @@ const Navbar = () => {
             >
                 <div className="max-w-7xl mx-auto pl-4 sm:pl-6 lg:pl-8 pr-3 sm:pr-4 lg:pr-5 h-full">
                     <div className="h-full flex items-center gap-4 sm:gap-5 lg:gap-6">
-                        {/* ─── Chap blok: Logo (orqa fonsiz, temaga mos) ─── */}
+                        {/* ─── Logo: dumaloq ramka, saytga mos ─── */}
                         <Link
                             to="/"
-                            className="group flex items-center flex-shrink-0 transition-transform hover:scale-[1.02] h-10"
+                            className="group flex items-center flex-shrink-0 transition-all duration-200 hover:scale-[1.03] h-11"
                             style={{ textDecoration: 'none' }}
                         >
                             <span
-                                className="flex items-center justify-center h-10 px-1"
+                                className="flex items-center justify-center h-10 w-10 sm:h-11 sm:w-[52px] rounded-xl overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:shadow-lg"
                                 style={{
-                                    mixBlendMode: 'multiply',
-                                    filter: isDark ? 'brightness(1.35) contrast(1.15)' : 'none',
+                                    backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)',
+                                    border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'}`,
+                                    padding: '5px',
+                                    boxShadow: isDark ? '0 2px 12px rgba(0,0,0,0.25)' : '0 2px 10px rgba(0,0,0,0.08)',
                                 }}
                             >
                                 <img
                                     src="/logotip.png"
                                     alt="WibeStore - Gaming Marketplace"
-                                    className="h-8 sm:h-9 w-auto object-contain select-none pointer-events-none"
+                                    className="h-full w-full object-contain select-none pointer-events-none"
                                     style={{
-                                        maxWidth: '160px',
-                                        display: 'block',
+                                        mixBlendMode: 'multiply',
+                                        filter: isDark ? 'brightness(1.2) contrast(1.08)' : 'none',
                                     }}
                                 />
                             </span>
