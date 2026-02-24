@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, Grid, List, X } from 'lucide-react';
 import { useListings, useGames } from '../hooks';
 import AccountCard from '../components/AccountCard';
@@ -9,20 +10,27 @@ import { accounts as mockAccounts, games as mockGames } from '../data/mockData';
 
 const ProductsPage = () => {
     const { t } = useLanguage();
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const urlSearch = searchParams.get('search') ?? '';
+    const [searchQuery, setSearchQuery] = useState(urlSearch);
     const [selectedGame, setSelectedGame] = useState('all');
     const [sortBy, setSortBy] = useState('newest');
     const [viewMode, setViewMode] = useState('grid');
     const [_showFilters, _setShowFilters] = useState(false);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
 
-    // API hooks
+    // URL dan search ni sinxronlashtirish
+    useEffect(() => {
+        setSearchQuery(urlSearch);
+    }, [urlSearch]);
+
+    // API hooks — faqat aniq filterlar yuboriladi (undefined yo‘q, tez cache)
     const { data: gamesData } = useGames();
-    const { data, isLoading, fetchNextPage, hasNextPage } = useListings({
-        game: selectedGame !== 'all' ? selectedGame : undefined,
-        search: searchQuery || undefined,
-        min_price: priceRange.min || undefined,
-        max_price: priceRange.max || undefined,
+    const { data, isLoading, isFetching, fetchNextPage, hasNextPage } = useListings({
+        ...(selectedGame !== 'all' && { game: selectedGame }),
+        ...(searchQuery.trim() && { search: searchQuery.trim() }),
+        ...(priceRange.min > 0 && { min_price: priceRange.min }),
+        ...(priceRange.max < 10000000 && { max_price: priceRange.max }),
         ordering: sortBy === 'price-low' ? 'price' : sortBy === 'price-high' ? '-price' : '-created_at',
     });
 
@@ -203,7 +211,7 @@ const ProductsPage = () => {
 
                 {/* Results */}
                 {isLoading ? (
-                    <SkeletonGrid count={8} />
+                    <SkeletonGrid count={12} />
                 ) : filteredAccounts.length > 0 ? (
                     <>
                         <div
@@ -238,9 +246,9 @@ const ProductsPage = () => {
                                 <button
                                     onClick={() => fetchNextPage()}
                                     className="btn btn-primary btn-lg"
-                                    disabled={isLoading}
+                                    disabled={isFetching}
                                 >
-                                    {isLoading ? 'Loading...' : 'Load More'}
+                                    {isFetching ? (t('common.loading') || 'Loading...') : (t('products.load_more') || 'Load More')}
                                 </button>
                             </div>
                         )}

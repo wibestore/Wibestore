@@ -1,25 +1,44 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import apiClient from '../lib/apiClient';
 
+/** Фильтрдан faqat aniq qiymatlar qoldiradi (URL va cache uchun) */
+const cleanFilters = (filters) => {
+    const out = {};
+    for (const [k, v] of Object.entries(filters || {})) {
+        if (v !== undefined && v !== null && v !== '') out[k] = v;
+    }
+    return out;
+};
+
 /**
  * Hook для получения списка listing'ов с фильтрами
  */
 export const useListings = (filters = {}) => {
+    const safeFilters = cleanFilters(filters);
     return useInfiniteQuery({
-        queryKey: ['listings', filters],
+        queryKey: ['listings', safeFilters],
         queryFn: async ({ pageParam = 1 }) => {
-            const params = new URLSearchParams({ page: pageParam, ...filters });
+            const params = new URLSearchParams({ page: String(pageParam), limit: '24', ...safeFilters });
             const { data } = await apiClient.get(`/listings/?${params}`);
             return data;
         },
+        initialPageParam: 1,
         getNextPageParam: (lastPage) => {
-            if (lastPage.next) {
-                const url = new URL(lastPage.next);
-                return url.searchParams.get('page');
+            if (lastPage?.next) {
+                try {
+                    const url = new URL(lastPage.next);
+                    const page = url.searchParams.get('page');
+                    return page ? Number(page) : undefined;
+                } catch (_) {
+                    return undefined;
+                }
             }
             return undefined;
         },
-        staleTime: 2 * 60 * 1000, // 2 minutes
+        staleTime: 3 * 60 * 1000, // 3 daqiqa — tez qayta ko'rsatish
+        gcTime: 10 * 60 * 1000, // 10 daqiqa cache
+        retry: 2,
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     });
 };
 
