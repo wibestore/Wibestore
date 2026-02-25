@@ -517,14 +517,14 @@ const Navbar = () => {
                                     )}
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-2">
                                     <Link
                                         to="/login"
-                                        className="hidden sm:inline-flex items-center justify-center h-7 px-2.5 rounded-md text-[12px] font-medium transition-colors duration-150"
+                                        className="hidden sm:inline-flex items-center justify-center h-9 px-4 rounded-sm text-[13px] font-medium transition-colors duration-150"
                                         style={{
                                             textDecoration: 'none',
                                             color: isDark ? '#c9d1d9' : '#1f2328',
-                                            border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}`,
+                                            border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
                                         }}
                                         onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'; }}
                                         onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
@@ -533,7 +533,7 @@ const Navbar = () => {
                                     </Link>
                                     <Link
                                         to="/signup"
-                                        className="inline-flex items-center justify-center h-7 px-2.5 rounded-md text-[12px] font-semibold transition-all duration-150"
+                                        className="inline-flex items-center justify-center h-9 px-4 rounded-sm text-[13px] font-semibold transition-all duration-150"
                                         style={{
                                             textDecoration: 'none',
                                             backgroundColor: isDark ? '#238636' : '#1f883d',
