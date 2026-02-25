@@ -123,28 +123,28 @@ const Navbar = () => {
             >
                 <div className="max-w-7xl mx-auto pl-4 sm:pl-6 lg:pl-8 pr-3 sm:pr-4 lg:pr-5 h-full">
                     <div className="h-full flex items-center gap-4 sm:gap-5 lg:gap-6">
-                        {/* ─── Logo: dumaloq ramka, saytga mos ─── */}
+                        {/* ─── Logo: orqa fon "kesilgan", saytga mos ─── */}
                         <Link
                             to="/"
-                            className="group flex items-center flex-shrink-0 transition-all duration-200 hover:scale-[1.03] h-11"
+                            className="group flex items-center flex-shrink-0 transition-all duration-200 hover:scale-[1.02] h-11"
                             style={{ textDecoration: 'none' }}
                         >
                             <span
-                                className="flex items-center justify-center h-10 w-10 sm:h-11 sm:w-[52px] rounded-xl overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:shadow-lg"
+                                className="flex items-center justify-center h-9 sm:h-10 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:opacity-95"
                                 style={{
-                                    backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)',
-                                    border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'}`,
-                                    padding: '5px',
-                                    boxShadow: isDark ? '0 2px 12px rgba(0,0,0,0.25)' : '0 2px 10px rgba(0,0,0,0.08)',
+                                    padding: '4px 10px',
+                                    minWidth: '120px',
+                                    maxWidth: '160px',
+                                    backgroundColor: 'transparent',
                                 }}
                             >
                                 <img
-                                    src="/logotip.png"
+                                    src="/logo.png"
                                     alt="WibeStore - Gaming Marketplace"
-                                    className="h-full w-full object-contain select-none pointer-events-none"
+                                    className="h-full w-auto max-h-9 sm:max-h-10 object-contain object-left select-none pointer-events-none"
                                     style={{
                                         mixBlendMode: 'multiply',
-                                        filter: isDark ? 'brightness(1.2) contrast(1.08)' : 'none',
+                                        filter: isDark ? 'brightness(1.2) contrast(1.12)' : 'none',
                                     }}
                                 />
                             </span>
