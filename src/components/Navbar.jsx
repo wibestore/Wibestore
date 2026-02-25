@@ -123,28 +123,20 @@ const Navbar = () => {
             >
                 <div className="max-w-7xl mx-auto pl-4 sm:pl-6 lg:pl-8 pr-3 sm:pr-4 lg:pr-5 h-full">
                     <div className="h-full flex items-center gap-4 sm:gap-5 lg:gap-6">
-                        {/* ─── Logo: orqa fon "kesilgan", saytga mos ─── */}
+                        {/* ─── Logo: transparent fon, saytga mos ─── */}
                         <Link
                             to="/"
-                            className="group flex items-center flex-shrink-0 transition-all duration-200 hover:scale-[1.02] h-11"
+                            className="group flex items-center flex-shrink-0 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] h-11"
                             style={{ textDecoration: 'none' }}
                         >
-                            <span
-                                className="flex items-center justify-center h-9 sm:h-10 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:opacity-95"
-                                style={{
-                                    padding: '4px 10px',
-                                    minWidth: '120px',
-                                    maxWidth: '160px',
-                                    backgroundColor: 'transparent',
-                                }}
-                            >
+                            <span className="flex items-center justify-center h-9 sm:h-10 flex-shrink-0">
                                 <img
                                     src="/logo.png"
                                     alt="WibeStore - Gaming Marketplace"
-                                    className="h-full w-auto max-h-9 sm:max-h-10 object-contain object-left select-none pointer-events-none"
+                                    className="h-full w-auto max-h-9 sm:max-h-10 object-contain object-left select-none pointer-events-none block"
                                     style={{
-                                        mixBlendMode: 'multiply',
-                                        filter: isDark ? 'brightness(1.2) contrast(1.12)' : 'none',
+                                        maxWidth: '155px',
+                                        filter: isDark ? 'brightness(1.05) drop-shadow(0 1px 2px rgba(0,0,0,0.3))' : 'drop-shadow(0 1px 2px rgba(0,0,0,0.06))',
                                     }}
                                 />
                             </span>
