@@ -120,7 +120,7 @@ const Navbar = () => {
                 role="navigation"
                 aria-label="Main navigation"
             >
-                <div className="h-full w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-10">
                     <div className="h-full flex items-center gap-1">
 
                         {/* ─── Logo ─── */}
