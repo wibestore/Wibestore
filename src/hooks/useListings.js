@@ -34,7 +34,7 @@ export const useListings = (filters = {}) => {
                     const url = new URL(lastPage.next);
                     const page = url.searchParams.get('page');
                     return page ? Number(page) : undefined;
-                } catch (_) {
+                } catch {
                     return undefined;
                 }
             }

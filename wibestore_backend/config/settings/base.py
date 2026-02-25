@@ -124,13 +124,20 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # ============================================================
 # DATABASE
+# Railway Postgres provides DATABASE_PUBLIC_URL; we support both.
 # ============================================================
+_db_default = (
+    os.environ.get("DATABASE_PUBLIC_URL")
+    or os.environ.get("DATABASE_URL")
+    or "postgresql://wibestore:wibestore_password@localhost:5432/wibestore_db"
+)
 DATABASES = {
-    "default": env.db(
-        "DATABASE_URL",
-        default="postgresql://wibestore:wibestore_password@localhost:5432/wibestore_db",
-    )
+    "default": env.db("DATABASE_URL", default=_db_default),
 }
+
+# Railway Postgres (DATABASE_PUBLIC_URL) usually requires SSL
+if _db_default and "sslmode" not in _db_default and ("railway" in _db_default.lower() or ".railway.app" in _db_default):
+    DATABASES["default"].setdefault("OPTIONS", {})["sslmode"] = "require"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
