@@ -506,7 +506,7 @@ const Navbar = () => {
                                     )}
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3">
                                     <Link
                                         to="/login"
                                         className="hidden sm:inline-flex items-center justify-center h-9 px-10 rounded-sm text-[13px] font-medium transition-colors duration-150"
