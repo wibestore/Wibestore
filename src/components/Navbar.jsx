@@ -126,7 +126,7 @@ const Navbar = () => {
                         {/* ─── Logo ─── */}
                         <Link
                             to="/"
-                            className="flex items-center flex-shrink-0 mr-4 lg:mr-8 transition-opacity duration-200 hover:opacity-80"
+                            className="flex items-center flex-shrink-0 transition-opacity duration-200 hover:opacity-80"
                             style={{ textDecoration: 'none' }}
                         >
                             <img
@@ -134,7 +134,7 @@ const Navbar = () => {
                                 alt="WibeStore"
                                 className="select-none pointer-events-none"
                                 style={{
-                                    height: '44px',
+                                    height: '48px',
                                     width: 'auto',
                                     filter: isDark
                                         ? 'brightness(1.1) drop-shadow(0 0 8px rgba(59,130,246,0.15))'
@@ -143,8 +143,11 @@ const Navbar = () => {
                             />
                         </Link>
 
+                        {/* ─── Spacer ─── */}
+                        <div className="flex-1 min-w-0" />
+
                         {/* ─── Nav Links (desktop) ─── */}
-                        <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
+                        <div className="hidden lg:flex items-center gap-1.5 mr-4 flex-shrink-0">
                             {navLinks.map((link) => {
                                 const active = isActive(link.to);
                                 return (
@@ -213,9 +216,6 @@ const Navbar = () => {
                             )}
                         </div>
 
-                        {/* ─── Spacer ─── */}
-                        <div className="flex-1 min-w-0" />
-
                         {/* ─── Search (desktop) ─── */}
                         <div className="hidden md:flex items-center mr-3">
                             <form onSubmit={handleSearch} className="relative">
@@ -264,7 +264,7 @@ const Navbar = () => {
                             <div className="relative" ref={langRef}>
                                 <button
                                     onClick={() => setIsLangOpen(!isLangOpen)}
-                                    className="flex items-center gap-2 h-8 px-3 rounded-full transition-all duration-200"
+                                    className="flex items-center gap-2 h-8 px-3 rounded-md transition-all duration-200"
                                     aria-label="Change language"
                                     style={{
                                         backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
@@ -280,11 +280,12 @@ const Navbar = () => {
                                     <img
                                         src={currentLang.flagUrl}
                                         alt={currentLang.name}
-                                        className="rounded flex-shrink-0"
+                                        className="flex-shrink-0"
                                         style={{
                                             width: '20px',
                                             height: '14px',
                                             objectFit: 'cover',
+                                            borderRadius: '2px',
                                             border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}`,
                                         }}
                                     />
@@ -302,7 +303,7 @@ const Navbar = () => {
 
                                 {isLangOpen && (
                                     <div
-                                        className="absolute right-0 top-full mt-2 py-1.5 rounded-xl shadow-xl overflow-hidden"
+                                        className="absolute right-0 top-full mt-2 py-1.5 rounded-md shadow-xl overflow-hidden"
                                         style={{
                                             minWidth: '180px',
                                             backgroundColor: isDark ? '#1c2333' : '#ffffff',
@@ -333,11 +334,12 @@ const Navbar = () => {
                                                     <img
                                                         src={lang.flagUrl}
                                                         alt={lang.name}
-                                                        className="rounded flex-shrink-0"
+                                                        className="flex-shrink-0"
                                                         style={{
                                                             width: '24px',
                                                             height: '17px',
                                                             objectFit: 'cover',
+                                                            borderRadius: '2px',
                                                             border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'}`,
                                                         }}
                                                     />
