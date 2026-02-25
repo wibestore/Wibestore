@@ -235,7 +235,7 @@ const Navbar = () => {
                                     style={{
                                         width: searchFocused ? '280px' : '220px',
                                         paddingLeft: '32px',
-                                        paddingRight: '48px',
+                                        paddingRight: '12px',
                                         backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
                                         color: isDark ? '#f0f6fc' : '#1f2328',
                                         border: `1px solid ${searchFocused
@@ -248,16 +248,6 @@ const Navbar = () => {
                                     }}
                                     aria-label="Search"
                                 />
-                                <kbd
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium leading-none"
-                                    style={{
-                                        backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-                                        color: isDark ? '#484f58' : '#8c959f',
-                                        border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
-                                    }}
-                                >
-                                    Ctrl K
-                                </kbd>
                             </form>
                         </div>
 
