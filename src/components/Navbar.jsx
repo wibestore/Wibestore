@@ -120,7 +120,7 @@ const Navbar = () => {
                 role="navigation"
                 aria-label="Main navigation"
             >
-                <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-10">
+                <div className="h-full w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-24 lg:pr-32">
                     <div className="h-full flex items-center gap-1">
 
                         {/* ─── Logo ─── */}
@@ -509,7 +509,7 @@ const Navbar = () => {
                                 <div className="flex items-center gap-3">
                                     <Link
                                         to="/login"
-                                        className="hidden sm:inline-flex items-center justify-center h-9 px-10 rounded-sm text-[13px] font-medium transition-colors duration-150"
+                                        className="hidden sm:inline-flex items-center justify-center h-9 px-12 rounded-sm text-sm font-medium transition-colors duration-150 whitespace-nowrap"
                                         style={{
                                             textDecoration: 'none',
                                             color: isDark ? '#c9d1d9' : '#1f2328',
@@ -522,7 +522,7 @@ const Navbar = () => {
                                     </Link>
                                     <Link
                                         to="/signup"
-                                        className="inline-flex items-center justify-center h-9 px-10 rounded-sm text-[13px] font-semibold transition-all duration-150"
+                                        className="inline-flex items-center justify-center h-9 px-12 rounded-sm text-sm font-semibold transition-all duration-150 whitespace-nowrap"
                                         style={{
                                             textDecoration: 'none',
                                             backgroundColor: isDark ? '#238636' : '#1f883d',
