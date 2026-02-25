@@ -50,3 +50,9 @@ Bu logdagi “noto‘g‘ri” URL xatolarini kamaytiradi va backend uchun ham y
 - **Production xavfsizlik:** Production sozlamalarida default **SECRET_KEY** ishlatilsa dastur ishga tushmaydi (ValueError). **FERNET_KEY** bo‘lmasa yoki dummy bo‘lsa ogohlantirish chiqadi.
 - **PasswordHistory:** Django admin da ro‘yxatdan o‘tkazildi (Accounts → Password histories).
 - **Hujjatlashtirish:** `.env.example` va settings da production uchun SECRET_KEY, FERNET_KEY, DATABASE_URL majburiy ekani ko‘rsatilgan.
+
+### Django admin 500 (Games va boshqa sahifalar)
+
+- **Sabab:** `/admin/games/game/` da GameAdmin `get_queryset()` ichida `Count` + `filter=Q(...)` annotatsiyasi murakkab JOIN keltirib, ba’zan 500 yoki noto‘g‘ri natija berardi.
+- **Tuzatish:** GameAdmin da annotatsiya olib tashlandi; “Active Listings” endi `obj.listings.filter(status="active").count()` orqali hisoblanadi (admin uchun N+1 maqbul).
+- **Seed_data:** Game va SubscriptionPlan, Category modellariga moslashtirildi (modelda yo‘q bo‘lgan `name_uz`, `name_ru`, `category`, `price` olib tashlandi).

@@ -3,7 +3,6 @@ WibeStore Backend - Games Admin
 """
 
 from django.contrib import admin
-from django.db.models import Count, Q
 
 from .models import Category, Game
 
@@ -16,18 +15,16 @@ class GameAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     list_editable = ["is_active", "sort_order"]
     ordering = ["sort_order", "name"]
+    readonly_fields = ["created_at", "updated_at"]
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.annotate(
-            _active_listings_count=Count(
-                "listings", filter=Q(listings__status="active")
-            )
-        )
-
-    @admin.display(description="Active Listings", ordering="_active_listings_count")
+    @admin.display(description="Active Listings")
     def get_active_listings(self, obj):
-        return getattr(obj, "_active_listings_count", 0)
+        if obj is None or not obj.pk:
+            return 0
+        try:
+            return obj.listings.filter(status="active").count()
+        except Exception:
+            return 0
 
 
 @admin.register(Category)

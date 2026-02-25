@@ -53,7 +53,7 @@ class Command(BaseCommand):
         for cat in categories:
             Category.objects.get_or_create(
                 slug=cat["slug"],
-                defaults={"name": cat["name"], "name_uz": cat["name"], "name_ru": cat["name"]}
+                defaults={"name": cat["name"]}
             )
         self.stdout.write("Created categories")
 
@@ -97,14 +97,10 @@ class Command(BaseCommand):
             {"name": "Assassin's Creed", "slug": "assassins-creed", "category": "console-games"},
         ]
         for game_data in games:
-            category = Category.objects.filter(slug=game_data["category"]).first()
             Game.objects.get_or_create(
                 slug=game_data["slug"],
                 defaults={
                     "name": game_data["name"],
-                    "name_uz": game_data["name"],
-                    "name_ru": game_data["name"],
-                    "category": category,
                     "description": f"{game_data['name']} - popular game for buying and selling accounts",
                     "is_active": True,
                 }
@@ -122,12 +118,13 @@ class Command(BaseCommand):
                 slug=plan["slug"],
                 defaults={
                     "name": plan["name"],
-                    "name_uz": plan["name"],
-                    "name_ru": plan["name"],
-                    "price": plan["price"],
+                    "price_monthly": plan["price"],
+                    "price_yearly": plan["price"] * 12,
                     "commission_rate": plan["commission_rate"],
                     "features": plan["features"],
                     "is_active": True,
+                    "is_premium": plan["slug"] != "free",
+                    "is_pro": plan["slug"] == "pro",
                 }
             )
         self.stdout.write("Created subscription plans")
