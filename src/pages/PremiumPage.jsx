@@ -127,6 +127,7 @@ const PremiumPage = () => {
                                 <div
                                     className="absolute"
                                     style={{
+                                        zIndex: 10,
                                         top: '-12px',
                                         left: '50%',
                                         transform: 'translateX(-50%)',
@@ -146,7 +147,7 @@ const PremiumPage = () => {
                             {/* Premium top accent */}
                             {plan.popular && (
                                 <div style={{
-                                    position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
+                                    position: 'absolute', top: 0, left: 0, right: 0, height: '0px',
                                     background: 'linear-gradient(90deg, var(--color-premium-gold), var(--color-premium-gold-light))',
                                     borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
                                 }} />
