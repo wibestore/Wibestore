@@ -121,9 +121,10 @@ const Navbar = () => {
                 role="navigation"
                 aria-label="Main navigation"
             >
-                <div className="max-w-7xl mx-auto pl-4 sm:pl-6 lg:pl-8 pr-3 sm:pr-4 lg:pr-5 h-full">
+                <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 h-full">
                     <div className="h-full flex items-center gap-4 sm:gap-5 lg:gap-6">
-                        {/* ─── Logo: transparent fon, saytga mos ─── */}
+                        {/* ─── Chap qism: Logo + Nav linklar ─── */}
+                        <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-shrink-0">
                         <Link
                             to="/"
                             className="group flex items-center flex-shrink-0 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] h-11"
@@ -142,17 +143,14 @@ const Navbar = () => {
                             </span>
                         </Link>
 
-                        {/* Logo va nav orasidagi joy (flex o‘ng blokni surish uchun emas) */}
-                        <div className="hidden lg:block min-w-0 grow-0 w-0" aria-hidden="true" />
-
-                        {/* Ajratgich: Logo | Nav */}
+                        {/* Ajratgich: Logo | Nav — faqat desktop */}
                         <div
                             className="hidden lg:block flex-shrink-0 w-px self-center"
                             style={{ height: '28px', backgroundColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)' }}
                         />
 
-                        {/* ─── Nav linklar (desktop) — o'ng tomonda ─── */}
-                        <div className="hidden lg:flex items-center gap-4 lg:gap-6 flex-shrink-0 h-10">
+                        {/* ─── Nav linklar (desktop) ─── */}
+                        <div className="hidden lg:flex items-center gap-2 lg:gap-4 flex-shrink-0 h-10">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.to}
@@ -231,17 +229,13 @@ const Navbar = () => {
                                 </Link>
                             )}
                         </div>
+                        </div>
 
-                        {/* ─── O‘ng taraf: Qidiruv, til, tema, auth — bitta blok, o‘ngga yopishadi ─── */}
-                        <div className="flex-1 min-w-0 hidden lg:block" aria-hidden="true" />
+                        {/* ─── O‘rtada bo‘sh joy — o‘ng blokni to‘g‘ri suradi ─── */}
+                        <div className="flex-1 min-w-0" aria-hidden="true" />
 
-                        {/* Ajratgich: Nav | O‘ng blok — faqat desktop */}
-                        <div
-                            className="hidden md:block flex-shrink-0 w-px h-8"
-                            style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)', marginLeft: '4px' }}
-                        />
-
-                        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-auto">
+                        {/* ─── O‘ng blok: Qidiruv, til, tema, auth — header o‘ng chetida ─── */}
+                        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
                             {/* Qidiruv — faqat desktop */}
                             <div className="hidden md:block w-[200px] sm:w-[240px] lg:w-[280px] xl:w-[320px] flex-shrink-0">
                                 <form onSubmit={handleSearch} className="w-full flex items-center h-10">
