@@ -1,0 +1,20 @@
+---
+description: Har safar kod o'zgartirishlardan keyin GitHub'ga push qilish
+alwaysApply: true
+---
+
+# GitHub push — o'zgartirishlardan keyin
+
+Loyihada kod o'zgartirishlar kiritilgandan so'ng **har doim** quyidagilarni bajarish kerak:
+
+1. **Commit:** Barcha o'zgargan fayllarni `git add` qilib, mazmunli commit xabari bilan commit qilish.
+2. **Push:** `git push` orqali o'zgarishlarni GitHub remote'ga yuborish.
+
+## Qoidalar
+
+- O'zgartirishlar tugagach, avtomatik ravishda `git status` tekshirilsin.
+- Agar o'zgarishlar bo'lsa: `git add .` (yoki aniq fayllar), keyin `git commit -m "..."`, keyin `git push`.
+- Commit xabari qisqa va aniq bo'lsin (masalan: "Navbar: o'ng blokni header o'ngiga joylashtirish", "Terms sahifasi tarjimalarini to'ldirish").
+- Push xatolik bersa (masalan, remote'da yangi commit bo'lsa), avval `git pull --rebase` yoki `git pull` qilib, keyin qayta `git push` qilish kerak.
+
+Bu qoida **har bir muhim o'zgartirish sessiyasidan keyin** qo'llanadi.
