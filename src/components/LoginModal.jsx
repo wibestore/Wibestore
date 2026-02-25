@@ -132,20 +132,8 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }) => {
 
                 {/* Header */}
                 <div className="text-center" style={{ marginBottom: '24px' }}>
-                    <div
-                        className="flex items-center justify-center mx-auto"
-                        style={{
-                            width: '52px',
-                            height: '52px',
-                            borderRadius: 'var(--radius-xl)',
-                            background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
-                            marginBottom: '16px',
-                            boxShadow: '0 8px 24px rgba(9, 105, 218, 0.25)',
-                        }}
-                    >
-                        <LogIn className="w-6 h-6" style={{ color: '#ffffff' }} />
-                    </div>
                     <h2
+                        className="flex items-center justify-center gap-3"
                         style={{
                             fontSize: 'var(--font-size-xl)',
                             fontWeight: 'var(--font-weight-bold)',
@@ -153,6 +141,18 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }) => {
                             marginBottom: '6px',
                         }}
                     >
+                        <div
+                            className="flex items-center justify-center flex-shrink-0"
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: 'var(--radius-lg)',
+                                background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                                boxShadow: '0 6px 20px rgba(9, 105, 218, 0.25)',
+                            }}
+                        >
+                            <LogIn className="w-5 h-5" style={{ color: '#ffffff' }} />
+                        </div>
                         {t('auth.login_title') || 'Tizimga kirish'}
                     </h2>
                     <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>

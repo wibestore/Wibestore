@@ -69,20 +69,9 @@ const LoginPage = () => {
                 }}
             >
                 {/* Header */}
-                <div className="text-center" style={{ marginBottom: '32px' }}>
-                    <div
-                        className="flex items-center justify-center mx-auto"
-                        style={{
-                            width: '48px',
-                            height: '48px',
-                            borderRadius: 'var(--radius-xl)',
-                            background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
-                            marginBottom: '20px',
-                        }}
-                    >
-                        <Gamepad2 className="w-6 h-6" style={{ color: '#ffffff' }} />
-                    </div>
+                <div style={{ marginBottom: '32px' }}>
                     <h1
+                        className="flex items-center justify-center gap-3"
                         style={{
                             fontSize: 'var(--font-size-2xl)',
                             fontWeight: 'var(--font-weight-bold)',
@@ -90,9 +79,20 @@ const LoginPage = () => {
                             marginBottom: '8px',
                         }}
                     >
+                        <div
+                            className="flex items-center justify-center flex-shrink-0"
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: 'var(--radius-xl)',
+                                background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                            }}
+                        >
+                            <Gamepad2 className="w-5 h-5" style={{ color: '#ffffff' }} />
+                        </div>
                         {t('auth.login_title') || 'Sign in to WibeStore'}
                     </h1>
-                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)' }}>
+                    <p className="text-center" style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-base)' }}>
                         {t('auth.login_subtitle') || 'Welcome back'}
                     </p>
                 </div>

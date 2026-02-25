@@ -170,6 +170,7 @@ const Navbar = () => {
                                             <span
                                                 className="px-1.5 py-0.5 rounded-full text-[9px] font-bold leading-none"
                                                 style={{
+                                                    padding: '2px 6px',
                                                     background: 'linear-gradient(135deg, #F59E0B, #EF4444)',
                                                     color: '#fff',
                                                 }}
