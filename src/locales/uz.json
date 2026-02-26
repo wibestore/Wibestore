@@ -409,6 +409,16 @@
         "answer_all": "Barcha savollarga javob bering.",
         "quiz_fail": "Ba'zi javoblar noto'g'ri. Qoidalarni qayta o'qing va urinib ko'ring."
     },
+    "buyer_rules": {
+        "title": "Sotib olishdan oldin qoidalarni o'qing",
+        "subtitle": "Quyidagi qoidalarni to'liq o'qing. Keyin 5 ta savolga javob bering.",
+        "read_confirm": "Men barcha qoidalarni to'liq o'qidim va qabul qilaman.",
+        "start_quiz": "Savollarni boshlash",
+        "quiz_subtitle": "Har bir savolga bitta javob tanlang. Barchasi to'g'ri bo'lishi kerak.",
+        "submit_quiz": "Javoblarni yuborish",
+        "answer_all": "Barcha savollarga javob bering.",
+        "quiz_fail": "Ba'zi javoblar noto'g'ri. Qoidalarni qayta o'qing va urinib ko'ring."
+    },
     "top": {
         "badge": "Eng yaxshilari",
         "title": "Top",

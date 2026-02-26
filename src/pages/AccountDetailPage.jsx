@@ -14,6 +14,7 @@ import { useToast } from '../components/ToastProvider';
 import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import { accounts as mockAccounts } from '../data/mockData';
+import BuyerRulesQuiz from '../components/BuyerRulesQuiz';
 
 /* ─── Image Carousel ──────────────────────────────────────────── */
 const ImageCarousel = ({ images, title }) => {
@@ -220,6 +221,7 @@ const AccountDetailPage = () => {
     const [isLiked, setIsLiked] = useState(false);
     const [copied, setCopied] = useState(false);
     const [activeTab, setActiveTab] = useState('description');
+    const [showBuyerRulesModal, setShowBuyerRulesModal] = useState(false);
 
     // Sevimlilar: API yoki localStorage (kirish qilmaganida) — defer to avoid sync setState in effect
     const FAV_STORAGE_KEY = 'wibeFavoriteListingIds';
@@ -323,6 +325,15 @@ const AccountDetailPage = () => {
         }
     };
 
+    const handleBuyClick = () => {
+        if (!isAuthenticated || !user) {
+            addToast({ type: 'info', title: t('detail.contact_seller') || 'Sotuvchi bilan bog\'lanish uchun kirish qiling' });
+            navigate('/login?redirect=' + encodeURIComponent(location.pathname));
+            return;
+        }
+        setShowBuyerRulesModal(true);
+    };
+
     const handleContactSeller = () => {
         if (!isAuthenticated || !user) {
             addToast({ type: 'info', title: t('detail.contact_seller') || 'Sotuvchi bilan bog\'lanish uchun kirish qiling' });
@@ -378,6 +389,16 @@ const AccountDetailPage = () => {
 
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '80px' }}>
+            {showBuyerRulesModal && (
+                <BuyerRulesQuiz
+                    inModal
+                    onPass={() => {
+                        setShowBuyerRulesModal(false);
+                        handleContactSeller();
+                    }}
+                    onClose={() => setShowBuyerRulesModal(false)}
+                />
+            )}
             <div className="gh-container">
                 {/* Breadcrumbs */}
                 <div className="breadcrumbs">
@@ -513,7 +534,7 @@ const AccountDetailPage = () => {
 
                             {/* CTA buttons */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                <button className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center' }}>
+                                <button type="button" onClick={handleBuyClick} className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center' }}>
                                     {t('detail.buy_now') || 'Sotib olish'}
                                 </button>
                                 <button

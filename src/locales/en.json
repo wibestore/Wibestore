@@ -409,6 +409,16 @@
         "answer_all": "Please answer all questions.",
         "quiz_fail": "Some answers are incorrect. Please read the rules again and try again."
     },
+    "buyer_rules": {
+        "title": "Read the rules before buying",
+        "subtitle": "Read the following rules in full. Then answer 5 questions.",
+        "read_confirm": "I have read and accept all the rules.",
+        "start_quiz": "Start quiz",
+        "quiz_subtitle": "Choose one answer per question. All must be correct.",
+        "submit_quiz": "Submit answers",
+        "answer_all": "Please answer all questions.",
+        "quiz_fail": "Some answers are incorrect. Please read the rules again and try again."
+    },
     "top": {
         "badge": "Best of the best",
         "title": "Top",
