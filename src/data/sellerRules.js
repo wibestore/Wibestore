@@ -98,6 +98,16 @@ export const sellerRulesSectionsUz = [
       'Каждый спор рассматривается индивидуально; договорённости в чате учитываются.',
     ],
   },
+  {
+    title: '4. Sotib olgandan keyingi muammolar',
+    titleRu: '4. Проблемы после покупки аккаунта',
+    items: [
+      'Akkauntni sotib olgandan keyin paydo bo\'ladigan muammolar (masalan, o\'yindagi keyingi bloklar, shaxsiy ishlatishdagi muammolar, uchinchi shaxs da\'vosi va b.) uchun WibeStore javobgarlik olmaydi. Faqat Escrow va qoidalarda ko\'rsatilgan holatlar (sotuvchi qayta kirish tiklash, o\'yin administratsiyasi bloki va h.k.) bo\'yicha qaytarish va yordam qoidalariga amal qilinadi.',
+    ],
+    itemsRu: [
+      'WibeStore не несёт ответственности за проблемы, возникшие после покупки аккаунта (например, последующие блокировки в игре, проблемы при личном использовании, претензии третьих лиц и т.д.). Возвраты и поддержка осуществляются только в случаях, указанных в правилах Escrow (восстановление доступа продавцом, блокировка администрацией игры и т.п.).',
+    ],
+  },
 ];
 
 /** Quiz savollari: { id, questionUz, questionEn, questionRu, optionsUz, optionsEn, optionsRu, correctIndex } */
@@ -242,6 +252,16 @@ export const buyerRulesSectionsUz = [
       'Проверьте аккаунт до подтверждения заказа. После подтверждения спор решить сложнее.',
       'Договорённости в чате с продавцом учитываются при разборе споров.',
       'По подозрительным предложениям или неверным данным можно пожаловаться через сайт.',
+    ],
+  },
+  {
+    title: '3. Sotib olgandan keyingi muammolar',
+    titleRu: '3. Проблемы после покупки аккаунта',
+    items: [
+      'Akkauntni sotib olgandan keyin yuzaga keladigan muammolar (o\'yindagi keyingi bloklar, shaxsiy foydalanishdagi muammolar, uchinchi shaxs da\'vosi va b.) uchun WibeStore javob bermaydi. Qaytarish va yordam faqat qoidalarda ko\'rsatilgan holatlar (sotuvchi qayta kirish tiklash, o\'yin bloki va h.k.) bo\'yicha amalga oshiriladi.',
+    ],
+    itemsRu: [
+      'WibeStore не несёт ответственности за проблемы, возникшие после покупки аккаунта (последующие блокировки в игре, проблемы при личном использовании, претензии третьих лиц и т.д.). Возвраты и поддержка осуществляются только в случаях, указанных в правилах (восстановление доступа продавцом, блокировка игрой и т.п.).',
     ],
   },
 ];
