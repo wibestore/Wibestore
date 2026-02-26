@@ -1,5 +1,5 @@
 /**
- * FunPay saytidagi o'yinlar ro'yxati (faqat o'yinlar, servislar/ilovalar kiritilmagan).
+ * WibeStore — barcha o'yinlar ro'yxati (faqat o'yinlar, servislar/ilovalar kiritilmagan).
  * Slug: name dan yasalgan, unique.
  */
 
@@ -37,13 +37,13 @@ const PREFERRED_IDS = { 'Call of Duty Mobile': 'codm', 'Standoff 2': 'standoff2'
 
 const EXCLUDE = new Set([
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '2', '7', '8',
-  'All Games in Alphabetic Order', 'Toggle navigation FunPay', 'Legacy of Phrecia',
+  'All Games in Alphabetic Order', 'Legacy of Phrecia',
   'EU, NA Free', 'CH EU RU US', 'EU US', 'Free RU, EU, US',
   'Adobe', 'After Effects', 'Acrobat', 'Canva', 'CapCut', 'ChatGPT', 'Claude', 'Cursor AI', 'Discord', 'ElevenLabs', 'Gemini', 'Grok', 'Midjourney', 'Perplexity', 'Photoshop', 'Runway', 'SoundCloud', 'Spotify', 'Suno', 'Crunchyroll', 'App Store & iTunes', 'GeForce NOW', 'ExitLag', 'NoPing', 'GearUP Booster', 'Catizen', 'Blum', 'Bombie', 'City Holder', 'Threads', 'Twitter (X)', 'Kick', 'MiSide', 'MO.CO', 'PixelTap', 'RCD', 'Reanimal', 'Trovo', 'Veo 3', 'WTFast', 'Hailuo AI', 'Kling AI', 'Leonardo AI', 'FP Club', 'Mobile Games', 'Other Games', 'VR Games', 'Conscript', 'Edens Zero', 'Crimson Desert', 'Hunter x Hunter Nen x Impact', 'Inazuma Eleven: Victory Road', 'Fantasy Life i: The Girl Who Steals Time', 'Forza Horizon 6',
 ]);
 
-/** FunPay da bor o'yin nomlari (faqat o'yinlar) */
-const FUNPAY_GAME_NAMES = [
+/** O'yin nomlari (faqat o'yinlar) */
+const GAME_NAMES = [
   'Abyss of Dungeons', 'Acrobat', 'Active Matter', 'AFK Arena', 'AFK Journey', 'Age of Empires Mobile', 'Age of Mythology: Retold', 'Age of Wonders 4', 'Age of Wushu', 'AI Limit', 'Aion', 'Aion 2', 'Aion Classic', 'Alan Wake 2', 'Albion Online', 'Aliens: Dark Descent', 'Allods Online', 'Amazing RP', 'Amerzone: The Explorer\'s Legacy', 'Amikin Survival', 'Among Us', 'Anchor Panic', 'Aniimo', 'Anno', 'Anomaly Zone', 'Anthem', 'Anvil Empires', 'APB: Reloaded', 'Apex Legends', 'ARC Raiders', 'ArcheAge', 'Archeage War', 'Arena Breakout', 'Arizona RP', 'ARK: Survival Ascended', 'ARK: Survival Evolved', 'Arknights', 'Arknights: Endfield', 'Arma 3', 'Arma Reforger', 'Armored Core VI: Fires of Rubicon', 'Armored Warfare', 'Ashes of Creation', 'Asphalt', 'Assassin\'s Creed', 'Assassin\'s Creed Shadows', 'Assetto Corsa', 'Astellia', 'Astro Bot', 'Atlas Fallen', 'Atomfall', 'Atomic Heart', 'AutoChess', 'Avatar: Frontiers of Pandora', 'Avowed', 'Awaken: Chaos Era', 'Azur Lane',
   'Back 4 Blood', 'Backrooms', 'Baldur\'s Gate 3', 'Batman: Arkham', 'Battle Teams 2', 'Battle.net', 'BattleBit Remastered', 'Battlefield', 'Battlefield 6', 'BeamNG.drive', 'Beat Saber', 'Bellatores', 'Biomutant', 'Bird Game 3', 'BitCraft Online', 'Black Beacon', 'Black Clover M', 'Black Desert', 'Black Desert Mobile', 'Black Myth: Wukong', 'Black Russia', 'Blade & Soul', 'Blade & Soul 2', 'Blade & Soul Heroes', 'Blade & Soul NEO', 'Bleach Rebirth of Souls', 'Bleach: Immortal Soul', 'Bless Unleashed', 'Block Strike', 'Blockman GO', 'Blood And Soul', 'Blood Strike', 'Bloodhunt', 'Blue Lock Project: World Champion', 'Blue Protocol: Star Resonance', 'Bodycam', 'Boom Beach', 'Borderlands', 'Borderlands 4', 'Brawl Stars', 'Brawlhalla', 'Broken Arrow', 'Broken Ranks', 'Bullet Echo',
   'Cabal Online', 'Caliber', 'Call of Dragons', 'Call of Duty', 'Call of Duty Mobile', 'Call of Duty Warzone', 'Call of Duty Warzone Mobile', 'Call of Duty: Black Ops 6', 'Call of Duty: Black Ops 7', 'Call of Duty: Modern Warfare 3 (2023)', 'Candy Crush', 'Car Parking Multiplayer', 'Car Parking Multiplayer 2', 'CarX Drift Racing', 'Castle Clash', 'Chained Together', 'Chaos Zero Nightmare', 'Chess', 'Chicken Gun', 'Chivalry 2', 'Chrono Odyssey', 'Cities: Skylines II', 'Civilization', 'Clair Obscur: Expedition 33', 'Clash of Clans', 'Clash of Kings', 'Clash Royale', 'Code Vein II', 'Command & Conquer: Legions', 'Commandos: Origins', 'Conan Exiles', 'Conqueror\'s Blade', 'Contract Wars', 'CookieRun: Kingdom', 'Core Keeper', 'Corepunk', 'Counter-Strike 2', 'Counter-Strike: GO', 'Critical Ops', 'Critical Strike', 'Cronos: The New Dawn', 'CrossFire', 'Crossout', 'Crosswind', 'Crystal of Atlan', 'Cult of the Lamb', 'Cyberpunk 2077',
@@ -68,10 +68,10 @@ const FUNPAY_GAME_NAMES = [
   'Xbox', 'Yakuza', 'Zenless Zone Zero', 'Zepeto', 'Zooba', '007 First Light', '2XKO', '7 Days to Die', '8 Ball Pool',
 ];
 
-/** FunPay o'yinlarini WibeStore formatida (id, name, icon, image, accountCount, color) */
-export function getFunPayGames() {
+/** O'yinlarni WibeStore formatida (id, name, icon, image, accountCount, color) */
+export function getGamesList() {
   const seen = new Set();
-  return FUNPAY_GAME_NAMES
+  return GAME_NAMES
     .filter((name) => !EXCLUDE.has(name) && name.length > 1)
     .map((name, index) => {
       let id = PREFERRED_IDS[name] || slug(name);
@@ -90,4 +90,4 @@ export function getFunPayGames() {
     });
 }
 
-export default getFunPayGames;
+export default getGamesList;

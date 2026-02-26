@@ -1,10 +1,10 @@
 // WibeStore - Mock Data
 // All prices in UZS (Uzbek Sum)
 
-import getFunPayGames from './funpayGames';
+import getGamesList from './gamesList';
 
-/** FunPay da bor barcha o'yinlar (faqat o'yinlar, servislar kiritilmagan) */
-export const games = getFunPayGames();
+/** Barcha o'yinlar ro'yxati (faqat o'yinlar) */
+export const games = getGamesList();
 
 // Helper: API-formatga mos mock listing (bosh sahifa, mahsulotlar, batafsil uchun)
 function mockListing(id, gameId, gameName, title, description, price, image, seller, isPremium) {
