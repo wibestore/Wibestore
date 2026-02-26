@@ -3,6 +3,7 @@ WibeStore Backend - Marketplace Admin
 """
 
 from django.contrib import admin
+from django.db.utils import ProgrammingError
 
 from .models import Favorite, Listing, ListingImage, ListingView
 
@@ -41,14 +42,32 @@ class ListingAdmin(admin.ModelAdmin):
         queryset.filter(status="pending").update(status="rejected")
     reject_listings.short_description = "Reject selected listings"
 
+    def get_queryset(self, request):
+        try:
+            return super().get_queryset(request)
+        except ProgrammingError:
+            return Listing.objects.none()
+
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ["user", "listing", "created_at"]
     list_filter = ["created_at"]
 
+    def get_queryset(self, request):
+        try:
+            return super().get_queryset(request)
+        except ProgrammingError:
+            return Favorite.objects.none()
+
 
 @admin.register(ListingView)
 class ListingViewAdmin(admin.ModelAdmin):
     list_display = ["listing", "user", "ip_address", "viewed_at"]
     list_filter = ["viewed_at"]
+
+    def get_queryset(self, request):
+        try:
+            return super().get_queryset(request)
+        except ProgrammingError:
+            return ListingView.objects.none()

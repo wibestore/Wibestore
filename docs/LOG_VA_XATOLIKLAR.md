@@ -82,12 +82,11 @@ Bu logdagi “noto‘g‘ri” URL xatolarini kamaytiradi va backend uchun ham y
 
 **Siz qilishingiz kerak:** Railway da **REDIS_URL** o‘rnatmasangiz, hozirgi o‘zgarishlar yetadi. Agar Redis ishlatmoqchi bo‘lsangiz, Railway Redis plugin qo‘shib, REDIS_URL ni o‘shanda berilgan qiymatga o‘rnating.
 
-### 2. relation "listings" / "games" does not exist
+### 2. relation "listings" / "games" / "messages" does not exist
 
 **Belgi (log.txt):**  
-`django.db.utils.ProgrammingError: relation "listings" does not exist`  
-`psycopg.errors.UndefinedTable: relation "games" does not exist`  
-`GET /api/v1/listings/ 500`, `GET /api/v1/games/ 500`
+`relation "listings" does not exist`, `relation "messages" does not exist`, `relation "games" does not exist`  
+`GET /api/v1/listings/ 500`, `GET /api/v1/games/ 500`, `GET /admin/messaging/message/ 500`
 
 **Sabab:** Migratsiyalar qo‘llanmagan, PostgreSQL da `listings`, `games` va boshqa jadvallar yaratilmagan.
 
@@ -96,7 +95,7 @@ Bu logdagi “noto‘g‘ri” URL xatolarini kamaytiradi va backend uchun ham y
 - **entrypoint.sh** da avval `makemigrations`, keyin `migrate` ishlatiladi — deploy paytida jadvallar yaratiladi.  
 - Repoda migratsiyalar bor bo‘lgani uchun har safar deployda `migrate` yetarli.
 
-**Siz qilishingiz kerak:** Backend ni **qayta deploy** qiling. Railway logda “Applying migrations” ko‘rinsin; shundan keyin `/api/v1/listings/` va `/api/v1/games/` 500 bermasligi kerak.
+**Siz qilishingiz kerak:** Backend ni **qayta deploy** qiling. Railway logda “Applying migrations” ko‘rinsin; shundan keyin `/api/v1/listings/`, `/api/v1/games/` va admin 500 bermasligi kerak. Agar jadval yo‘q bo‘lsa, admin bo‘sh ro‘yxat ko‘rsatadi.
 
 ### 3. 401 (Unauthorized) — xato emas
 

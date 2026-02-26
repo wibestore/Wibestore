@@ -6,6 +6,7 @@ Minimal config to avoid 500 when DB/migrations differ or relations fail.
 import logging
 
 from django.contrib import admin
+from django.db.utils import ProgrammingError
 
 from .models import Category, Game
 
@@ -21,6 +22,12 @@ class GameAdmin(admin.ModelAdmin):
     ordering = ["sort_order", "name"]
     readonly_fields = ["created_at", "updated_at"]
 
+    def get_queryset(self, request):
+        try:
+            return super().get_queryset(request)
+        except ProgrammingError:
+            return Game.objects.none()
+
     def changelist_view(self, request, extra_context=None):
         """Log any error for debugging (Railway logs)."""
         try:
@@ -35,3 +42,9 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ["name", "slug", "parent"]
     search_fields = ["name"]
     prepopulated_fields = {"slug": ("name",)}
+
+    def get_queryset(self, request):
+        try:
+            return super().get_queryset(request)
+        except ProgrammingError:
+            return Category.objects.none()

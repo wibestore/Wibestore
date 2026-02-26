@@ -3,6 +3,7 @@ WibeStore Backend - Messaging Admin
 """
 
 from django.contrib import admin
+from django.db.utils import ProgrammingError
 
 from .models import ChatRoom, Message
 
@@ -22,6 +23,12 @@ class ChatRoomAdmin(admin.ModelAdmin):
     readonly_fields = ["id", "created_at", "updated_at"]
     date_hierarchy = "created_at"
 
+    def get_queryset(self, request):
+        try:
+            return super().get_queryset(request)
+        except ProgrammingError:
+            return ChatRoom.objects.none()
+
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
@@ -39,6 +46,12 @@ class MessageAdmin(admin.ModelAdmin):
     readonly_fields = ["id", "created_at"]
     raw_id_fields = ["room", "sender"]
     date_hierarchy = "created_at"
+
+    def get_queryset(self, request):
+        try:
+            return super().get_queryset(request)
+        except ProgrammingError:
+            return Message.objects.none()
 
     @admin.display(description="Content")
     def short_content(self, obj):
