@@ -1,10 +1,19 @@
-import { Link } from 'react-router-dom';
-import { Check, Crown, Star, Zap, Shield, TrendingUp, X } from 'lucide-react';
-import { formatPrice } from '../data/mockData';
+import { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Check, Crown, Star, Zap, Shield, TrendingUp, X, Loader2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import apiClient from '../lib/apiClient';
 
 const PremiumPage = () => {
     const { t } = useLanguage();
+    const { user } = useAuth();
+    const [searchParams] = useSearchParams();
+    const [loading, setLoading] = useState(null); // plan id being loaded
+    const [error, setError] = useState('');
+
+    // Check for payment result from URL params
+    const paymentStatus = searchParams.get('payment');
 
     const features = {
         free: [
@@ -43,7 +52,7 @@ const PremiumPage = () => {
         {
             id: 'free',
             name: 'Free',
-            price: 0,
+            priceUSD: 0,
             icon: '🆓',
             description: t('premium.free_desc') || 'Get started',
             features: features.free,
@@ -51,7 +60,7 @@ const PremiumPage = () => {
         {
             id: 'premium',
             name: 'Premium',
-            price: 99000,
+            priceUSD: 9.99,
             icon: '⭐',
             description: t('premium.premium_desc') || 'More visibility',
             features: features.premium,
@@ -59,13 +68,50 @@ const PremiumPage = () => {
         {
             id: 'pro',
             name: 'Pro',
-            price: 249999,
+            priceUSD: 24.99,
             icon: '💎',
             description: t('premium.pro_desc') || 'Maximum benefits',
             features: features.pro,
             popular: true,
         },
     ];
+
+    const handleSubscribe = async (planSlug) => {
+        setError('');
+
+        if (!user) {
+            const msg = t('premium.login_required') || 'Please login first to subscribe.';
+            setError(msg);
+            alert(msg);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        setLoading(planSlug);
+
+        try {
+            const response = await apiClient.post('/payments/stripe/create-checkout-session/', {
+                plan_slug: planSlug,
+            });
+
+            if (response.data?.success && response.data?.data?.checkout_url) {
+                // Redirect to Stripe Checkout
+                window.location.href = response.data.data.checkout_url;
+            } else {
+                const msg = response.data?.error?.message || 'Failed to create checkout session.';
+                setError(msg);
+                alert(msg);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        } catch (err) {
+            const msg = err.response?.data?.error?.message || err.message || 'Payment error. Please try again.';
+            setError(msg);
+            alert(msg);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } finally {
+            setLoading(null);
+        }
+    };
 
     return (
         <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '64px' }}>
@@ -76,6 +122,62 @@ const PremiumPage = () => {
                     <span className="breadcrumb-separator">/</span>
                     <span className="breadcrumb-current">Premium</span>
                 </div>
+
+                {/* Payment Status Banner */}
+                {paymentStatus === 'success' && (
+                    <div
+                        style={{
+                            padding: '16px 20px',
+                            borderRadius: 'var(--radius-lg)',
+                            backgroundColor: 'var(--color-success-bg)',
+                            border: '1px solid var(--color-accent-green)',
+                            marginBottom: '24px',
+                            marginTop: '16px',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <p style={{ color: 'var(--color-accent-green)', fontWeight: 'var(--font-weight-semibold)' }}>
+                            ✅ {t('premium.payment_success') || 'Payment successful! Your subscription is now active.'}
+                        </p>
+                    </div>
+                )}
+
+                {paymentStatus === 'cancelled' && (
+                    <div
+                        style={{
+                            padding: '16px 20px',
+                            borderRadius: 'var(--radius-lg)',
+                            backgroundColor: 'var(--color-bg-secondary)',
+                            border: '1px solid var(--color-border-default)',
+                            marginBottom: '24px',
+                            marginTop: '16px',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <p style={{ color: 'var(--color-text-secondary)' }}>
+                            {t('premium.payment_cancelled') || 'Payment was cancelled. You can try again anytime.'}
+                        </p>
+                    </div>
+                )}
+
+                {/* Error Banner */}
+                {error && (
+                    <div
+                        style={{
+                            padding: '16px 20px',
+                            borderRadius: 'var(--radius-lg)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                            marginBottom: '24px',
+                            marginTop: '16px',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <p style={{ color: '#ef4444', fontWeight: 'var(--font-weight-medium)' }}>
+                            ⚠️ {error}
+                        </p>
+                    </div>
+                )}
 
                 {/* Header */}
                 <div className="text-center" style={{ paddingTop: '32px', marginBottom: '48px' }}>
@@ -182,14 +284,14 @@ const PremiumPage = () => {
 
                             {/* Price */}
                             <div className="text-center" style={{ marginBottom: '24px' }}>
-                                {plan.price > 0 ? (
+                                {plan.priceUSD > 0 ? (
                                     <>
                                         <span style={{
                                             fontSize: 'var(--font-size-3xl)',
                                             fontWeight: 'var(--font-weight-bold)',
                                             color: 'var(--color-text-primary)',
                                         }}>
-                                            {formatPrice(plan.price)}
+                                            ${plan.priceUSD}
                                         </span>
                                         <span style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>/mo</span>
                                     </>
@@ -237,16 +339,31 @@ const PremiumPage = () => {
                             </ul>
 
                             {/* Button */}
-                            {plan.price > 0 ? (
-                                <a
-                                    href="https://t.me/amor_fati71"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                            {plan.priceUSD > 0 ? (
+                                <button
+                                    onClick={() => handleSubscribe(plan.id)}
+                                    disabled={loading === plan.id}
                                     className={`btn btn-lg w-full ${plan.popular ? 'btn-premium' : 'btn-primary'}`}
-                                    style={{ textDecoration: 'none' }}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '8px',
+                                        cursor: loading === plan.id ? 'not-allowed' : 'pointer',
+                                        opacity: loading === plan.id ? 0.7 : 1,
+                                    }}
                                 >
-                                    💬 {t('premium.buy_telegram') || 'Buy via Telegram'}
-                                </a>
+                                    {loading === plan.id ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4" style={{ animation: 'spin 1s linear infinite' }} />
+                                            {t('premium.processing') || 'Processing...'}
+                                        </>
+                                    ) : (
+                                        <>
+                                            💳 {t('premium.subscribe_now') || 'Subscribe Now'}
+                                        </>
+                                    )}
+                                </button>
                             ) : (
                                 <button className="btn btn-secondary btn-lg w-full" disabled>
                                     {t('premium.current_plan') || 'Current plan'}
@@ -326,7 +443,7 @@ const PremiumPage = () => {
                         {t('premium.payment_methods') || 'Payment Methods'}
                     </h3>
                     <div className="flex items-center justify-center gap-3 flex-wrap" style={{ marginBottom: '16px' }}>
-                        {['Google Pay', 'Visa Card', 'Mastercard', 'Apple Pay'].map((method) => (
+                        {['Visa', 'Mastercard', 'Google Pay', 'Apple Pay'].map((method) => (
                             <div
                                 key={method}
                                 style={{
@@ -344,10 +461,18 @@ const PremiumPage = () => {
                         ))}
                     </div>
                     <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
-                        {t('premium.auto_renew') || 'Subscription auto-renews monthly. Cancel anytime.'}
+                        {t('premium.secure_payment') || 'Secure payment powered by Stripe'}
                     </p>
                 </div>
             </div>
+
+            {/* Spinner animation */}
+            <style>{`
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
         </div>
     );
 };

@@ -5,6 +5,7 @@ WibeStore Backend - Payments URL Configuration
 from django.urls import path
 
 from . import views
+from .stripe_views import StripeCreateCheckoutSessionView, StripeWebhookView
 
 app_name = "payments"
 
@@ -19,5 +20,7 @@ urlpatterns = [
     path("escrow/<uuid:pk>/confirm/", views.EscrowConfirmDeliveryView.as_view(), name="escrow-confirm"),
     path("escrow/<uuid:pk>/dispute/", views.EscrowDisputeView.as_view(), name="escrow-dispute"),
     path("webhooks/<str:provider>/", views.WebhookView.as_view(), name="webhook"),
+    # Stripe
+    path("stripe/create-checkout-session/", StripeCreateCheckoutSessionView.as_view(), name="stripe-checkout"),
+    path("stripe/webhook/", StripeWebhookView.as_view(), name="stripe-webhook"),
 ]
-

@@ -378,6 +378,37 @@ PAYNET_MERCHANT_ID = env("PAYNET_MERCHANT_ID", default="")
 PAYNET_SECRET_KEY = env("PAYNET_SECRET_KEY", default="")
 
 # ============================================================
+# STRIPE
+# ============================================================
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY", default="")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET", default="")
+
+# Stripe prices in cents (USD) for each plan
+STRIPE_PRICES = {
+    "premium": {
+        "amount": 999,       # $9.99
+        "currency": "usd",
+        "name": "WibeStore Premium",
+    },
+    "pro": {
+        "amount": 2499,      # $24.99
+        "currency": "usd",
+        "name": "WibeStore Pro",
+    },
+}
+
+# Frontend URLs for Stripe redirect
+STRIPE_SUCCESS_URL = env(
+    "STRIPE_SUCCESS_URL",
+    default="http://localhost:5173/premium?payment=success",
+)
+STRIPE_CANCEL_URL = env(
+    "STRIPE_CANCEL_URL",
+    default="http://localhost:5173/premium?payment=cancelled",
+)
+
+# ============================================================
 # LOGGING
 # ============================================================
 LOG_DIR = BASE_DIR / "logs"
