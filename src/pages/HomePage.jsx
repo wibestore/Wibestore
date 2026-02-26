@@ -61,8 +61,13 @@ const HomePage = () => {
     // Use API data or fallback to mock data — ensure array, no undefined items
     const rawGames = gamesData?.results ?? gamesData ?? mockGames;
     const allGames = Array.isArray(rawGames) ? rawGames.filter(Boolean) : [];
-    // Bosh sahifada doim 8 ta mashhur o'yin rasmlari bilan
-    const games = (allGames.length > 0 ? allGames : mockGames).slice(0, 8);
+    // Bosh sahifada avvalgi 8 ta mashhur o'yin (doim shu tartibda)
+    const popularGameIds = ['pubg-mobile', 'steam', 'free-fire', 'standoff2', 'mobile-legends', 'clash-of-clans', 'codm', 'roblox'];
+    const sourceGames = allGames.length > 0 ? allGames : mockGames;
+    const games = popularGameIds
+        .map((id) => sourceGames.find((g) => (g?.slug || g?.id) === id))
+        .filter(Boolean);
+    const gamesFallback = games.length > 0 ? games : sourceGames.slice(0, 8);
 
     // Mashhur o'yinlar uchun rasmlar (slug bo‘yicha) — API da image bo‘lmasa ishlatiladi
     const popularGameImages = {
@@ -287,8 +292,8 @@ const HomePage = () => {
                         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 animate-stagger grid-auto-fill-280"
                         style={{ gap: 'var(--space-4)' }}
                     >
-                        {games.length > 0 ? (
-                            games.map((game) => {
+                        {gamesFallback.length > 0 ? (
+                            gamesFallback.map((game) => {
                                 const slug = game.slug || game.id;
                                 return (
                                     <GameCard
