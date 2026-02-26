@@ -61,25 +61,24 @@ const HomePage = () => {
     // Use API data or fallback to mock data — ensure array, no undefined items
     const rawGames = gamesData?.results ?? gamesData ?? mockGames;
     const allGames = Array.isArray(rawGames) ? rawGames.filter(Boolean) : [];
-    // Bosh sahifada avvalgi 8 ta mashhur o'yin (doim shu tartibda)
-    const popularGameIds = ['pubg-mobile', 'steam', 'free-fire', 'standoff2', 'mobile-legends', 'clash-of-clans', 'codm', 'roblox'];
+    // Bosh sahifada doim avvalgi 8 ta mashhur o'yin (PUBG, Steam, Free Fire va hokazo) — API tartibiga qaramay
+    const popularGamesFixed = [
+        { id: 'pubg-mobile', name: 'PUBG Mobile', image: '/img/icons/Pubg-icon.webp' },
+        { id: 'steam', name: 'Steam', image: '/img/icons/steam.png' },
+        { id: 'free-fire', name: 'Free Fire', image: '/img/icons/free.webp' },
+        { id: 'standoff2', name: 'Standoff 2', image: '/img/icons/st.webp' },
+        { id: 'mobile-legends', name: 'Mobile Legends', image: '/img/icons/ml.webp' },
+        { id: 'clash-of-clans', name: 'Clash of Clans', image: '/img/icons/cc.webp' },
+        { id: 'codm', name: 'Call of Duty Mobile', image: '/img/icons/cal.webp' },
+        { id: 'roblox', name: 'Roblox', image: '/img/icons/roblox.webp' },
+    ];
     const sourceGames = allGames.length > 0 ? allGames : mockGames;
-    const games = popularGameIds
-        .map((id) => sourceGames.find((g) => (g?.slug || g?.id) === id))
-        .filter(Boolean);
-    const gamesFallback = games.length > 0 ? games : sourceGames.slice(0, 8);
-
-    // Mashhur o'yinlar uchun rasmlar (slug bo‘yicha) — API da image bo‘lmasa ishlatiladi
-    const popularGameImages = {
-        'pubg-mobile': '/img/icons/Pubg-icon.webp',
-        'steam': '/img/icons/steam.png',
-        'free-fire': '/img/icons/free.webp',
-        'standoff2': '/img/icons/st.webp',
-        'mobile-legends': '/img/icons/ml.webp',
-        'clash-of-clans': '/img/icons/cc.webp',
-        'codm': '/img/icons/cal.webp',
-        'roblox': '/img/icons/roblox.webp',
-    };
+    const games = popularGamesFixed.map((fixed) => {
+        const fromApi = sourceGames.find((g) => (g?.slug || g?.id) === fixed.id);
+        return fromApi
+            ? { ...fixed, ...fromApi, id: fixed.id, name: fromApi.name || fixed.name, image: fromApi.image || fromApi.banner || fixed.image }
+            : fixed;
+    });
 
     // API bo'sh bo'lsa mock akkauntlar ko'rinsin (sotuvchi/xaridor va xatolik tekshiruvi uchun)
     const rawListings = listingsData?.pages?.flatMap?.(page => page?.results ?? []) ?? listingsData?.results ?? listingsData ?? [];
@@ -292,23 +291,20 @@ const HomePage = () => {
                         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 animate-stagger grid-auto-fill-280"
                         style={{ gap: 'var(--space-4)' }}
                     >
-                        {gamesFallback.length > 0 ? (
-                            gamesFallback.map((game) => {
-                                const slug = game.slug || game.id;
-                                return (
-                                    <GameCard
-                                        key={game.id || game.slug}
-                                        game={{
-                                            id: game.id || game.slug,
-                                            name: game.name,
-                                            slug: game.slug || game.id,
-                                            icon: game.icon,
-                                            image: game.image || game.banner || popularGameImages[slug],
-                                            listingsCount: game.listings_count ?? game.listingsCount ?? game.accountCount ?? 0,
-                                        }}
-                                    />
-                                );
-                            })
+                        {games.length > 0 ? (
+                            games.map((game) => (
+                                <GameCard
+                                    key={game.id}
+                                    game={{
+                                        id: game.id,
+                                        name: game.name,
+                                        slug: game.slug || game.id,
+                                        icon: game.icon,
+                                        image: game.image || game.banner,
+                                        listingsCount: game.listings_count ?? game.listingsCount ?? game.accountCount ?? 0,
+                                    }}
+                                />
+                            ))
                         ) : gamesLoading ? (
                             Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
                         ) : null}
