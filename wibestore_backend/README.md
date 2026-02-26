@@ -27,6 +27,9 @@ pip install -r requirements.txt
 copy .env.example .env  # Windows
 cp .env.example .env  # Linux/Mac
 
+# Создать миграции (если папки migrations пустые)
+python manage.py makemigrations
+
 # Применить миграции
 python manage.py migrate
 

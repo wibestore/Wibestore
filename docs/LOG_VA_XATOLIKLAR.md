@@ -56,3 +56,9 @@ Bu logdagi “noto‘g‘ri” URL xatolarini kamaytiradi va backend uchun ham y
 - **Sabab:** `/admin/games/game/` da GameAdmin `get_queryset()` ichida `Count` + `filter=Q(...)` annotatsiyasi murakkab JOIN keltirib, ba’zan 500 yoki noto‘g‘ri natija berardi.
 - **Tuzatish:** GameAdmin da annotatsiya olib tashlandi; “Active Listings” endi `obj.listings.filter(status="active").count()` orqali hisoblanadi (admin uchun N+1 maqbul).
 - **Seed_data:** Game va SubscriptionPlan, Category modellariga moslashtirildi (modelda yo‘q bo‘lgan `name_uz`, `name_ru`, `category`, `price` olib tashlandi).
+
+### Admin 500 davom etsa (Games / boshqa sahifalar)
+
+- **Ehtimoliy sabab:** Production DB da jadval yo‘q yoki migratsiyalar qo‘llanmagan. Loyihada `apps/*/migrations/` papkalari bo‘sh edi.
+- **Qilingan:** Barcha applar uchun `migrations/__init__.py` qo‘shildi. Game admin: `list_editable` va “Active Listings” ustuni olib tashlandi, xatolik logga yoziladi.
+- **Siz qilishingiz kerak:** Backend (yoki Railway) da bir marta: `python manage.py makemigrations`, keyin `python manage.py migrate`. Keyin backend ni qayta ishga tushiring (redeploy). Agar 500 davom etsa, Railway → Deployments → View logs da aniq xato matnini ko‘ring.
