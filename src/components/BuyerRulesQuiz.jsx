@@ -18,10 +18,11 @@ export default function BuyerRulesQuiz({ onPass, onClose, inModal = true }) {
     const [answers, setAnswers] = useState({});
     const [submitError, setSubmitError] = useState(null);
 
-    const isRu = language === 'ru';
-    const isUz = language === 'uz' || (!language && !isRu);
-    const getQuestion = (q) => (isRu ? q.questionRu : (isUz ? q.questionUz : q.questionEn));
-    const getOptions = (q) => (isRu ? q.optionsRu : (isUz ? q.optionsUz : q.optionsEn));
+    const lang = (language || 'uz').toLowerCase();
+    const isRu = lang === 'ru';
+    const isUz = lang === 'uz';
+    const getQuestion = (q) => (isRu && q.questionRu ? q.questionRu : (isUz && q.questionUz ? q.questionUz : (q.questionEn || q.questionUz)));
+    const getOptions = (q) => (isRu && q.optionsRu ? q.optionsRu : (isUz && q.optionsUz ? q.optionsUz : (q.optionsEn || q.optionsUz)));
 
     const handleStartQuiz = () => {
         if (!readConfirmed) return;
@@ -77,7 +78,9 @@ export default function BuyerRulesQuiz({ onPass, onClose, inModal = true }) {
                 <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', marginBottom: '16px' }}>
                     {t('buyer_rules.subtitle') || "Quyidagi qoidalarni to'liq o'qing. Keyin 5 ta savolga javob bering."}
                 </p>
-                <div style={{
+                <div
+                    key={`buyer-rules-${lang}`}
+                    style={{
                     border: '1px solid var(--color-border-default)',
                     borderRadius: 'var(--radius-lg)',
                     padding: '16px',
@@ -87,8 +90,8 @@ export default function BuyerRulesQuiz({ onPass, onClose, inModal = true }) {
                     marginBottom: '16px',
                 }}>
                     {buyerRulesSectionsUz.map((section, idx) => {
-                        const title = isRu && section.titleRu ? section.titleRu : section.title;
-                        const items = isRu && section.itemsRu ? section.itemsRu : section.items;
+                        const title = (isRu && section.titleRu) ? section.titleRu : section.title;
+                        const items = (isRu && section.itemsRu && section.itemsRu.length) ? section.itemsRu : section.items;
                         return (
                             <div key={idx} style={{ marginBottom: idx < buyerRulesSectionsUz.length - 1 ? '16px' : 0 }}>
                                 <h4 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '8px' }}>{title}</h4>
