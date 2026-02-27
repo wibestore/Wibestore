@@ -465,6 +465,13 @@
         "sold": "Sotilgan"
     },
     "profile": {
+        "dashboard": "Boshqaruv paneli",
+        "referral": "Do'stlarni taklif qilish",
+        "referral_title": "Do'stlarni taklif qiling",
+        "referral_description": "Havolangizni ulashing. Do'stlaringiz ro'yxatdan o'tsa, mukofotlar olasiz.",
+        "your_code": "Sizning kodingiz",
+        "referral_link": "Taklif havolasi",
+        "referred_count": "Taklif qilinganlar",
         "delete_confirm": "Bu listingni o'chirishni xohlaysizmi?",
         "my_listings": "Mening e'lonlarim",
         "purchases": "Xaridlar",
