@@ -245,7 +245,22 @@
         "add_money_coming_soon": "Скоро! Функция пополнения пока недоступна.",
         "withdraw_coming_soon": "Скоро! Функция вывода пока недоступна.",
         "add_card_coming_soon": "Скоро! Функция добавления карты в разработке.",
-        "generic_error": "Произошла ошибка"
+        "generic_error": "Произошла ошибка",
+        "change_email": "Изменить email",
+        "change_email_desc": "Введите новый email. На него придёт код подтверждения. Введите код, чтобы обновить email.",
+        "email_change_hint": "Чтобы изменить email, отправьте код подтверждения ниже",
+        "new_email": "Новый email",
+        "verification_code": "Код подтверждения",
+        "send_verification_code": "Отправить код",
+        "confirm_email_change": "Подтвердить",
+        "email_code_sent": "Код отправлен на новый email",
+        "email_changed": "Email успешно изменён",
+        "enter_email": "Введите новый email",
+        "valid_email": "Введите корректный email",
+        "email_same": "Новый email должен отличаться от текущего",
+        "enter_code": "Введите код подтверждения",
+        "sending": "Отправка...",
+        "cancel": "Отмена"
     },
     "footer": {
         "description": "Самая надёжная платформа торговли игровыми аккаунтами в Узбекистане",

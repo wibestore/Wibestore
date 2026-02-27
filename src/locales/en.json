@@ -245,7 +245,22 @@
         "add_money_coming_soon": "Coming soon! Add funds feature is not available yet.",
         "withdraw_coming_soon": "Coming soon! Withdraw feature is not available yet.",
         "add_card_coming_soon": "Coming soon! Add card feature is in development.",
-        "generic_error": "An error occurred"
+        "generic_error": "An error occurred",
+        "change_email": "Change email",
+        "change_email_desc": "Enter your new email. A verification code will be sent there. Enter the code to update your email.",
+        "email_change_hint": "Use the form below to change email via verification code",
+        "new_email": "New email",
+        "verification_code": "Verification code",
+        "send_verification_code": "Send verification code",
+        "confirm_email_change": "Confirm",
+        "email_code_sent": "Verification code sent to your new email",
+        "email_changed": "Email updated successfully",
+        "enter_email": "Enter new email",
+        "valid_email": "Enter a valid email",
+        "email_same": "New email must be different from current",
+        "enter_code": "Enter verification code",
+        "sending": "Sending...",
+        "cancel": "Cancel"
     },
     "footer": {
         "description": "The most trusted gaming account trading platform in Uzbekistan",

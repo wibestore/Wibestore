@@ -6,7 +6,7 @@ import { useLanguage, languages as langList } from '../context/LanguageContext';
 
 const SettingsPage = () => {
     const navigate = useNavigate();
-    const { user, isAuthenticated, updateProfile, logout } = useAuth();
+    const { user, isAuthenticated, updateProfile, logout, requestEmailChange, confirmEmailChange, refreshUser } = useAuth();
     const { t, language, setLanguage } = useLanguage();
     const [activeTab, setActiveTab] = useState('profile');
     const [isSaving, setIsSaving] = useState(false);
@@ -35,6 +35,13 @@ const SettingsPage = () => {
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
+    });
+
+    const [emailChange, setEmailChange] = useState({
+        newEmail: '',
+        code: '',
+        step: 'idle',
+        loading: false,
     });
 
     const [notifications, setNotifications] = useState({
@@ -131,6 +138,54 @@ const SettingsPage = () => {
 
     const handleDeleteAccount = () => {
         if (window.confirm(t('settings.delete_confirm'))) { logout(); navigate('/'); }
+    };
+
+    const handleRequestEmailChange = async () => {
+        const newEmail = emailChange.newEmail.trim();
+        if (!newEmail) {
+            setMessage({ type: 'error', text: t('settings.enter_email') || 'Yangi email kiriting' });
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(newEmail)) {
+            setMessage({ type: 'error', text: t('settings.valid_email') || 'To\'g\'ri email kiriting' });
+            return;
+        }
+        if (newEmail.toLowerCase() === (user?.email || '').toLowerCase()) {
+            setMessage({ type: 'error', text: t('settings.email_same') || 'Yangi email joriy emaildan farq qilishi kerak' });
+            return;
+        }
+        setMessage({ type: '', text: '' });
+        setEmailChange(prev => ({ ...prev, loading: true }));
+        try {
+            await requestEmailChange(newEmail);
+            setMessage({ type: 'success', text: t('settings.email_code_sent') || 'Tasdiqlash kodi yangi emailga yuborildi' });
+            setEmailChange(prev => ({ ...prev, step: 'confirm', loading: false }));
+        } catch (err) {
+            const msg = err?.message || err?.error || err?.detail || t('settings.generic_error');
+            setMessage({ type: 'error', text: typeof msg === 'string' ? msg : t('settings.generic_error') });
+            setEmailChange(prev => ({ ...prev, loading: false }));
+        }
+    };
+
+    const handleConfirmEmailChange = async () => {
+        const { newEmail, code } = emailChange;
+        if (!code.trim()) {
+            setMessage({ type: 'error', text: t('settings.enter_code') || 'Tasdiqlash kodini kiriting' });
+            return;
+        }
+        setMessage({ type: '', text: '' });
+        setEmailChange(prev => ({ ...prev, loading: true }));
+        try {
+            await confirmEmailChange(newEmail.trim(), code.trim());
+            setMessage({ type: 'success', text: t('settings.email_changed') || 'Email muvaffaqiyatli o\'zgartirildi' });
+            setEmailChange({ newEmail: '', code: '', step: 'idle', loading: false });
+            if (refreshUser) await refreshUser();
+        } catch (err) {
+            const msg = err?.message || err?.error || err?.detail || t('settings.generic_error');
+            setMessage({ type: 'error', text: typeof msg === 'string' ? msg : t('settings.generic_error') });
+            setEmailChange(prev => ({ ...prev, loading: false }));
+        }
     };
 
     const notificationItems = [
@@ -265,15 +320,75 @@ const SettingsPage = () => {
                                         </div>
                                     </div>
 
+                                    {/* Joriy email (faqat ko'rsatish) — o'zgartirish tasdiqlash kodi orqali */}
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <label className="input-label">{t('settings.email')}</label>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                                            <input type="email" value={user?.email ?? ''} readOnly className={inputStyle} style={{ flex: '1', minWidth: '200px', backgroundColor: 'var(--color-bg-tertiary)', cursor: 'not-allowed' }} />
+                                            <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{t('settings.email_change_hint') || 'O\'zgartirish uchun quyida tasdiqlash kodi yuboring'}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Email o'zgartirish — tasdiqlash kodi (Google reserve account kabi) */}
+                                    <div style={{ marginBottom: '24px', padding: '20px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border-default)', backgroundColor: 'var(--color-bg-secondary)' }}>
+                                        <h3 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '12px' }}>
+                                            {t('settings.change_email') || 'Emailni o\'zgartirish'}
+                                        </h3>
+                                        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginBottom: '16px' }}>
+                                            {t('settings.change_email_desc') || 'Yangi email kiriting. Unga tasdiqlash kodi yuboriladi. Kodni kiriting va email yangilanadi.'}
+                                        </p>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                            <div>
+                                                <label className="input-label">{t('settings.new_email') || 'Yangi email'}</label>
+                                                <input
+                                                    type="email"
+                                                    value={emailChange.newEmail}
+                                                    onChange={(e) => setEmailChange(prev => ({ ...prev, newEmail: e.target.value }))}
+                                                    placeholder={t('settings.email_placeholder') || 'email@example.com'}
+                                                    className={inputStyle}
+                                                    disabled={emailChange.step === 'confirm'}
+                                                    autoComplete="email"
+                                                />
+                                            </div>
+                                            {emailChange.step === 'confirm' && (
+                                                <div>
+                                                    <label className="input-label">{t('settings.verification_code') || 'Tasdiqlash kodi'}</label>
+                                                    <input
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        maxLength={8}
+                                                        value={emailChange.code}
+                                                        onChange={(e) => setEmailChange(prev => ({ ...prev, code: e.target.value.replace(/\D/g, '') }))}
+                                                        placeholder="123456"
+                                                        className={inputStyle}
+                                                        autoComplete="one-time-code"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                {emailChange.step === 'idle' ? (
+                                                    <button type="button" onClick={handleRequestEmailChange} disabled={emailChange.loading} className="btn btn-primary btn-md">
+                                                        {emailChange.loading ? (t('settings.sending') || 'Yuborilmoqda...') : (t('settings.send_verification_code') || 'Tasdiqlash kodini yuborish')}
+                                                    </button>
+                                                ) : (
+                                                    <>
+                                                        <button type="button" onClick={handleConfirmEmailChange} disabled={emailChange.loading} className="btn btn-primary btn-md">
+                                                            {emailChange.loading ? (t('settings.saving') || 'Saqlanmoqda...') : (t('settings.confirm_email_change') || 'Tasdiqlash')}
+                                                        </button>
+                                                        <button type="button" onClick={() => setEmailChange({ newEmail: '', code: '', step: 'idle', loading: false })} disabled={emailChange.loading} className="btn btn-ghost btn-md">
+                                                            {t('settings.cancel') || 'Bekor qilish'}
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {/* Form */}
                                     <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: '16px', marginBottom: '24px' }}>
                                         <div>
                                             <label className="input-label">{t('settings.name')}</label>
                                             <input type="text" value={profileData.name} onChange={(e) => setProfileData({ ...profileData, name: e.target.value })} className={inputStyle} autoComplete="name" />
-                                        </div>
-                                        <div>
-                                            <label className="input-label">{t('settings.email')}</label>
-                                            <input type="email" value={profileData.email} onChange={(e) => setProfileData({ ...profileData, email: e.target.value })} className={inputStyle} autoComplete="email" />
                                         </div>
                                         <div className="md:col-span-2">
                                             <label className="input-label">{t('settings.phone')}</label>

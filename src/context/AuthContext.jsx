@@ -198,6 +198,32 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    /** Yangi emailga tasdiqlash kodi yuborish (Google reserve account kabi) */
+    const requestEmailChange = async (newEmail) => {
+        try {
+            await apiClient.post('/auth/email/change-request/', { new_email: newEmail.trim() });
+            return true;
+        } catch (error) {
+            console.error('[Auth] Email change request failed:', error);
+            throw error.response?.data || new Error('Request failed');
+        }
+    };
+
+    /** Tasdiqlash kodi bilan yangi emailni aktivlashtirish */
+    const confirmEmailChange = async (newEmail, code) => {
+        try {
+            await apiClient.post('/auth/email/change-confirm/', {
+                new_email: newEmail.trim(),
+                code: String(code).trim(),
+            });
+            await refreshUser();
+            return true;
+        } catch (error) {
+            console.error('[Auth] Email change confirm failed:', error);
+            throw error.response?.data || new Error('Confirm failed');
+        }
+    };
+
     const value = {
         user,
         isLoading,
@@ -211,6 +237,8 @@ export const AuthProvider = ({ children }) => {
         refreshUser,
         resetPassword,
         confirmResetPassword,
+        requestEmailChange,
+        confirmEmailChange,
     };
 
     return (

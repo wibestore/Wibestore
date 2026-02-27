@@ -245,7 +245,22 @@
         "add_money_coming_soon": "Tez orada! Pul qo'shish funksiyasi hozircha mavjud emas.",
         "withdraw_coming_soon": "Tez orada! Pul yechish funksiyasi hozircha mavjud emas.",
         "add_card_coming_soon": "Tez orada! Karta qo'shish funksiyasi ishlab chiqilmoqda.",
-        "generic_error": "Xatolik yuz berdi"
+        "generic_error": "Xatolik yuz berdi",
+        "change_email": "Emailni o'zgartirish",
+        "change_email_desc": "Yangi email kiriting. Unga tasdiqlash kodi yuboriladi. Kodni kiriting va email yangilanadi.",
+        "email_change_hint": "O'zgartirish uchun quyida tasdiqlash kodi yuboring",
+        "new_email": "Yangi email",
+        "verification_code": "Tasdiqlash kodi",
+        "send_verification_code": "Tasdiqlash kodini yuborish",
+        "confirm_email_change": "Tasdiqlash",
+        "email_code_sent": "Tasdiqlash kodi yangi emailga yuborildi",
+        "email_changed": "Email muvaffaqiyatli o'zgartirildi",
+        "enter_email": "Yangi email kiriting",
+        "valid_email": "To'g'ri email kiriting",
+        "email_same": "Yangi email joriy emaildan farq qilishi kerak",
+        "enter_code": "Tasdiqlash kodini kiriting",
+        "sending": "Yuborilmoqda...",
+        "cancel": "Bekor qilish"
     },
     "footer": {
         "description": "O'zbekistonning eng ishonchli o'yin akkauntlari savdo platformasi",
