@@ -10,7 +10,19 @@
         "profile": "My Profile",
         "settings": "Settings",
         "logout": "Logout",
-        "search": "Search accounts..."
+        "search": "Search accounts...",
+        "compare": "Compare"
+    },
+    "onboarding": {
+        "welcome_title": "Welcome to WibeStore",
+        "welcome_body": "Buy and sell game accounts safely with escrow protection.",
+        "buy_title": "How to buy",
+        "buy_body": "Browse products, choose an account, pay via escrow. You get the account after confirming delivery.",
+        "sell_title": "How to sell",
+        "sell_body": "Create a listing, set price and details. When sold, we hold the payment until the buyer confirms.",
+        "skip": "Skip",
+        "next": "Next",
+        "browse": "Browse products"
     },
     "hero": {
         "badge": "100% secure trading guarantee",
@@ -249,7 +261,11 @@
         "home": "Home",
         "products": "Products",
         "unknown_game": "Unknown game",
-        "untitled_account": "Untitled account"
+        "untitled_account": "Untitled account",
+        "got_it": "Got it",
+        "copied": "Copied",
+        "days_warranty": "days warranty",
+        "days": "days"
     },
     "auth": {
         "login_title": "Sign in",

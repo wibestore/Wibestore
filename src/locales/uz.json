@@ -10,7 +10,19 @@
         "profile": "Mening profilim",
         "settings": "Sozlamalar",
         "logout": "Chiqish",
-        "search": "Akkauntlarni qidirish..."
+        "search": "Akkauntlarni qidirish...",
+        "compare": "Solishtirish"
+    },
+    "onboarding": {
+        "welcome_title": "WibeStore ga xush kelibsiz",
+        "welcome_body": "O'yin akkauntlarini escrow himoyasida xavfsiz sotib oling va soting.",
+        "buy_title": "Qanday sotib olish",
+        "buy_body": "Mahsulotlarni ko'ring, akkauntni tanlang, escrow orqali to'lang. Yetkazib berilgach tasdiqlasangiz, akkaunt sizga o'tadi.",
+        "sell_title": "Qanday sotish",
+        "sell_body": "E'lon yarating, narx va tafsilotlarni kiriting. Sotilganda to'lov xaridor tasdiqlaguncha ushlab qolinadi.",
+        "skip": "O'tkazib yuborish",
+        "next": "Keyingi",
+        "browse": "Mahsulotlarni ko'rish"
     },
     "hero": {
         "badge": "100% xavfsiz savdo kafolati",
@@ -249,7 +261,11 @@
         "home": "Bosh sahifa",
         "products": "Mahsulotlar",
         "unknown_game": "Noma'lum o'yin",
-        "untitled_account": "Nomsiz akkaunt"
+        "untitled_account": "Nomsiz akkaunt",
+        "got_it": "Tushundim",
+        "copied": "Nusxalandi",
+        "days_warranty": "kun kafolat",
+        "days": "kun"
     },
     "auth": {
         "login_title": "Tizimga kirish",
