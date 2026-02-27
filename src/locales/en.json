@@ -181,7 +181,12 @@
         "no_results_desc": "Try adjusting your search or filters",
         "clear_all": "Clear all",
         "clear_filters": "Clear filters",
-        "change_search": "Change your search query"
+        "change_search": "Change your search query",
+        "weapon_type": "Weapon type",
+        "weapon_type_all": "All weapons",
+        "min_price": "Min price",
+        "max_price": "Max price",
+        "warranty_only": "With warranty"
     },
     "settings": {
         "title": "Settings",
@@ -396,7 +401,9 @@
         "back_btn": "Back",
         "next_btn": "Next",
         "submit_btn": "Submit listing",
-        "submitting": "Submitting..."
+        "submitting": "Submitting...",
+        "weapon_type": "Weapon type (skin)",
+        "weapon_type_placeholder": "Select (optional)"
     },
     "terms": {
         "title": "Terms of Service",

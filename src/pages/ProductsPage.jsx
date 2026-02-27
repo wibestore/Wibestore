@@ -7,9 +7,10 @@ import { SkeletonGrid } from '../components/SkeletonLoader';
 import { PageHeader } from '../components/ui';
 import { useLanguage } from '../context/LanguageContext';
 import { accounts as mockAccounts, games as mockGames } from '../data/mockData';
+import { CS2_WEAPON_TYPES, getWeaponName } from '../data/cs2WeaponTypes';
 
 const ProductsPage = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [searchParams, setSearchParams] = useSearchParams();
     const urlSearch = searchParams.get('search') ?? '';
     const [searchQuery, setSearchQuery] = useState(urlSearch);
@@ -18,6 +19,7 @@ const ProductsPage = () => {
     const [viewMode, setViewMode] = useState('grid');
     const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
     const [hasWarrantyOnly, setHasWarrantyOnly] = useState(false);
+    const [weaponType, setWeaponType] = useState('');
 
     // URL dan search ni sinxronlashtirish (sahifa ochilganda yoki link orqali)
     useEffect(() => {
@@ -80,6 +82,10 @@ const ProductsPage = () => {
             const price = parseFloat(l.price);
             return price >= priceRange.min && price <= priceRange.max;
         });
+    }
+
+    if (weaponType) {
+        filteredListings = filteredListings.filter(l => l && l.weapon_type === weaponType);
     }
 
     // Sort
@@ -158,6 +164,43 @@ const ProductsPage = () => {
                         ))}
                     </select>
 
+                    {/* Qurol turi (CS2 skinlar) */}
+                    <select
+                        value={weaponType}
+                        onChange={(e) => setWeaponType(e.target.value)}
+                        className="select select-md"
+                        style={{ maxWidth: '180px' }}
+                        aria-label={t('products.weapon_type') || 'Qurol turi'}
+                    >
+                        <option value="">{t('products.weapon_type_all') || 'Barcha qurollar'}</option>
+                        {CS2_WEAPON_TYPES.map((w) => (
+                            <option key={w.id} value={w.id}>{getWeaponName(w.id, language)}</option>
+                        ))}
+                    </select>
+
+                    {/* Min / Max narx */}
+                    <div className="flex items-center gap-2" style={{ flexWrap: 'wrap' }}>
+                        <input
+                            type="number"
+                            min={0}
+                            placeholder={t('products.min_price') || 'Min narx'}
+                            value={priceRange.min || ''}
+                            onChange={(e) => setPriceRange(prev => ({ ...prev, min: Number(e.target.value) || 0 }))}
+                            className="input input-md"
+                            style={{ width: '110px' }}
+                        />
+                        <span style={{ color: 'var(--color-text-muted)' }}>–</span>
+                        <input
+                            type="number"
+                            min={0}
+                            placeholder={t('products.max_price') || 'Max narx'}
+                            value={priceRange.max >= 10000000 ? '' : priceRange.max || ''}
+                            onChange={(e) => setPriceRange(prev => ({ ...prev, max: Number(e.target.value) || 10000000 }))}
+                            className="input input-md"
+                            style={{ width: '110px' }}
+                        />
+                    </div>
+
                     {/* Sort */}
                     <select
                         value={sortBy}
@@ -204,13 +247,24 @@ const ProductsPage = () => {
                 </div>
 
                 {/* Active filters */}
-                {(selectedGame !== 'all' || searchQuery) && (
+                {(selectedGame !== 'all' || searchQuery || weaponType || priceRange.min > 0 || priceRange.max < 10000000) && (
                     <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: '16px' }}>
                         {selectedGame !== 'all' && (
                             <span className="badge badge-blue flex items-center gap-1" style={{ padding: '4px 10px' }}>
                                 {games.find(g => (g?.slug ?? g?.id) === selectedGame)?.name ?? selectedGame}
                                 <button
                                     onClick={() => setSelectedGame('all')}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}
+                                >
+                                    <X className="w-3 h-3" />
+                                </button>
+                            </span>
+                        )}
+                        {weaponType && (
+                            <span className="badge badge-blue flex items-center gap-1" style={{ padding: '4px 10px' }}>
+                                {getWeaponName(weaponType, language)}
+                                <button
+                                    onClick={() => setWeaponType('')}
                                     style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}
                                 >
                                     <X className="w-3 h-3" />
@@ -232,6 +286,8 @@ const ProductsPage = () => {
                             onClick={() => {
                                 setSelectedGame('all');
                                 setSearchQuery('');
+                                setWeaponType('');
+                                setPriceRange({ min: 0, max: 10000000 });
                                 setSearchParams({}, { replace: true });
                             }}
                             className="text-sm"
@@ -300,6 +356,7 @@ const ProductsPage = () => {
                             onClick={() => {
                                 setSearchQuery('');
                                 setSelectedGame('all');
+                                setWeaponType('');
                                 setPriceRange({ min: 0, max: 10000000 });
                                 setSearchParams({}, { replace: true });
                             }}

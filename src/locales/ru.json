@@ -181,7 +181,12 @@
         "no_results_desc": "Попробуйте изменить поиск или фильтры",
         "clear_all": "Очистить всё",
         "clear_filters": "Сбросить фильтры",
-        "change_search": "Измените поисковый запрос"
+        "change_search": "Измените поисковый запрос",
+        "weapon_type": "Тип оружия",
+        "weapon_type_all": "Всё оружие",
+        "min_price": "Мин. цена",
+        "max_price": "Макс. цена",
+        "warranty_only": "С гарантией"
     },
     "settings": {
         "title": "Настройки",
@@ -396,7 +401,9 @@
         "back_btn": "Назад",
         "next_btn": "Далее",
         "submit_btn": "Отправить объявление",
-        "submitting": "Отправка..."
+        "submitting": "Отправка...",
+        "weapon_type": "Тип оружия (скин)",
+        "weapon_type_placeholder": "Выберите (необязательно)"
     },
     "terms": {
         "title": "Условия использования",

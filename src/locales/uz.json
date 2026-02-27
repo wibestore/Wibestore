@@ -181,7 +181,12 @@
         "no_results_desc": "Qidiruv yoki filtrlarni o'zgartirib ko'ring",
         "clear_all": "Hammasini tozalash",
         "clear_filters": "Filtrlarni tozalash",
-        "change_search": "Qidiruv so'rovingizni o'zgartiring"
+        "change_search": "Qidiruv so'rovingizni o'zgartiring",
+        "weapon_type": "Qurol turi",
+        "weapon_type_all": "Barcha qurollar",
+        "min_price": "Min narx",
+        "max_price": "Max narx",
+        "warranty_only": "Kafolatli"
     },
     "settings": {
         "title": "Sozlamalar",
@@ -396,7 +401,9 @@
         "back_btn": "Orqaga",
         "next_btn": "Keyingi",
         "submit_btn": "E'lonni yuborish",
-        "submitting": "Yuborilmoqda..."
+        "submitting": "Yuborilmoqda...",
+        "weapon_type": "Qurol turi (skin)",
+        "weapon_type_placeholder": "Tanlang (ixtiyoriy)"
     },
     "terms": {
         "title": "Foydalanish shartlari",

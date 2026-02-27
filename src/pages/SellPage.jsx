@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useToast } from '../components/ToastProvider';
 import { useCreateListing, useUploadImage, useGames } from '../hooks';
 import getGamesList from '../data/gamesList';
+import { CS2_WEAPON_TYPES, isCs2Game } from '../data/cs2WeaponTypes';
 import SellerRulesQuiz from '../components/SellerRulesQuiz';
 
 // Eng ko'p sotilgan / ko'p e'lon bor o'yinlar (API yoki mock bo'yicha)
@@ -56,7 +57,7 @@ const SellPage = () => {
 
     const [formData, setFormData] = useState({
         gameId: '', title: '', description: '', price: '',
-        level: '', rank: '', skins: '', features: [], images: [],
+        weaponType: '', level: '', rank: '', skins: '', features: [], images: [],
         loginMethod: 'email', accountEmail: '', accountPassword: '', additionalInfo: ''
     });
 
@@ -132,6 +133,7 @@ const SellPage = () => {
                 title: formData.title,
                 description: formData.description,
                 price: formData.price,
+                ...(formData.weaponType && { weapon_type: formData.weaponType }),
                 level: formData.level || '',
                 rank: formData.rank || '',
                 skins_count: parseInt(formData.skins) || 0,
@@ -176,7 +178,7 @@ const SellPage = () => {
         setStep(1);
         setFormData({
             gameId: '', title: '', description: '', price: '',
-            level: '', rank: '', skins: '', features: [], images: [],
+            weaponType: '', level: '', rank: '', skins: '', features: [], images: [],
             loginMethod: 'email', accountEmail: '', accountPassword: '', additionalInfo: ''
         });
     };
@@ -385,6 +387,24 @@ const SellPage = () => {
                                         Komissiya: 10% (siz olasiz: {formData.price ? (formData.price * 0.9).toLocaleString() : 0} so'm)
                                     </p>
                                 </div>
+
+                                {/* Qurol turi — faqat CS2 / skin uchun */}
+                                {isCs2Game(formData.gameId) && (
+                                    <div style={{ marginBottom: '16px' }}>
+                                        <label className="input-label">{t('sell.weapon_type') || 'Qurol turi (skin)'}</label>
+                                        <select
+                                            value={formData.weaponType}
+                                            onChange={(e) => setFormData({ ...formData, weaponType: e.target.value })}
+                                            className="input input-lg"
+                                            style={{ width: '100%' }}
+                                        >
+                                            <option value="">{t('sell.weapon_type_placeholder') || "Tanlang (ixtiyoriy)"}</option>
+                                            {CS2_WEAPON_TYPES.map((w) => (
+                                                <option key={w.id} value={w.id}>{w.nameUz}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
 
                                 {/* Level & Rank */}
                                 <div className="grid grid-cols-2" style={{ gap: '12px' }}>
