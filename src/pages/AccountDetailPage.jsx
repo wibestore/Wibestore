@@ -549,42 +549,96 @@ const AccountDetailPage = () => {
                             </div>
                         </div>
 
-                        {/* Seller card */}
-                        <div style={{
-                            padding: '16px',
-                            borderRadius: 'var(--radius-xl)',
-                            backgroundColor: 'var(--color-bg-secondary)',
-                            border: '1px solid var(--color-border-default)',
-                        }}>
-                            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginBottom: '12px', fontWeight: 'var(--font-weight-medium)' }}>
-                                {t('detail.seller') || 'Sotuvchi'}
-                            </p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <div style={{
-                                    width: '44px', height: '44px',
-                                    borderRadius: 'var(--radius-full)',
-                                    background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: '#fff', fontWeight: 'var(--font-weight-bold)',
-                                    fontSize: 'var(--font-size-lg)', flexShrink: 0,
-                                }}>
-                                    {listing.seller?.display_name?.charAt(0)?.toUpperCase() || 'S'}
+                        {/* Seller card — profilga o'tish */}
+                        {listing.seller?.id ? (
+                            <Link
+                                to={`/seller/${listing.seller.id}`}
+                                state={{ seller: listing.seller }}
+                                style={{
+                                    display: 'block',
+                                    padding: '16px',
+                                    borderRadius: 'var(--radius-xl)',
+                                    backgroundColor: 'var(--color-bg-secondary)',
+                                    border: '1px solid var(--color-border-default)',
+                                    textDecoration: 'none',
+                                    color: 'inherit',
+                                    transition: 'background-color 0.15s ease, border-color 0.15s ease',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'var(--color-bg-tertiary)';
+                                    e.currentTarget.style.borderColor = 'var(--color-accent-blue)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'var(--color-bg-secondary)';
+                                    e.currentTarget.style.borderColor = 'var(--color-border-default)';
+                                }}
+                            >
+                                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginBottom: '12px', fontWeight: 'var(--font-weight-medium)' }}>
+                                    {t('detail.seller') || 'Sotuvchi'} — {t('detail.view_profile') || 'Profilni ko\'rish'}
+                                </p>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <div style={{
+                                        width: '44px', height: '44px',
+                                        borderRadius: 'var(--radius-full)',
+                                        background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        color: '#fff', fontWeight: 'var(--font-weight-bold)',
+                                        fontSize: 'var(--font-size-lg)', flexShrink: 0,
+                                    }}>
+                                        {listing.seller?.display_name?.charAt(0)?.toUpperCase() || 'S'}
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <p style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '2px' }}>
+                                            {listing.seller?.display_name || t('detail.seller')}
+                                        </p>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                                <Star style={{ width: '13px', height: '13px', fill: 'var(--color-premium-gold-light)', color: 'var(--color-premium-gold-light)' }} />
+                                                {listing.seller?.rating || '5.0'}
+                                            </span>
+                                            <span>•</span>
+                                            <span>{listing.seller?.total_sales || 0} {t('detail.sales_count')}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <p style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '2px' }}>
-                                        {listing.seller?.display_name || t('detail.seller')}
-                                    </p>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                                            <Star style={{ width: '13px', height: '13px', fill: 'var(--color-premium-gold-light)', color: 'var(--color-premium-gold-light)' }} />
-                                            {listing.seller?.rating || '5.0'}
-                                        </span>
-                                        <span>•</span>
-                                        <span>{listing.seller?.total_sales || 0} {t('detail.sales_count')}</span>
+                            </Link>
+                        ) : (
+                            <div style={{
+                                padding: '16px',
+                                borderRadius: 'var(--radius-xl)',
+                                backgroundColor: 'var(--color-bg-secondary)',
+                                border: '1px solid var(--color-border-default)',
+                            }}>
+                                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginBottom: '12px', fontWeight: 'var(--font-weight-medium)' }}>
+                                    {t('detail.seller') || 'Sotuvchi'}
+                                </p>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <div style={{
+                                        width: '44px', height: '44px',
+                                        borderRadius: 'var(--radius-full)',
+                                        background: 'linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple))',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        color: '#fff', fontWeight: 'var(--font-weight-bold)',
+                                        fontSize: 'var(--font-size-lg)', flexShrink: 0,
+                                    }}>
+                                        {listing.seller?.display_name?.charAt(0)?.toUpperCase() || 'S'}
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <p style={{ fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '2px' }}>
+                                            {listing.seller?.display_name || t('detail.seller')}
+                                        </p>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                                <Star style={{ width: '13px', height: '13px', fill: 'var(--color-premium-gold-light)', color: 'var(--color-premium-gold-light)' }} />
+                                                {listing.seller?.rating || '5.0'}
+                                            </span>
+                                            <span>•</span>
+                                            <span>{listing.seller?.total_sales || 0} {t('detail.sales_count')}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
 
