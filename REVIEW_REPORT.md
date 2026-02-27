@@ -72,6 +72,11 @@
 | 8 | SellPage i18n | ✅ Validatsiya va featureOptions t() |
 | 9 | AdminLogin i18n | ✅ admin.* tarjimalar |
 | 10 | Statistics | Kerak bo‘lsa AuthGuard qo‘shish (ixtiyoriy) |
+| 11 | AccountDetailPage qattiq matnlar | ✅ Rasm yo'q, Rasm yuklanmadi, chat, features, reviewer i18n |
+| 12 | ReviewList qattiq matnlar | ✅ reviews.* tarjimalar qo‘shildi |
+| 13 | Login/Signup toast | ✅ auth.success_title, error_title, welcome, google_login_success va boshqalar |
+| 14 | Admin Premium/Users/Layout/Settings | ✅ admin.* kalitlar va t() |
+| 15 | SellPage "Profilga o'tish" | ✅ common.go_to_profile |
 
 ---
 

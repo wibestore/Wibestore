@@ -17,7 +17,7 @@ import { accounts as mockAccounts } from '../data/mockData';
 import BuyerRulesQuiz from '../components/BuyerRulesQuiz';
 
 /* ─── Image Carousel ──────────────────────────────────────────── */
-const ImageCarousel = ({ images, title }) => {
+const ImageCarousel = ({ images, title, noImageText, imageErrorText }) => {
     const [current, setCurrent] = useState(0);
     const [imgError, setImgError] = useState(false);
     const total = images?.length || 0;
@@ -38,7 +38,7 @@ const ImageCarousel = ({ images, title }) => {
                 flexDirection: 'column', gap: '12px',
             }}>
                 <Gamepad2 style={{ width: '48px', height: '48px', opacity: 0.3 }} />
-                <span style={{ fontSize: 'var(--font-size-sm)' }}>Rasm yo'q</span>
+                <span style={{ fontSize: 'var(--font-size-sm)' }}>{noImageText || 'Rasm yo\'q'}</span>
             </div>
         );
     }
@@ -72,7 +72,7 @@ const ImageCarousel = ({ images, title }) => {
                         color: 'var(--color-text-muted)',
                     }}>
                         <Gamepad2 style={{ width: '48px', height: '48px', opacity: 0.3 }} />
-                        <span style={{ fontSize: 'var(--font-size-sm)' }}>Rasm yuklanmadi</span>
+                        <span style={{ fontSize: 'var(--font-size-sm)' }}>{imageErrorText || 'Rasm yuklanmadi'}</span>
                     </div>
                 )}
 
@@ -214,7 +214,7 @@ const AccountDetailPage = () => {
             rating: rawListing.seller?.rating ?? mockFallback?.seller?.rating ?? 5,
         },
         price: rawListing.price ?? mockFallback?.price,
-        features: rawListing.features?.length ? rawListing.features : (mockFallback ? ['Escrow himoya', 'Tez yetkazish', mockFallback.game?.name || mockFallback.gameName].filter(Boolean) : []),
+        features: rawListing.features?.length ? rawListing.features : (mockFallback ? [t('detail.escrow_protection'), t('detail.fast_delivery'), mockFallback.game?.name || mockFallback.gameName].filter(Boolean) : []),
     } : null;
     const { data: relatedData } = useListings({ game: listing?.game?.id, limit: 4 });
 
@@ -354,7 +354,7 @@ const AccountDetailPage = () => {
             startConversation(seller, account);
             openChat();
         } else {
-            addToast({ type: 'info', title: 'Sotuvchi bilan chat tez orada ulanadi.' });
+            addToast({ type: 'info', title: t('detail.chat_coming_soon') });
         }
     };
 
@@ -439,7 +439,7 @@ const AccountDetailPage = () => {
                 >
                     {/* ── Left: Images ── */}
                     <div>
-                        <ImageCarousel images={images} title={listing.title} />
+                        <ImageCarousel images={images} title={listing.title} noImageText={t('detail.no_image')} imageErrorText={t('detail.image_load_failed')} />
                     </div>
 
                     {/* ── Right: Info + Purchase ── */}
@@ -628,7 +628,7 @@ const AccountDetailPage = () => {
                                                         <Star key={s} className="w-3 h-3" style={{ color: s <= (rev.rating || 0) ? 'var(--color-premium-gold-light)' : 'var(--color-text-muted)', fill: s <= (rev.rating || 0) ? 'currentColor' : 'none' }} />
                                                     ))}
                                                     <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
-                                                        {rev.reviewerName || 'Foydalanuvchi'}
+                                                        {rev.reviewerName || t('detail.reviewer_unknown')}
                                                     </span>
                                                 </div>
                                                 {rev.comment && (

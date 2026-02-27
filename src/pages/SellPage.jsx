@@ -218,7 +218,7 @@ title: t('common.error') || 'Xatolik',
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <button onClick={() => navigate('/profile')} className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-                            Profilga o'tish
+                            {t('common.go_to_profile')}
                         </button>
                         <button onClick={resetForm} className="btn btn-secondary btn-lg" style={{ width: '100%' }}>
                             Yana e'lon berish

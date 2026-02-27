@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import { Star, MessageSquare } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const ReviewList = ({ userId, type = 'received' }) => {
+    const { t } = useLanguage();
     const reviews = useMemo(() => {
         const savedReviews = localStorage.getItem('wibeReviews');
         if (!savedReviews) return [];
@@ -33,8 +35,8 @@ const ReviewList = ({ userId, type = 'received' }) => {
                 <MessageSquare className="empty-state-icon" />
                 <p className="empty-state-description">
                     {type === 'received'
-                        ? 'Hali baholashlar yo\'q'
-                        : 'Siz hali hech kimni baholamadingiz'
+                        ? t('reviews.empty_received')
+                        : t('reviews.empty_given')
                     }
                 </p>
             </div>
@@ -84,7 +86,7 @@ const ReviewList = ({ userId, type = 'received' }) => {
                     <span style={{ color: 'var(--color-text-primary)', fontWeight: 'var(--font-weight-medium)' }}>
                         {reviews.length}
                     </span>{' '}
-                    ta baholash
+                    {t('reviews.reviews_count')}
                 </div>
             </div>
 
@@ -158,7 +160,7 @@ const ReviewList = ({ userId, type = 'received' }) => {
                                         color: 'var(--color-text-muted)',
                                         marginBottom: '8px',
                                     }}>
-                                        Akkaunt:{' '}
+                                        {t('reviews.account_label')}:{' '}
                                         <span style={{ color: 'var(--color-text-secondary)' }}>
                                             {review.accountTitle}
                                         </span>

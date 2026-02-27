@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Settings, Shield, Bell, Globe, Save, Check } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Section = ({ title, icon: Icon, children }) => (
     <div style={{
@@ -65,6 +66,7 @@ const Toggle = ({ label, desc, checked, onChange }) => (
 );
 
 const AdminSettings = () => {
+    const { t } = useLanguage();
     const [settings, setSettings] = useState({
         siteName: 'WibeStore',
         siteDescription: "O'yin akkauntlari savdo platformasi",
@@ -100,7 +102,7 @@ const AdminSettings = () => {
                     style={{ gap: '8px' }}
                 >
                     {saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-                    {saved ? 'Saqlandi!' : 'Saqlash'}
+                    {saved ? t('admin.saved') : t('admin.save')}
                 </button>
             </div>
 
@@ -158,7 +160,7 @@ const AdminSettings = () => {
             <Section title="Xavfsizlik" icon={Shield}>
                 <Toggle
                     label="E'lonlarni avtomatik tasdiqlash"
-                    desc="Yangi e'lonlar avtomatik tasdiqlansin"
+                    desc={t('admin.auto_approve_desc')}
                     checked={settings.autoApproveListings}
                     onChange={(v) => setSettings({ ...settings, autoApproveListings: v })}
                 />

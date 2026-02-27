@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, Crown, User, Check, X, Clock, Star } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const AdminPremium = () => {
+    const { t } = useLanguage();
     const [searchQuery, setSearchQuery] = useState('');
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -81,9 +83,9 @@ const AdminPremium = () => {
                 <div>
                     <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <Crown style={{ width: '28px', height: '28px', color: 'var(--color-premium-gold-light)' }} />
-                        Premium boshqaruvi
+                        {t('admin.premium_title')}
                     </h1>
-                    <p style={{ color: 'var(--color-text-muted)', marginTop: '4px' }}>Foydalanuvchilarga premium tarif berish</p>
+                    <p style={{ color: 'var(--color-text-muted)', marginTop: '4px' }}>{t('admin.premium_subtitle')}</p>
                 </div>
             </div>
 
@@ -103,7 +105,7 @@ const AdminPremium = () => {
                 border: '1px solid var(--color-border-default)',
             }}>
                 <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginBottom: '16px' }}>
-                    Foydalanuvchi qidirish
+                    {t('admin.premium_search')}
                 </h2>
                 <div style={{ position: 'relative' }}>
                     <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: 'var(--color-text-muted)' }} />
@@ -111,7 +113,7 @@ const AdminPremium = () => {
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Ism yoki email bo'yicha qidiring..."
+                        placeholder={t('admin.premium_search_placeholder')}
                         className="input input-lg"
                         style={{ paddingLeft: '36px' }}
                     />
@@ -127,7 +129,7 @@ const AdminPremium = () => {
             }}>
                 <div className="card-header">
                     <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-                        Foydalanuvchilar ({filteredUsers.length})
+                        {t('admin.premium_users_count')} ({filteredUsers.length})
                     </h2>
                 </div>
 
@@ -169,7 +171,7 @@ const AdminPremium = () => {
                                         {user.isPremium && user.premiumExpiry && (
                                             <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
                                                 <Clock style={{ width: '12px', height: '12px' }} />
-                                                Tugash: {user.premiumExpiry}
+                                                {t('admin.premium_expires')}: {user.premiumExpiry}
                                             </p>
                                         )}
                                     </div>
@@ -178,11 +180,11 @@ const AdminPremium = () => {
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                     {user.isPremium ? (
                                         <button onClick={() => handleRevokePremium(user)} className="btn btn-danger btn-md">
-                                            Bekor qilish
+                                            {t('admin.premium_revoke')}
                                         </button>
                                     ) : (
                                         <button onClick={() => { setSelectedUser(user); setShowConfirmModal(true); }} className="btn btn-premium btn-md">
-                                            <Crown style={{ width: '14px', height: '14px' }} /> Premium berish
+                                            <Crown style={{ width: '14px', height: '14px' }} /> {t('admin.premium_grant')}
                                         </button>
                                     )}
                                 </div>
@@ -191,7 +193,7 @@ const AdminPremium = () => {
                     ) : (
                         <div style={{ padding: '48px 16px', textAlign: 'center' }}>
                             <User style={{ width: '48px', height: '48px', color: 'var(--color-text-muted)', margin: '0 auto 16px' }} />
-                            <p style={{ color: 'var(--color-text-secondary)' }}>Foydalanuvchi topilmadi</p>
+                            <p style={{ color: 'var(--color-text-secondary)' }}>{t('admin.premium_no_user')}</p>
                         </div>
                     )}
                 </div>
@@ -200,9 +202,9 @@ const AdminPremium = () => {
             {/* Premium Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: '16px' }}>
                 {[
-                    { icon: User, label: 'Jami foydalanuvchilar', value: users.length, color: 'var(--color-text-muted)' },
+                    { icon: User, label: t('admin.premium_total_users'), value: users.length, color: 'var(--color-text-muted)' },
                     { icon: Crown, label: 'Premium', value: users.filter(u => u.isPremium && u.premiumType === 'premium').length, color: 'var(--color-premium-gold-light)' },
-                    { icon: Star, label: 'Pro', value: users.filter(u => u.isPremium && u.premiumType === 'pro').length, color: 'var(--color-accent-blue)' },
+                    { icon: Star, label: t('admin.premium_pro'), value: users.filter(u => u.isPremium && u.premiumType === 'pro').length, color: 'var(--color-accent-blue)' },
                 ].map((s, idx) => (
                     <div key={idx} className="stat-card">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
@@ -239,7 +241,7 @@ const AdminPremium = () => {
                             </div>
                             <div>
                                 <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                                    Premium berish
+                                    {t('admin.premium_grant')}
                                 </h3>
                                 <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>{selectedUser.name}</p>
                             </div>
@@ -300,14 +302,14 @@ const AdminPremium = () => {
                                 className="btn btn-secondary btn-md"
                                 style={{ flex: 1 }}
                             >
-                                Bekor qilish
+                                {t('admin.cancel')}
                             </button>
                             <button
                                 onClick={handleGrantPremium}
                                 className="btn btn-premium btn-md"
                                 style={{ flex: 1 }}
                             >
-                                <Check style={{ width: '16px', height: '16px' }} /> Tasdiqlash
+                                <Check style={{ width: '16px', height: '16px' }} /> {t('admin.confirm')}
                             </button>
                         </div>
                     </div>

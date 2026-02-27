@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Search, Crown, Ban, Eye, Mail, MoreVertical, UserCheck } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const AdminUsers = () => {
+    const { t } = useLanguage();
     const [selectedRole, setSelectedRole] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -16,17 +18,17 @@ const AdminUsers = () => {
     ];
 
     const roleFilters = [
-        { value: 'all', label: 'Barchasi' },
-        { value: 'seller', label: 'Sotuvchilar' },
-        { value: 'buyer', label: 'Xaridorlar' },
-        { value: 'premium', label: 'Premium' },
-        { value: 'blocked', label: 'Bloklangan' },
+        { value: 'all', label: t('admin.filter_all') },
+        { value: 'seller', label: t('admin.filter_sellers') },
+        { value: 'buyer', label: t('admin.filter_buyers') },
+        { value: 'premium', label: t('admin.filter_premium') },
+        { value: 'blocked', label: t('admin.filter_blocked') },
     ];
 
     const getStatusBadge = (status) => {
         const config = {
-            active: { bg: 'var(--color-success-bg)', color: 'var(--color-accent-green)', label: 'Faol' },
-            blocked: { bg: 'var(--color-error-bg)', color: 'var(--color-accent-red)', label: 'Bloklangan' },
+            active: { bg: 'var(--color-success-bg)', color: 'var(--color-accent-green)', label: t('admin.status_active') },
+            blocked: { bg: 'var(--color-error-bg)', color: 'var(--color-accent-red)', label: t('admin.status_blocked') },
         };
         const s = config[status] || config.active;
         return <span className="badge" style={{ backgroundColor: s.bg, color: s.color }}>{s.label}</span>;
@@ -37,7 +39,7 @@ const AdminUsers = () => {
             return (
                 <span className="badge" style={{ backgroundColor: 'var(--color-warning-bg)', color: 'var(--color-premium-gold-light)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                     <Crown style={{ width: '12px', height: '12px' }} />
-                    Premium {role === 'seller' ? 'Sotuvchi' : 'Xaridor'}
+                    Premium {role === 'seller' ? t('admin.role_seller') : t('admin.role_buyer')}
                 </span>
             );
         }
@@ -46,7 +48,7 @@ const AdminUsers = () => {
                 backgroundColor: role === 'seller' ? 'var(--color-info-bg)' : 'var(--color-bg-tertiary)',
                 color: role === 'seller' ? 'var(--color-accent-blue)' : 'var(--color-text-muted)',
             }}>
-                {role === 'seller' ? 'Sotuvchi' : 'Xaridor'}
+                {role === 'seller' ? t('admin.role_seller') : t('admin.role_buyer')}
             </span>
         );
     };
@@ -68,18 +70,18 @@ const AdminUsers = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between" style={{ gap: '16px' }}>
                 <div>
                     <h1 style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '4px' }}>
-                        Foydalanuvchilar
+                        {t('admin.users_title')}
                     </h1>
                     <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
-                        Barcha foydalanuvchilarni boshqaring
+                        {t('admin.users_subtitle')}
                     </p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span className="badge" style={{ backgroundColor: 'var(--color-info-bg)', color: 'var(--color-accent-blue)', padding: '6px 12px' }}>
-                        {users.filter(u => u.role === 'seller').length} ta sotuvchi
+                        {users.filter(u => u.role === 'seller').length} {t('admin.count_sellers')}
                     </span>
                     <span className="badge" style={{ backgroundColor: 'var(--color-warning-bg)', color: 'var(--color-premium-gold-light)', padding: '6px 12px' }}>
-                        {users.filter(u => u.isPremium).length} ta premium
+                        {users.filter(u => u.isPremium).length} {t('admin.count_premium')}
                     </span>
                 </div>
             </div>
@@ -92,7 +94,7 @@ const AdminUsers = () => {
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Ism yoki email qidirish..."
+                        placeholder={t('admin.users_search_placeholder')}
                         className="input input-lg"
                         style={{ paddingLeft: '36px' }}
                     />
@@ -120,15 +122,15 @@ const AdminUsers = () => {
             }}>
                 <div style={{ overflowX: 'auto' }}>
                     <table className="gh-table">
-                        <thead>
-                            <tr>
-                                <th>Foydalanuvchi</th>
-                                <th>Email</th>
-                                <th>Rol</th>
-                                <th>Faoliyat</th>
-                                <th>Status</th>
-                                <th>Qo&apos;shilgan</th>
-                                <th>Amallar</th>
+<thead>
+                        <tr>
+                                <th>{t('admin.table_user')}</th>
+                                <th>{t('admin.table_email')}</th>
+                                <th>{t('admin.table_role')}</th>
+                                <th>{t('admin.table_activity')}</th>
+                                <th>{t('admin.table_status')}</th>
+                                <th>{t('admin.table_joined')}</th>
+                                <th>{t('admin.table_actions')}</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -5,6 +5,7 @@ import {
     DollarSign, Settings, LogOut, Menu, X, Gamepad2, Bell, Search, ChevronLeft
 } from 'lucide-react';
 import { getAdminSession, refreshAdminSession } from '../../hooks/useAdminAuth';
+import { useLanguage } from '../../context/LanguageContext';
 import './admin.css';
 
 const AdminLayout = ({ children }) => {
@@ -41,14 +42,15 @@ const AdminLayout = ({ children }) => {
         navigate('/admin/login');
     };
 
+    const { t } = useLanguage();
     const menuItems = [
-        { icon: LayoutDashboard, label: 'Dashboard', to: '/admin' },
-        { icon: Users, label: 'Foydalanuvchilar', to: '/admin/users' },
-        { icon: Package, label: 'Akkauntlar', to: '/admin/accounts' },
-        { icon: AlertTriangle, label: 'Shikoyatlar', to: '/admin/reports' },
-        { icon: Star, label: 'Premium', to: '/admin/premium' },
-        { icon: DollarSign, label: 'Moliya', to: '/admin/finance' },
-        { icon: Settings, label: 'Sozlamalar', to: '/admin/settings' },
+        { icon: LayoutDashboard, label: t('admin.menu_dashboard'), to: '/admin' },
+        { icon: Users, label: t('admin.menu_users'), to: '/admin/users' },
+        { icon: Package, label: t('admin.menu_accounts'), to: '/admin/accounts' },
+        { icon: AlertTriangle, label: t('admin.menu_reports'), to: '/admin/reports' },
+        { icon: Star, label: t('admin.menu_premium'), to: '/admin/premium' },
+        { icon: DollarSign, label: t('admin.menu_finance'), to: '/admin/finance' },
+        { icon: Settings, label: t('admin.menu_settings'), to: '/admin/settings' },
     ];
 
     const getAdminName = () => {
