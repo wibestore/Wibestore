@@ -17,4 +17,6 @@ Loyihada kod o'zgartirishlar kiritilgandan so'ng **har doim** quyidagilarni baja
 - Commit xabari qisqa va aniq bo'lsin (masalan: "Navbar: o'ng blokni header o'ngiga joylashtirish", "Terms sahifasi tarjimalarini to'ldirish").
 - Push xatolik bersa (masalan, remote'da yangi commit bo'lsa), avval `git pull --rebase` yoki `git pull` qilib, keyin qayta `git push` qilish kerak.
 
+- **Foydalanuvchi aytmasa ham:** O'zgartirishlar bo'lsa, har doim commit va push qilish kerak. "Push qil" deb so'ramasdan avtomatik bajarilsin.
+
 Bu qoida **har bir muhim o'zgartirish sessiyasidan keyin** qo'llanadi.
