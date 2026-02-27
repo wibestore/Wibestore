@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle, Gamepad2, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 const ForgotPasswordPage = () => {
     const { t } = useLanguage();
+    const { resetPassword } = useAuth();
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -24,9 +26,15 @@ const ForgotPasswordPage = () => {
         }
 
         setIsLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setIsLoading(false);
-        setIsSubmitted(true);
+        try {
+            await resetPassword(email.trim());
+            setIsSubmitted(true);
+        } catch (err) {
+            const msg = err?.message || err?.error || err?.detail || t('auth.generic_error') || 'Xatolik yuz berdi';
+            setError(typeof msg === 'string' ? msg : 'Xatolik yuz berdi');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     if (isSubmitted) {

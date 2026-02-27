@@ -186,7 +186,9 @@
         "weapon_type_all": "Всё оружие",
         "min_price": "Мин. цена",
         "max_price": "Макс. цена",
-        "warranty_only": "С гарантией"
+        "warranty_only": "С гарантией",
+        "sort_views": "По просмотрам",
+        "load_more": "Загрузить ещё"
     },
     "settings": {
         "title": "Настройки",

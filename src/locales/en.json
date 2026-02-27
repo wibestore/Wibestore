@@ -186,7 +186,9 @@
         "weapon_type_all": "All weapons",
         "min_price": "Min price",
         "max_price": "Max price",
-        "warranty_only": "With warranty"
+        "warranty_only": "With warranty",
+        "sort_views": "Most Viewed",
+        "load_more": "Load More"
     },
     "settings": {
         "title": "Settings",

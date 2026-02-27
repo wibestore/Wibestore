@@ -186,7 +186,9 @@
         "weapon_type_all": "Barcha qurollar",
         "min_price": "Min narx",
         "max_price": "Max narx",
-        "warranty_only": "Kafolatli"
+        "warranty_only": "Kafolatli",
+        "sort_views": "Eng ko'p ko'rilgan",
+        "load_more": "Yana yuklash"
     },
     "settings": {
         "title": "Sozlamalar",
