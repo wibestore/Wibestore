@@ -1,122 +1,131 @@
-# 🚂 Railway — Backend, Frontend va Bot uchun aniq Variables
+# Railway — Barcha servislar uchun Variables (copy-paste tayyor)
 
-Quyida **sizning URL’laringiz** asosida barcha servislar uchun o‘rnatish kerak bo‘lgan o‘zgaruvchilar keltirilgan.
+Quyida **har bir servis** uchun Railway Variables bo‘limiga **nom = qiymat** ko‘rinishida kiritishingiz mumkin. Reference’lar `${{Servis.VARIABLE}}` ko‘rinishida.
 
----
-
-## URL’lar
-
-| Servis   | URL |
-|----------|-----|
-| **Backend**  | `https://exemplary-fascination-production-9514.up.railway.app` |
-| **Frontend** | `https://frontend-production-76e67.up.railway.app` |
-| **Bot**      | Telegram’da @YourBotUsername (o‘zingiz qo‘ygan) |
+**Eslatma:** Railway’da Postgres va Redis servislari odatda o‘z `RAILWAY_PRIVATE_DOMAIN`, `RAILWAY_TCP_PROXY_*` va boshqa o‘zgaruvchilarni o‘zlari yaratadi. Siz faqat **Backend, Frontend, Telegram Bot** va kerak bo‘lsa **Postgres/Redis** qo‘lda o‘zgaruvchilarini to‘ldirasiz.
 
 ---
 
-## 1. Backend servisi (Railway’da Backend → Variables)
+## 1. Redis servisi — to‘g‘ridan-to‘g‘ri joylash (copy-paste)
 
-| Variable | Qiymat | Eslatma |
-|----------|--------|--------|
-| `DATABASE_URL` yoki `DATABASE_PUBLIC_URL` | *(Reference)* Postgres servisidan **DATABASE_PUBLIC_URL** | Variables → Add Reference → Postgres → DATABASE_PUBLIC_URL |
-| `SECRET_KEY` | Yangi kalit (pastdagi buyruqdan) | Majburiy |
-| `ALLOWED_HOSTS` | `exemplary-fascination-production-9514.up.railway.app,.railway.app` | Ixtiyoriy — production’da `.railway.app` avtomatik qo‘shiladi |
-| `CORS_ALLOWED_ORIGINS` | `https://frontend-production-76e67.up.railway.app` | Frontend domeni — majburiy |
-| `CSRF_TRUSTED_ORIGINS` | `https://exemplary-fascination-production-9514.up.railway.app,https://frontend-production-76e67.up.railway.app` | Ixtiyoriy (default bor) |
-| `TELEGRAM_BOT_SECRET` | `wibestore-telegram-bot-secret-2024` | Bot’dagi `BOT_SECRET_KEY` bilan **bir xil** bo‘lishi kerak |
+Redis servisi → Variables → Raw Editor (yoki bittadan Name/Value). Quyidagi blokni nusxalab joylashtiring:
 
-**SECRET_KEY generatsiya (bir marta ishlatib, nusxalang):**
+```
+REDIS_PASSWORD="oDtIHqCCjcqaPaHQbqIdphOGKxDCdGXq"
+REDIS_PUBLIC_URL="redis://default:${{REDIS_PASSWORD}}@${{RAILWAY_TCP_PROXY_DOMAIN}}:${{RAILWAY_TCP_PROXY_PORT}}"
+REDIS_URL="redis://${{REDISUSER}}:${{REDIS_PASSWORD}}@${{REDISHOST}}:${{REDISPORT}}"
+REDISHOST="${{RAILWAY_PRIVATE_DOMAIN}}"
+REDISPASSWORD="${{REDIS_PASSWORD}}"
+REDISPORT="6379"
+REDISUSER="default"
+```
+
+---
+
+## 2. Postgres servisi — to‘g‘ridan-to‘g‘ri joylash (copy-paste)
+
+Postgres servisi → Variables. Quyidagi blokni nusxalab joylashtiring (typo tuzatilgan — ortiqcha `}` yo‘q):
+
+```
+DATABASE_PUBLIC_URL="postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_TCP_PROXY_DOMAIN}}:${{RAILWAY_TCP_PROXY_PORT}}/${{PGDATABASE}}"
+DATABASE_URL="postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:5432/${{PGDATABASE}}"
+PGDATA="/var/lib/postgresql/data/pgdata"
+PGDATABASE="${{POSTGRES_DB}}"
+PGHOST="${{RAILWAY_PRIVATE_DOMAIN}}"
+PGPASSWORD="${{POSTGRES_PASSWORD}}"
+PGPORT="5432"
+PGUSER="${{POSTGRES_USER}}"
+POSTGRES_DB="railway"
+POSTGRES_PASSWORD="mnaWooQCfFfeonxVieIJyTMwvpNKHKAb"
+POSTGRES_USER="postgres"
+```
+
+---
+
+## 3. Backend servisi — to‘g‘ridan-to‘g‘ri joylash (copy-paste)
+
+Backend servisi → Variables. Quyidagi blokni nusxalab joylashtiring.  
+**SECRET_KEY** ni avval generatsiya qiling (pastdagi buyruq), keyin `SECRET_KEY="..."` o‘rniga chiqqan qiymatni qo‘ying.  
+**DATABASE_URL** va **DATABASE_PUBLIC_URL** — Railway’da Reference ishlatishingiz kerak bo‘lsa: Add Variable → Add Reference → Postgres → DATABASE_URL / DATABASE_PUBLIC_URL.
+
+```
+ALLOWED_HOSTS="backend-production-97516.up.railway.app,.railway.app"
+CORS_ALLOWED_ORIGINS="https://frontend-production-76e67.up.railway.app"
+CSRF_TRUSTED_ORIGINS="https://backend-production-97516.up.railway.app,https://frontend-production-76e67.up.railway.app"
+DATABASE_PUBLIC_URL="${{Postgres.DATABASE_PUBLIC_URL}}"
+DATABASE_URL="${{Postgres.DATABASE_URL}}"
+REDIS_URL="redis://default:oDtIHqCCjcqaPaHQbqIdphOGKxDCdGXq@${{Redis.RAILWAY_PRIVATE_DOMAIN}}:6379"
+SECRET_KEY="BURGA_GENERATSIA_QILINGAN_KALIT"
+TELEGRAM_BOT_SECRET="wibestore-telegram-bot-secret-2024"
+VITE_ADMIN_USERNAME="admin"
+VITE_API_BASE_URL="https://backend-production-97516.up.railway.app/api/v1"
+VITE_APP_ENV="production"
+VITE_TELEGRAM_BOT_USERNAME="wibestorebot"
+VITE_WS_BASE_URL="wss://backend-production-97516.up.railway.app"
+```
+
+**SECRET_KEY** generatsiya (terminalda bajarib, chiqqan qatorni `SECRET_KEY="..."` o‘rniga qo‘ying):
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-**Ixtiyoriy:** `FERNET_KEY`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` — qo‘shishingiz mumkin.
+---
+
+## 4. Frontend servisi — to‘g‘ridan-to‘g‘ri joylash (copy-paste)
+
+Frontend servisi → Variables. Quyidagi blokni nusxalab joylashtiring. Keyin **Redeploy** qiling.
+
+```
+BACKEND_URL="https://backend-production-97516.up.railway.app/"
+VITE_ADMIN_PASSWORD="kuchli_parol_yozing"
+VITE_ADMIN_USERNAME="admin"
+VITE_API_BASE_URL="https://backend-production-97516.up.railway.app/api/v1"
+VITE_APP_ENV="production"
+VITE_APPWRITE_ENDPOINT="https://cloud.appwrite.io/v1"
+VITE_APPWRITE_PROJECT_ID="appwrite_project_id"
+VITE_EMAILJS_PUBLIC_KEY="emailjs_public_key"
+VITE_EMAILJS_SERVICE_ID="emailjs_service_id"
+VITE_EMAILJS_TEMPLATE_ID="emailjs_template_id"
+VITE_GOOGLE_CLIENT_ID="481518038748-mraubsfrm6qicdr2dcuk3o4vodemn98h.apps.googleusercontent.com"
+VITE_TELEGRAM_BOT_USERNAME="wibestorebot"
+VITE_WS_BASE_URL="wss://backend-production-97516.up.railway.app"
+```
 
 ---
 
-## 2. Frontend servisi (Railway’da Frontend → Variables)
+## 5. Telegram Bot servisi — to‘g‘ridan-to‘g‘ri joylash (copy-paste)
 
-Frontend **build** paytida bu o‘zgaruvchilar ishlatiladi. Railway’da Frontend servisining **Variables** qismiga quyidagilarni qo‘ying:
+Telegram Bot servisi → Variables. Quyidagi blokni nusxalab joylashtiring.
 
-| Variable | Qiymat |
-|----------|--------|
-| `VITE_API_BASE_URL` | `https://exemplary-fascination-production-9514.up.railway.app/api/v1` |
-| `VITE_TELEGRAM_BOT_USERNAME` | `wibestorebot` (yoki o‘z bot username’ingiz) |
-| `VITE_WS_BASE_URL` | `wss://exemplary-fascination-production-9514.up.railway.app` |
+```
+BOT_SECRET_KEY="wibestore-telegram-bot-secret-2024"
+BOT_TOKEN="8511895179:AAENCVFFkHqvnzneXgd4eHZpfNNP78-smg4"
+REGISTER_URL="https://frontend-production-76e67.up.railway.app/register"
+WEBSITE_URL="https://backend-production-97516.up.railway.app"
+```
 
-**Eslatma:** O‘zgarishlardan keyin Frontend’ni **qayta build** qilish kerak (Redeploy).
-
----
-
-## 3. Telegram Bot servisi (Railway’da Bot → Variables)
-
-| Variable | Qiymat |
-|----------|--------|
-| `BOT_TOKEN` | @BotFather’dan olgan token (masalan `8511895179:AAE...`) |
-| `WEBSITE_URL` | `https://exemplary-fascination-production-9514.up.railway.app` |
-| `BOT_SECRET_KEY` | `wibestore-telegram-bot-secret-2024` (Backend’dagi `TELEGRAM_BOT_SECRET` bilan bir xil) |
-| `REGISTER_URL` | `https://frontend-production-76e67.up.railway.app/register` |
+**Eslatma:** `BOT_SECRET_KEY` va Backend’dagi `TELEGRAM_BOT_SECRET` bir xil bo‘lishi shart.
 
 ---
 
-## 4. Qisqa tartib
+## 6. Qisqa tartib (copy-paste qilish ketma-ketligi)
 
-1. **Postgres** — loyihada qo‘shing (agar yo‘q bo‘lsa).
-2. **Backend** — Variables’da `DATABASE_PUBLIC_URL` (Reference), `SECRET_KEY`, `CORS_ALLOWED_ORIGINS`, `TELEGRAM_BOT_SECRET` qo‘ying.
-3. **Frontend** — Variables’da `VITE_API_BASE_URL`, `VITE_TELEGRAM_BOT_USERNAME` qo‘ying, keyin Redeploy.
-4. **Bot** — Variables’da `BOT_TOKEN`, `WEBSITE_URL`, `BOT_SECRET_KEY`, `REGISTER_URL` qo‘ying.
-5. **TELEGRAM_BOT_SECRET** (Backend) va **BOT_SECRET_KEY** (Bot) qiymati **bir xil** bo‘lishi kerak.
-
----
-
-## 5. Variables nomlari — aniq yozing (xato bo‘lmasin)
-
-Railway’da Variable qo‘shayotganda **nomni** to‘g‘ri kiriting (katta-kichik harf, pastgi chiziq):
-
-**Backend:**  
-`DATABASE_URL` yoki `DATABASE_PUBLIC_URL` · `SECRET_KEY` · `CORS_ALLOWED_ORIGINS` · `TELEGRAM_BOT_SECRET`
-
-**Frontend:**  
-`VITE_API_BASE_URL` · `VITE_TELEGRAM_BOT_USERNAME` · `VITE_WS_BASE_URL`
-
-**Bot:**  
-`BOT_TOKEN` · `WEBSITE_URL` · `BOT_SECRET_KEY` · `REGISTER_URL`
-
-Noto‘g‘ri yozuvlar (ishlamaydi): `TELEGRAM_BOT_TOKEN`, `BOT_SECRET`, `VITE_API_URL`, `WEBSITE_BASE_URL`.
+1. **Postgres** — agar template’dan qo‘shilgan bo‘lsa, faqat parol/o‘zgaruvchilarni tekshiring; xato bo‘lsa **DATABASE_PUBLIC_URL** dagi ortiqcha `}` ni olib tashlang.
+2. **Redis** — template’dan bo‘lsa, `REDIS_PASSWORD` va boshqalarni tekshiring.
+3. **Backend** — yuqoridagi 3-bo‘limdagi jadvaldan barcha o‘zgaruvchilarni qo‘ying; `DATABASE_URL` / `DATABASE_PUBLIC_URL` uchun Reference tanlang; `SECRET_KEY` ni generatsiya qilib qo‘ying.
+4. **Frontend** — 4-bo‘limdagi jadvaldan barcha o‘zgaruvchilarni qo‘ying, keyin **Redeploy**.
+5. **Telegram Bot** — 5-bo‘limdagi to‘rtta o‘zgaruvchini qo‘ying.
 
 ---
 
-## 6. Bot: 409 Conflict — "only one bot instance"
+## 7. URL’lar xulosasi (bir xil bo‘lishi kerak)
 
-Agar logda **Conflict: terminated by other getUpdates request** chiqsa — bir xil `BOT_TOKEN` bilan **ikki joyda** bot ishlayapti.
+| Qayerda | Qaysi URL |
+|---------|-----------|
+| Backend (asl domen) | `https://backend-production-97516.up.railway.app` |
+| Frontend | `https://frontend-production-76e67.up.railway.app` |
+| API base (Frontend/Backend) | `https://backend-production-97516.up.railway.app/api/v1` |
+| WebSocket | `wss://backend-production-97516.up.railway.app` |
+| Ro‘yxatdan o‘tish (Bot) | `https://frontend-production-76e67.up.railway.app/register` |
 
-**Qilish kerak:** Botni **faqat bitta** joyda ishlating:
-- Railway’da **Wibestore** (yoki Bot) servisi bor bo‘lsa — faqat shu servis ishlasin; kompyuteringizda `python bot.py` ishlamasin.
-- Yoki faqat kompyuteringizda ishlating, Railway’dagi Bot servisini **to‘xtating** (Stop) yoki o‘chiring.
-- Railway’da Bot servisi **replica 1** bo‘lishi kerak (Settings’da tekshiring).
-
----
-
-## 7. "Backend bilan bog'lanib bo'lmadi" — bot backendga ulanmayapti
-
-Agar bot foydalanuvchiga shu xabarni yuborsa:
-
-1. **Railway Bot servisi → Variables** tekshiring:
-   - **WEBSITE_URL** = `https://exemplary-fascination-production-9514.up.railway.app` (**https**, localhost emas).
-   - **BOT_SECRET_KEY** = Backend’dagi `TELEGRAM_BOT_SECRET` bilan **bir xil** (masalan `wibestore-telegram-bot-secret-2024`).
-
-2. **Backend ishlayotganini** tekshiring: brauzerda `https://exemplary-fascination-production-9514.up.railway.app/api/v1/` ochilsa — backend ishlayapti.
-
-3. Bot’ni **Redeploy** qiling (Variables o‘zgartirilgandan keyin).
-
----
-
-## 8. Tekshirish
-
-- Backend: brauzerda `https://exemplary-fascination-production-9514.up.railway.app/api/v1/` (yoki admin/docs) ochilsa — backend ishlayapti.
-- Frontend: `https://frontend-production-76e67.up.railway.app` — sayt ochilsa, Telegram tugmasi va ro‘yxatdan o‘tish ishlashi uchun `VITE_API_BASE_URL` to‘g‘ri bo‘lishi kerak.
-- Bot: Telegram’da `/start` → telefon yuborish → kod olish; keyin saytda `/register` da telefon + kod kiritib ro‘yxatdan o‘tish.
-
----
-
-*Agar bot "Backend bilan bog'lanib bo'lmadi" deb yuborsa — yuqoridagi 7-bo‘limni bajaring.*
+Agar Backend domeningiz boshqa bo‘lsa (masalan `exemplary-fascination-production-9514.up.railway.app`), yuqoridagi **backend-production-97516** o‘rniga o‘sha domenni barcha joyda almashtiring.
