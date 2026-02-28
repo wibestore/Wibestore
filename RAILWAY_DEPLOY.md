@@ -1,5 +1,8 @@
 # 🚂 Railway'da deploy — Backend, Bot, Frontend va integratsiya
 
+**Production 100% tayyorlik ro‘yxati:** [PRODUCTION_READY.md](PRODUCTION_READY.md)  
+**Aniq variable’lar (sizning URL’lar):** [RAILWAY_VARIABLES.md](RAILWAY_VARIABLES.md)
+
 Log'dagi xatoliklar ko‘pincha **o‘rnatilmagan env o‘zgaruvchilar** tufayli bo‘ladi. Quyida har bir servis uchun majburiy qadamlari va Telegram integratsiyasi uchun sozlash keltirilgan.
 
 ---

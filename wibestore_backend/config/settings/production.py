@@ -63,11 +63,17 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 
 # ============================================================
-# CSRF
+# CSRF (Railway va custom domenlar)
 # ============================================================
+_default_csrf = [
+    "https://wibestore.uz",
+    "https://api.wibestore.uz",
+    "https://exemplary-fascination-production-9514.up.railway.app",
+    "https://frontend-production-76e67.up.railway.app",
+]
 CSRF_TRUSTED_ORIGINS = env.list(  # noqa: F405
     "CSRF_TRUSTED_ORIGINS",
-    default=["https://wibestore.uz", "https://api.wibestore.uz"],
+    default=_default_csrf,
 )
 
 # ============================================================

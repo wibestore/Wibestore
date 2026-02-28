@@ -94,7 +94,9 @@ Ushbu hujjat backend, bot va frontend o'rtasidagi Telegram orqali ro'yxatdan o't
 
 ## 6. Railway deploy
 
-Railway'da backend, bot va frontend uchun majburiy o‘zgaruvchilar va tez tekshirish: **[RAILWAY_DEPLOY.md](RAILWAY_DEPLOY.md)**.
+- **Production 100% tayyorlik:** [PRODUCTION_READY.md](PRODUCTION_READY.md)
+- **Aniq variable’lar (URL’lar bilan):** [RAILWAY_VARIABLES.md](RAILWAY_VARIABLES.md)
+- **Umumiy qadamlari:** [RAILWAY_DEPLOY.md](RAILWAY_DEPLOY.md)
 
 ---
 
