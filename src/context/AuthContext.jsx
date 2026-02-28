@@ -61,27 +61,30 @@ export const AuthProvider = ({ children }) => {
         return () => window.removeEventListener('wibe-logout', handleLogout);
     }, []);
 
-    // Login функция
-    const login = async (email, password) => {
+    // Login функция (email/password — hozir ishlatilmaydi, faqat Telegram)
+    const login = async (_email, _password) => {
+        throw new Error('Kirish faqat Telegram orqali. Telefon raqam va kodni kiriting.');
+    };
+
+    // Telegram orqali kirish (telefon + botdan olingan kod)
+    const loginWithTelegram = async (phone, code) => {
         try {
             const publicClient = createPublicClient();
-            const { data } = await publicClient.post('/auth/login/', { email, password });
-            
-            // Backend returns: { success: true, data: { user, tokens } } or legacy { access, refresh }
-            const payload = data.data || data;
-            const tokens = payload.tokens || { access: payload.access, refresh: payload.refresh };
-            setTokens({ access: tokens.access, refresh: tokens.refresh });
-            
-            let userData = payload.user;
-            if (!userData && tokens.access) {
-                const { data: me } = await apiClient.get('/auth/me/');
-                userData = me;
-            }
+            const { data } = await publicClient.post('/auth/register/telegram/', {
+                phone: String(phone).trim(),
+                code: String(code).trim(),
+            }, { withCredentials: true });
+            const payload = data?.data || data;
+            const tokens = payload?.tokens || {};
+            if (tokens.access) setTokens({ access: tokens.access, refresh: tokens.refresh || '' });
+            const userData = payload?.user;
             setUser(normalizeUser(userData));
             return normalizeUser(userData);
         } catch (error) {
-            console.error('[Auth] Login failed:', error);
-            throw error.response?.data?.error || error.response?.data || new Error('Login failed');
+            console.error('[Auth] Telegram login failed:', error);
+            const res = error.response?.data;
+            const msg = res?.error?.message || (typeof res?.error === 'string' ? res.error : null) || res?.detail;
+            throw new Error(msg || 'Kod noto\'g\'ri yoki muddati tugagan. Botdan yangi kod oling.');
         }
     };
 
@@ -221,38 +224,13 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    /** Yangi emailga tasdiqlash kodi yuborish (Google reserve account kabi) */
-    const requestEmailChange = async (newEmail) => {
-        try {
-            await apiClient.post('/auth/email/change-request/', { new_email: newEmail.trim() });
-            return true;
-        } catch (error) {
-            console.error('[Auth] Email change request failed:', error);
-            throw error.response?.data || new Error('Request failed');
-        }
-    };
-
-    /** Tasdiqlash kodi bilan yangi emailni aktivlashtirish */
-    const confirmEmailChange = async (newEmail, code) => {
-        try {
-            await apiClient.post('/auth/email/change-confirm/', {
-                new_email: newEmail.trim(),
-                code: String(code).trim(),
-            });
-            await refreshUser();
-            return true;
-        } catch (error) {
-            console.error('[Auth] Email change confirm failed:', error);
-            throw error.response?.data || new Error('Confirm failed');
-        }
-    };
-
     const value = {
         user,
         isLoading,
         isInitialized,
         isAuthenticated: !!user,
         login,
+        loginWithTelegram,
         loginWithGoogle,
         register,
         registerWithTelegram,
@@ -261,8 +239,6 @@ export const AuthProvider = ({ children }) => {
         refreshUser,
         resetPassword,
         confirmResetPassword,
-        requestEmailChange,
-        confirmEmailChange,
     };
 
     return (

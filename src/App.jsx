@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -29,7 +29,6 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const SellPage = lazy(() => import('./pages/SellPage'));
 const FAQPage = lazy(() => import('./pages/FAQPage'));
-const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const StatisticsPage = lazy(() => import('./pages/StatisticsPage'));
@@ -255,11 +254,7 @@ function App() {
                             <PublicLayout><FAQPage /></PublicLayout>
                           </Suspense>
                         } />
-                        <Route path="/forgot-password" element={
-                          <Suspense fallback={<PageLoader />}>
-                            <PublicLayout><ForgotPasswordPage /></PublicLayout>
-                          </Suspense>
-                        } />
+                        <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
                         <Route path="/reset-password" element={
                           <Suspense fallback={<PageLoader />}>
                             <PublicLayout><ResetPasswordPage /></PublicLayout>

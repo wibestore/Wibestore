@@ -26,7 +26,7 @@ const ResetPasswordPage = () => {
 
     useEffect(() => {
         if (!uid || !token) {
-            navigate('/forgot-password', { replace: true });
+            navigate('/login', { replace: true });
         }
     }, [uid, token, navigate]);
 
@@ -103,7 +103,7 @@ const ResetPasswordPage = () => {
         >
             <div style={{ width: '100%', maxWidth: '400px' }}>
                 <Link
-                    to="/forgot-password"
+                    to="/login"
                     className="inline-flex items-center gap-2"
                     style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginBottom: '24px', textDecoration: 'none' }}
                 >
