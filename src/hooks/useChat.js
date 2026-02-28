@@ -71,14 +71,14 @@ export const useCreateChat = () => {
 };
 
 /**
- * Hook для отправки сообщения
+ * Hook для отправки сообщения (backend: POST /chats/:roomId/send/ body: { content })
  */
 export const useSendMessage = (chatId) => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (text) => {
-            const { data } = await apiClient.post(`/chats/${chatId}/messages/`, { text });
+            const { data } = await apiClient.post(`/chats/${chatId}/send/`, { content: text });
             return data;
         },
         onSuccess: () => {

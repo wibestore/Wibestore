@@ -1,0 +1,163 @@
+import { useState } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { ArrowLeft, Send, MessageCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useChatMessages, useSendMessage } from '../hooks/useChat.js';
+import { useLanguage } from '../context/LanguageContext';
+
+/**
+ * Sahifa: xarid (to'lov) dan keyin ochiladigan chat — xaridor, sotuvchi va admin.
+ * URL: /chat/:roomId
+ */
+export default function ChatRoomPage() {
+    const { roomId } = useParams();
+    const navigate = useNavigate();
+    const { user, isAuthenticated } = useAuth();
+    const { t } = useLanguage();
+    const [text, setText] = useState('');
+
+    const { data: messagesData, isLoading } = useChatMessages(roomId);
+    const sendMessageMutation = useSendMessage(roomId);
+
+    const messages = messagesData?.pages?.flatMap((p) => p.results ?? p) ?? [];
+
+    const handleSend = (e) => {
+        e.preventDefault();
+        if (!text.trim() || sendMessageMutation.isPending) return;
+        sendMessageMutation.mutate(text.trim(), {
+            onSuccess: () => setText(''),
+        });
+    };
+
+    if (!isAuthenticated || !user) {
+        navigate('/login?redirect=' + encodeURIComponent('/chat/' + roomId));
+        return null;
+    }
+
+    return (
+        <div className="page-enter" style={{ minHeight: '100vh', paddingBottom: '80px' }}>
+            <div className="gh-container" style={{ maxWidth: '720px', margin: '0 auto', paddingTop: '24px' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        marginBottom: '24px',
+                        borderBottom: '1px solid var(--color-border-muted)',
+                        paddingBottom: '16px',
+                    }}
+                >
+                    <Link
+                        to="/"
+                        className="btn btn-ghost btn-sm"
+                        style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                        <ArrowLeft style={{ width: '18px', height: '18px' }} />
+                        {t('common.back') || 'Orqaga'}
+                    </Link>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                        <MessageCircle style={{ width: '22px', height: '22px', color: 'var(--color-accent-blue)' }} />
+                        <h1 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', margin: 0 }}>
+                            {t('detail.order_chat') || 'Buyurtma chat'}
+                        </h1>
+                    </div>
+                </div>
+
+                <div
+                    style={{
+                        backgroundColor: 'var(--color-bg-secondary)',
+                        borderRadius: 'var(--radius-xl)',
+                        border: '1px solid var(--color-border-default)',
+                        minHeight: '400px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'hidden',
+                    }}
+                >
+                    <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        {isLoading ? (
+                            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+                                {t('common.loading') || 'Yuklanmoqda...'}
+                            </p>
+                        ) : messages.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '32px', color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+                                <MessageCircle style={{ width: '48px', height: '48px', margin: '0 auto 12px', opacity: 0.5 }} />
+                                <p>{t('detail.no_messages') || 'Xabar yo\'q. Birinchi xabarni yozing.'}</p>
+                            </div>
+                        ) : (
+                            messages.map((msg) => {
+                                const isMe = msg.sender?.id === user.id;
+                                return (
+                                    <div
+                                        key={msg.id}
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: isMe ? 'flex-end' : 'flex-start',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                maxWidth: '80%',
+                                                padding: '10px 14px',
+                                                borderRadius: 'var(--radius-2xl)',
+                                                ...(isMe
+                                                    ? {
+                                                        backgroundColor: 'var(--color-accent-blue)',
+                                                        color: 'var(--color-text-on-accent)',
+                                                        borderBottomRightRadius: 'var(--radius-sm)',
+                                                    }
+                                                    : {
+                                                        backgroundColor: 'var(--color-bg-tertiary)',
+                                                        color: 'var(--color-text-primary)',
+                                                        borderBottomLeftRadius: 'var(--radius-sm)',
+                                                    }),
+                                            }}
+                                        >
+                                            {!isMe && msg.sender?.display_name && (
+                                                <p style={{ fontSize: 'var(--font-size-xs)', opacity: 0.8, marginBottom: '4px' }}>
+                                                    {msg.sender.display_name}
+                                                </p>
+                                            )}
+                                            <p style={{ fontSize: 'var(--font-size-sm)', margin: 0 }}>{msg.content}</p>
+                                            <p style={{ fontSize: 'var(--font-size-xs)', marginTop: '4px', opacity: 0.8 }}>
+                                                {msg.created_at ? new Date(msg.created_at).toLocaleString('uz-UZ') : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
+
+                    <form
+                        onSubmit={handleSend}
+                        style={{
+                            padding: '16px',
+                            borderTop: '1px solid var(--color-border-muted)',
+                            display: 'flex',
+                            gap: '8px',
+                        }}
+                    >
+                        <input
+                            type="text"
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            placeholder={t('detail.write_message') || 'Xabar yozing...'}
+                            className="input input-md"
+                            style={{ flex: 1 }}
+                            disabled={sendMessageMutation.isPending}
+                        />
+                        <button
+                            type="submit"
+                            disabled={!text.trim() || sendMessageMutation.isPending}
+                            className="btn btn-primary btn-md"
+                            style={{ padding: '10px 16px' }}
+                        >
+                            <Send style={{ width: '18px', height: '18px' }} />
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -589,6 +589,12 @@
         "no_image": "No image",
         "image_load_failed": "Image failed to load",
         "chat_coming_soon": "Chat with seller will be available soon.",
+        "order_chat": "Order chat",
+        "purchase_success_chat": "Purchase confirmed. Chat with seller and admin opened.",
+        "insufficient_balance": "Insufficient balance. Top up your wallet or pay via Telegram.",
+        "purchase_error": "Purchase could not be completed.",
+        "no_messages": "No messages yet. Send the first one.",
+        "write_message": "Write a message...",
         "reviewer_unknown": "User",
         "fast_delivery": "Fast delivery"
     },

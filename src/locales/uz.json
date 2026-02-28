@@ -589,6 +589,12 @@
         "no_image": "Rasm yo'q",
         "image_load_failed": "Rasm yuklanmadi",
         "chat_coming_soon": "Sotuvchi bilan chat tez orada ulanadi.",
+        "order_chat": "Buyurtma chat",
+        "purchase_success_chat": "Xarid tasdiqlandi. Sotuvchi va admin bilan chat ochildi.",
+        "insufficient_balance": "Balans yetarli emas. Hamyonni to'ldiring yoki Telegram orqali to'lang.",
+        "purchase_error": "Xarid amalga oshmadi.",
+        "no_messages": "Xabar yo'q. Birinchi xabarni yozing.",
+        "write_message": "Xabar yozing...",
         "reviewer_unknown": "Foydalanuvchi",
         "fast_delivery": "Tez yetkazish"
     },

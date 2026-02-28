@@ -45,4 +45,20 @@ export const useWithdraw = () => {
     });
 };
 
-export default { useTransactions, useDeposit, useWithdraw };
+/**
+ * Hook для xarid (listingni balance orqali sotib olish — escrow).
+ * Muvaffaqiyatda data.chat_room_id qaytadi — shu chat ochiladi.
+ */
+export const usePurchaseListing = () => {
+    return useMutation({
+        mutationFn: async ({ listing_id }) => {
+            const { data } = await apiClient.post('/payments/purchase/', {
+                listing_id,
+                payment_method: 'balance',
+            });
+            return data;
+        },
+    });
+};
+
+export default { useTransactions, useDeposit, useWithdraw, usePurchaseListing };

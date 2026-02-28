@@ -42,7 +42,7 @@ export {
     useMarkNotificationRead,
     useMarkAllNotificationsRead,
 } from './useNotifications';
-export { useTransactions, useDeposit, useWithdraw } from './usePayments';
+export { useTransactions, useDeposit, useWithdraw, usePurchaseListing } from './usePayments';
 export {
     useSubscriptionPlans,
     useMySubscriptions,

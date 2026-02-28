@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const TELEGRAM_URL = 'https://t.me/wibestoreuz';
-import { useListing, useAddToFavorites, useRemoveFromFavorites, useListings } from '../hooks';
+import { useListing, useAddToFavorites, useRemoveFromFavorites, useListings, usePurchaseListing } from '../hooks';
 import ReviewList from '../components/ReviewList';
 import AccountCard from '../components/AccountCard';
 import SkeletonLoader from '../components/SkeletonLoader';
@@ -336,9 +336,42 @@ const AccountDetailPage = () => {
         setShowBuyerRulesModal(true);
     };
 
-    /** Qoidalar o‘tkazilgach: Telegramga yo‘naltirish, to‘lov adminiga Telegram orqali */
+    const purchaseListing = usePurchaseListing();
+
+    /** Qoidalar o‘tkazilgach: balance orqali xarid, muvaffaqiyatda chat ochiladi (sotuvchi + admin). */
     const handleBuyPassRedirectToTelegram = () => {
-        setShowBuyerRulesModal(false);
+        if (!listing?.id) return;
+        purchaseListing.mutate(
+            { listing_id: listing.id },
+            {
+                onSuccess: (data) => {
+                    setShowBuyerRulesModal(false);
+                    const chatRoomId = data?.data?.chat_room_id;
+                    if (chatRoomId) {
+                        addToast({ type: 'success', title: t('detail.purchase_success_chat') || 'Xarid tasdiqlandi. Chat ochildi.' });
+                        navigate(`/chat/${chatRoomId}`);
+                    } else {
+                        fallbackToTelegram();
+                    }
+                },
+                onError: (err) => {
+                    setShowBuyerRulesModal(false);
+                    const msg = err?.response?.data?.error?.message || err?.message || '';
+                    const statusCode = err?.response?.status;
+                    const insufficient = statusCode === 402 || msg.toLowerCase().includes('balance');
+                    if (insufficient) {
+                        addToast({ type: 'warning', title: t('detail.insufficient_balance') || 'Balans yetarli emas. Hamyonni to\'ldiring yoki Telegram orqali to\'lang.' });
+                        navigate('/coins');
+                    } else {
+                        addToast({ type: 'error', title: t('detail.purchase_error') || 'Xarid amalga oshmadi.' });
+                        fallbackToTelegram();
+                    }
+                },
+            }
+        );
+    };
+
+    const fallbackToTelegram = () => {
         const title = listing?.title || '';
         const price = listing?.price != null ? new Intl.NumberFormat('uz-UZ').format(listing.price) + ' so\'m' : '';
         const text = [title && `"${title}"`, 'akkauntini sotib olmoqchiman.', price && `Narx: ${price}`].filter(Boolean).join(' ');

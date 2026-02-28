@@ -125,11 +125,17 @@ class PurchaseListingView(APIView):
 
         escrow = EscrowService.create_escrow(buyer=request.user, listing=listing)
 
+        # Open chat between buyer, seller and site admin(s) after payment
+        from apps.messaging.services import create_order_chat_for_escrow
+        chat_room = create_order_chat_for_escrow(escrow)
+        escrow_data = EscrowTransactionSerializer(escrow).data
+        escrow_data["chat_room_id"] = str(chat_room.id)
+
         return Response(
             {
                 "success": True,
                 "message": "Purchase created. Payment held in escrow.",
-                "data": EscrowTransactionSerializer(escrow).data,
+                "data": escrow_data,
             },
             status=status.HTTP_201_CREATED,
         )
