@@ -14,7 +14,10 @@ import logging
 import os
 import urllib.error
 import urllib.request
+import warnings
 from pathlib import Path
+
+warnings.filterwarnings("ignore", message=".*per_message.*", category=UserWarning, module="telegram")
 
 try:
     from dotenv import load_dotenv
@@ -23,6 +26,7 @@ except ImportError:
     pass
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
+from telegram.error import Conflict as TelegramConflict
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -241,15 +245,34 @@ def main():
             ],
         },
         fallbacks=[CommandHandler('cancel', cancel)],
-        per_message=False,
+        per_message=True,
     )
 
     app.add_handler(conv_handler)
     app.add_handler(CommandHandler('help', help_command))
     app.add_handler(MessageHandler(filters.COMMAND, unknown))
 
+    # Conflict xatosida aniq xabar (bitta bot instance bo'lishi kerak)
+    async def error_handler(update, context):
+        if isinstance(context.error, TelegramConflict):
+            logger.warning(
+                "Conflict: Bot boshqa joyda ham ishlayapti. Faqat bitta instance ishlashi kerak "
+                "(Railway yoki kompyuteringizda, ikkovi emas)."
+            )
+            return
+        logger.exception("Kutilmagan xato: %s", context.error)
+
+    app.add_error_handler(error_handler)
+
     logger.info("Bot ishga tushdi...")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    try:
+        app.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
+    except TelegramConflict:
+        logger.warning(
+            "Bot Conflict: Faqat BITTA bot instance ishlashi kerak. "
+            "Boshqa joyda (kompyuter yoki ikkinchi Railway replica) botni to'xtating."
+        )
+        raise
 
 
 if __name__ == '__main__':

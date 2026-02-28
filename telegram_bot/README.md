@@ -66,6 +66,14 @@ Frontendda `/register` sahifasida telefon + kod kiritiladi, so'rov `POST /api/v1
 | POST | `/api/v1/auth/telegram/otp/create/` | Bot uchun kod yaratish (secret_key, telegram_id, phone_number) |
 | POST | `/api/v1/auth/register/telegram/` | Ro'yxatdan o'tish: phone, code → User + JWT (va httpOnly cookie) |
 
+## Conflict: "only one bot instance running"
+
+Agar logda `Conflict: terminated by other getUpdates request` ko'rsa — **bitta token bilan faqat bitta bot instance** ishlashi kerak. Quyilarni tekshiring:
+
+- **Railway:** Bitta Telegram Bot servisi bo'lsin, replica 1.
+- **Lokal:** Botni Railway'da ishlatayotgan bo'lsangiz, kompyuteringizda `python bot.py` ishlamasin (yoki aksincha).
+- **Webhook:** Agar oldin webhook ishlatilgan bo'lsa, @BotFather orqali webhook ni o'chirib, keyin polling qayta ishga tushiring.
+
 ## Xavfsizlik
 
 - Kod **10 daqiqa** amal qiladi, **bir marta** ishlatiladi.
