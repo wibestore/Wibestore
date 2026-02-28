@@ -1,4 +1,4 @@
-# TelegramRegistrationCode: full_name field va code max_length 10 ga oshirish
+# TelegramRegistrationCode: full_name field + index fix
 
 from django.db import migrations, models
 
@@ -10,14 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Fix: 0003 dagi index yaratilmagan bo'lsa, avval yaratamiz
+        migrations.RunSQL(
+            sql='CREATE INDEX IF NOT EXISTS "telegram_re_code_8a0b0d_idx" ON "telegram_registration_codes" ("code", "is_used");',
+            reverse_sql='DROP INDEX IF EXISTS "telegram_re_code_8a0b0d_idx";',
+        ),
         migrations.AddField(
             model_name="telegramregistrationcode",
             name="full_name",
             field=models.CharField(blank=True, default="", max_length=150),
-        ),
-        migrations.AlterField(
-            model_name="telegramregistrationcode",
-            name="code",
-            field=models.CharField(db_index=True, max_length=10),
         ),
     ]

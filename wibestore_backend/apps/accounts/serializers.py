@@ -217,4 +217,4 @@ class TelegramRegisterSerializer(serializers.Serializer):
     """Saytda telefon + kod orqali ro'yxatdan o'tish."""
 
     phone = serializers.CharField(max_length=20)
-    code = serializers.CharField(min_length=4, max_length=10)
+    code = serializers.CharField(min_length=4, max_length=6)
