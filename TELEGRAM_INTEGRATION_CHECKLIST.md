@@ -92,7 +92,13 @@ Ushbu hujjat backend, bot va frontend o'rtasidagi Telegram orqali ro'yxatdan o't
 
 ---
 
-## 6. Tez tekshirish (lokaldan)
+## 6. Railway deploy
+
+Railway'da backend, bot va frontend uchun majburiy o‘zgaruvchilar va tez tekshirish: **[RAILWAY_DEPLOY.md](RAILWAY_DEPLOY.md)**.
+
+---
+
+## 7. Tez tekshirish (lokaldan)
 
 1. Backend: `cd wibestore_backend && python manage.py runserver`
 2. Bot: `cd telegram_bot && python bot.py` (bitta instance).
@@ -103,6 +109,6 @@ Agar "Backend ishlamayotgan" yoki 403 chiqsa: `TELEGRAM_BOT_SECRET` (backend) va
 
 ---
 
-## 7. Xulosa
+## 8. Xulosa
 
 Integratsiya **mukammal** qilib qo'yilgan: backend (OTP yaratish + ro'yxatdan o'tish + JWT/cookie), bot (kod olish + havola) va frontend (forma + API chaqiruvi + token/user saqlash) barchasi bog'langan. Production'da faqat env o'zgaruvchilarini to'g'ri o'rnatish va bitta bot instance ishlatish kifoya.

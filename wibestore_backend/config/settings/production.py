@@ -40,6 +40,16 @@ if not os.environ.get("FERNET_KEY", "").strip() or FERNET_KEY == "AAAAAAAAAAAAAA
         UserWarning,
     )
 
+# Production da DB: Railway'da Postgres qo'shib, DATABASE_URL yoki DATABASE_PUBLIC_URL o'rnating
+_db_url = (os.environ.get("DATABASE_PUBLIC_URL") or os.environ.get("DATABASE_URL") or "").strip()
+_db_host = (DATABASES.get("default") or {}).get("HOST", "")  # noqa: F405
+if not _db_url or _db_host in ("localhost", "127.0.0.1", "::1"):
+    raise ValueError(
+        "Production requires a real database. Railway: Add Postgres plugin, then in Backend service "
+        "Variables set DATABASE_URL (or DATABASE_PUBLIC_URL) to the Postgres connection string. "
+        "Do not use localhost in production."
+    )
+
 # ============================================================
 # SECURITY
 # ============================================================
