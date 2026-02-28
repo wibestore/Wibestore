@@ -535,10 +535,15 @@
         "sold": "Sotilgan"
     },
     "profile": {
+        "active_listings": "Faol e'lonlar",
+        "sold": "Sotilgan",
+        "views": "Ko'rilishlar",
+        "earnings": "Daromad",
+        "conversion": "Konversiya",
         "dashboard": "Boshqaruv paneli",
         "referral": "Do'stlarni taklif qilish",
         "referral_title": "Do'stlarni taklif qiling",
-        "referral_description": "Havolangizni ulashing. Do'stlaringiz ro'yxatdan o'tsa, mukofotlar olasiz.",
+        "referral_description": "Havolangizni ulashing. Do'stlaringiz ro'yxatdan o'tsa, siz 2% skidka olasiz.",
         "your_code": "Sizning kodingiz",
         "referral_link": "Taklif havolasi",
         "referred_count": "Taklif qilinganlar",

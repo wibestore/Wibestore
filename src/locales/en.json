@@ -535,10 +535,15 @@
         "sold": "Sold"
     },
     "profile": {
+        "active_listings": "Active listings",
+        "sold": "Sold",
+        "views": "Views",
+        "earnings": "Earnings",
+        "conversion": "Conversion",
         "dashboard": "Dashboard",
         "referral": "Referral",
         "referral_title": "Invite friends",
-        "referral_description": "Share your link. When friends sign up, you get rewards.",
+        "referral_description": "Share your link. When friends sign up, you get a 2% discount.",
         "your_code": "Your code",
         "referral_link": "Referral link",
         "referred_count": "Referred",

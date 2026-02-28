@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Tag, Heart, Star, Settings, Edit2, LogOut, Package, Clock, CheckCircle, XCircle, Trash2, PlusCircle, BarChart3, UserPlus, Copy } from 'lucide-react';
+import { ShoppingBag, Tag, Heart, Settings, Edit2, LogOut, Package, Clock, CheckCircle, XCircle, Trash2, PlusCircle, BarChart3, UserPlus, Copy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile, useProfileListings, useProfileFavorites, useProfilePurchases, useProfileSales, useDeleteListing, useSellerDashboard, useReferral } from '../hooks';
 import AccountCard from '../components/AccountCard';
@@ -27,9 +27,6 @@ const ProfilePage = () => {
     const { data: dashboardData } = useSellerDashboard();
     const { data: referralData } = useReferral();
     const { mutate: deleteListingMutation } = useDeleteListing();
-
-    const [reviewCount] = useState(0);
-    const [averageRating] = useState(5.0);
 
     useEffect(() => {
         if (!isAuthenticated) navigate('/login');
@@ -166,25 +163,14 @@ const ProfilePage = () => {
                             </button>
                         </div>
 
-                        {/* Info */}
+                        {/* Info — ism ostida faqat Telegram ID */}
                         <div className="flex-1 text-center md:text-left">
                             <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginBottom: '4px' }}>
                                 {user.name || user.display_name || user.email}
                             </h1>
-                            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginBottom: '12px' }}>
-                                {user.email}
+                            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+                                {user.telegram_id || user.telegram_username || user.email || ''}
                             </p>
-                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                                <span className="badge badge-yellow" style={{ fontSize: '12px' }}>
-                                    <Star className="w-3 h-3 fill-current" /> {averageRating} ({reviewCount})
-                                </span>
-                                <span className="badge badge-green" style={{ fontSize: '12px' }}>
-                                    <Tag className="w-3 h-3" /> {sales.length} {t('profile.sales_count') || 'sales'}
-                                </span>
-                                <span className="badge badge-blue" style={{ fontSize: '12px' }}>
-                                    <ShoppingBag className="w-3 h-3" /> {purchases.length} {t('profile.purchases_count') || 'purchases'}
-                                </span>
-                            </div>
                         </div>
 
                         {/* Actions */}
