@@ -2,11 +2,14 @@
 WibeStore Backend - Production Settings
 """
 
+import logging
 import os
 import socket
 import warnings
 
 from .base import *  # noqa: F401,F403
+
+logger = logging.getLogger(__name__)
 
 # ============================================================
 # DEBUG (must be False in production)
@@ -14,14 +17,22 @@ from .base import *  # noqa: F401,F403
 DEBUG = False
 
 # ============================================================
-# PRODUCTION SECURITY CHECKS (fail fast if misconfigured)
+# PRODUCTION SECURITY CHECKS
 # ============================================================
-if os.environ.get("SECRET_KEY", "").strip() in ("", "django-insecure-change-me-in-production"):
-    raise ValueError(
-        "Production requires a strong SECRET_KEY. "
-        "Set SECRET_KEY in your environment (e.g. Railway Variables)."
+_raw_secret = os.environ.get("SECRET_KEY", "").strip()
+if _raw_secret in ("", "django-insecure-change-me-in-production"):
+    from django.core.management.utils import get_random_secret_key
+    SECRET_KEY = get_random_secret_key()
+    logger.critical(
+        "SECRET_KEY o'rnatilmagan! Vaqtincha random kalit ishlatilmoqda. "
+        "Railway: Backend servisida Variables → SECRET_KEY qo'shing (yangi kalit: "
+        "python -c \"from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())\"). "
+        "Aks holda har restartda sessiyalar yangilanadi."
     )
-# FERNET_KEY: base.py sets a dummy if unset; in production we require a real key from env
+else:
+    SECRET_KEY = _raw_secret
+
+# FERNET_KEY: base.py sets a dummy if unset; in production we only warn
 if not os.environ.get("FERNET_KEY", "").strip() or FERNET_KEY == "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=":  # noqa: F405
     warnings.warn(
         "FERNET_KEY is not set or is dummy in production. Set FERNET_KEY in env. "
