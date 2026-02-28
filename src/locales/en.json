@@ -167,7 +167,9 @@
         "telegram_submit": "Sign up via Telegram",
         "telegram_success": "You have signed up successfully via Telegram!",
         "telegram_phone_required": "Enter your phone number",
-        "telegram_code_required": "Enter the 6-digit code from the bot"
+        "telegram_code_required": "Enter the 6-digit code from the bot",
+        "telegram_get_code": "Get code",
+        "telegram_verify": "Verify"
     },
     "products": {
         "title": "All Products",

@@ -167,7 +167,9 @@
         "telegram_submit": "Telegram orqali ro'yxatdan o'tish",
         "telegram_success": "Telegram orqali muvaffaqiyatli ro'yxatdan o'tdingiz!",
         "telegram_phone_required": "Telefon raqamni kiriting",
-        "telegram_code_required": "Botdan olgan 6 xonali kodni kiriting"
+        "telegram_code_required": "Botdan olgan 6 xonali kodni kiriting",
+        "telegram_get_code": "Kod olish",
+        "telegram_verify": "Tekshirish"
     },
     "products": {
         "title": "Barcha mahsulotlar",

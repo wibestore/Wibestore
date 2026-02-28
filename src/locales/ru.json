@@ -167,7 +167,9 @@
         "telegram_submit": "Регистрация через Telegram",
         "telegram_success": "Вы успешно зарегистрировались через Telegram!",
         "telegram_phone_required": "Введите номер телефона",
-        "telegram_code_required": "Введите 6-значный код из бота"
+        "telegram_code_required": "Введите 6-значный код из бота",
+        "telegram_get_code": "Получить код",
+        "telegram_verify": "Проверить"
     },
     "products": {
         "title": "Все товары",
