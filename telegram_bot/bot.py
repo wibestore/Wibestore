@@ -56,12 +56,26 @@ WAITING_PHONE, CONFIRMING = range(2)
 
 # ===== HELPER FUNCTIONS =====
 
+def _normalize_phone(phone: str) -> str:
+    """Telefonni +998XXXXXXXXX ko'rinishiga keltirish (backend bilan bir xil)."""
+    cleaned = "".join(c for c in phone if c.isdigit())
+    if not cleaned:
+        return phone.strip()
+    if cleaned.startswith("998") and len(cleaned) == 12:
+        return "+" + cleaned
+    if len(cleaned) == 9 and cleaned[0] == "9":
+        return "+998" + cleaned
+    return "+" + cleaned if not phone.strip().startswith("+") else phone.strip()
+
+
 def create_otp_via_api(telegram_id: int, phone: str) -> dict:
     """Backend API orqali OTP kod yaratish (urllib — qo'shimcha paket kerak emas)."""
     if not BOT_SECRET_KEY:
         logger.error("BOT_SECRET_KEY yoki TELEGRAM_BOT_SECRET o'rnatilmagan")
         return None
-    url = f"{WEBSITE_URL}/api/v1/auth/telegram/otp/create/"
+    if "localhost" in WEBSITE_URL or "127.0.0.1" in WEBSITE_URL:
+        logger.warning("WEBSITE_URL localhost — Railway'da backend manzilini (https://...) o'rnating!")
+    url = f"{WEBSITE_URL.rstrip('/')}/api/v1/auth/telegram/otp/create/"
     body = json.dumps({
         "secret_key": BOT_SECRET_KEY,
         "telegram_id": telegram_id,
@@ -74,16 +88,20 @@ def create_otp_via_api(telegram_id: int, phone: str) -> dict:
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=15) as resp:
             if resp.status == 200:
                 return json.loads(resp.read().decode("utf-8"))
-            logger.error(f"API error: {resp.status} - {resp.read().decode()}")
+            raw = resp.read().decode()
+            logger.error("API javob: %s - %s", resp.status, raw[:500])
             return None
     except urllib.error.HTTPError as e:
-        logger.error(f"API HTTP error: {e.code} - {e.read().decode() if e.fp else ''}")
+        raw = e.read().decode() if e.fp else ""
+        logger.error("Backend HTTP %s: %s", e.code, raw[:500])
+        if e.code == 403:
+            logger.error("403: BOT_SECRET_KEY backend dagi TELEGRAM_BOT_SECRET bilan bir xil bo'lishi kerak.")
         return None
     except (urllib.error.URLError, OSError) as e:
-        logger.error(f"Request failed: {e}")
+        logger.error("Backend ga ulanish xatosi: %s (WEBSITE_URL=%s)", e, WEBSITE_URL)
         return None
 
 
@@ -142,16 +160,17 @@ async def receive_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     user = update.effective_user
     telegram_id = user.id
+    phone_normalized = _normalize_phone(phone)
 
     wait_msg = await update.message.reply_html("⏳ Kod tayyorlanmoqda...")
 
-    result = create_otp_via_api(telegram_id=telegram_id, phone=phone)
+    result = create_otp_via_api(telegram_id=telegram_id, phone=phone_normalized)
 
     await wait_msg.delete()
 
-    if result and result.get('success'):
-        code = result['code']
-        remaining = result.get('remaining_seconds', 600)
+    if result and result.get("success"):
+        code = result["code"]
+        remaining = result.get("remaining_seconds", 600)
 
         otp_msg = format_otp_message(code, remaining, REGISTER_URL)
         keyboard = [
@@ -159,7 +178,7 @@ async def receive_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             [InlineKeyboardButton("🌐 Saytga o'tish", url=REGISTER_URL)],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        context.user_data['phone'] = phone
+        context.user_data["phone"] = phone_normalized
 
         from telegram import ReplyKeyboardRemove
         await update.message.reply_html(otp_msg, reply_markup=reply_markup)
@@ -168,7 +187,10 @@ async def receive_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
             reply_markup=ReplyKeyboardRemove(),
         )
         return CONFIRMING
-    await update.message.reply_html("❌ Xatolik. Backend ishlamayotgan bo'lishi mumkin. /start yozing.")
+    await update.message.reply_html(
+        "❌ <b>Backend bilan bog'lanib bo'lmadi.</b>\n\n"
+        "Bir necha soniyadan keyin /start ni qayta yuboring. Agar takrorlansa, sayt administratoriga murojaat qiling."
+    )
     return ConversationHandler.END
 
 
