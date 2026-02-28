@@ -107,7 +107,10 @@ def create_otp_via_api(telegram_id: int, phone: str) -> dict:
             logger.error("403: BOT_SECRET_KEY backend dagi TELEGRAM_BOT_SECRET bilan bir xil bo'lishi kerak.")
         return None
     except (urllib.error.URLError, OSError) as e:
-        logger.error("Backend ga ulanish xatosi: %s (WEBSITE_URL=%s)", e, WEBSITE_URL)
+        logger.error(
+            "Backend ga ulanish xatosi: %s | WEBSITE_URL=%s | Backend ishlayotganini va URL to'g'riligini tekshiring (RAILWAY_VARIABLES.md)",
+            e, WEBSITE_URL
+        )
         return None
 
 
@@ -195,7 +198,8 @@ async def receive_phone(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         return CONFIRMING
     await update.message.reply_html(
         "❌ <b>Backend bilan bog'lanib bo'lmadi.</b>\n\n"
-        "Bir necha soniyadan keyin /start ni qayta yuboring. Agar takrorlansa, sayt administratoriga murojaat qiling."
+        "Bir necha soniyadan keyin /start ni qayta yuboring. Agar takrorlansa, administrator "
+        "WEBSITE_URL va BOT_SECRET_KEY ni tekshirsin (RAILWAY_VARIABLES.md)."
     )
     return ConversationHandler.END
 
@@ -262,6 +266,13 @@ def main():
         logger.error(
             "BOT_SECRET_KEY yoki TELEGRAM_BOT_SECRET o'rnatilmagan! "
             "Railway: Bot servisida Variable qo'shing (Backend dagi TELEGRAM_BOT_SECRET bilan bir xil)."
+        )
+        return
+    # Railway'da WEBSITE_URL = backend manzili (https://...). Localhost bo'lmasin.
+    if "localhost" in WEBSITE_URL or "127.0.0.1" in WEBSITE_URL:
+        logger.error(
+            "WEBSITE_URL localhost/127.0.0.1 — Backend ga ulanmaydi! "
+            "Railway Bot servisida WEBSITE_URL = Backend URL (masalan https://exemplary-fascination-production-9514.up.railway.app) qo'ying. RAILWAY_VARIABLES.md"
         )
         return
 

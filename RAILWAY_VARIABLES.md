@@ -97,8 +97,26 @@ Agar logda **Conflict: terminated by other getUpdates request** chiqsa — bir x
 
 ---
 
-## 7. Tekshirish
+## 7. "Backend bilan bog'lanib bo'lmadi" — bot backendga ulanmayapti
+
+Agar bot foydalanuvchiga shu xabarni yuborsa:
+
+1. **Railway Bot servisi → Variables** tekshiring:
+   - **WEBSITE_URL** = `https://exemplary-fascination-production-9514.up.railway.app` (**https**, localhost emas).
+   - **BOT_SECRET_KEY** = Backend’dagi `TELEGRAM_BOT_SECRET` bilan **bir xil** (masalan `wibestore-telegram-bot-secret-2024`).
+
+2. **Backend ishlayotganini** tekshiring: brauzerda `https://exemplary-fascination-production-9514.up.railway.app/api/v1/` ochilsa — backend ishlayapti.
+
+3. Bot’ni **Redeploy** qiling (Variables o‘zgartirilgandan keyin).
+
+---
+
+## 8. Tekshirish
 
 - Backend: brauzerda `https://exemplary-fascination-production-9514.up.railway.app/api/v1/` (yoki admin/docs) ochilsa — backend ishlayapti.
 - Frontend: `https://frontend-production-76e67.up.railway.app` — sayt ochilsa, Telegram tugmasi va ro‘yxatdan o‘tish ishlashi uchun `VITE_API_BASE_URL` to‘g‘ri bo‘lishi kerak.
 - Bot: Telegram’da `/start` → telefon yuborish → kod olish; keyin saytda `/register` da telefon + kod kiritib ro‘yxatdan o‘tish.
+
+---
+
+*Agar bot "Backend bilan bog'lanib bo'lmadi" deb yuborsa — yuqoridagi 7-bo‘limni bajaring.*
