@@ -17,7 +17,10 @@ import urllib.request
 import warnings
 from pathlib import Path
 
-warnings.filterwarnings("ignore", message=".*per_message.*", category=UserWarning, module="telegram")
+# PTBUserWarning (per_message + CallbackQueryHandler) — ConversationHandler da kerakli sozlama
+warnings.filterwarnings("ignore", message=".*per_message.*")
+warnings.filterwarnings("ignore", message=".*CallbackQueryHandler.*")
+warnings.filterwarnings("ignore", category=UserWarning, module="telegram")
 
 try:
     from dotenv import load_dotenv
@@ -42,6 +45,8 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+# Conflict (409) da telegram kutubxonasi ERROR yozadi — bitta instance masalasi, WARNING yetarli
+logging.getLogger("telegram.ext.Updater").setLevel(logging.WARNING)
 
 # ===== KONFIGURATSIYA =====
 BOT_TOKEN = os.getenv('BOT_TOKEN', 'YOUR_BOT_TOKEN_HERE')
@@ -251,6 +256,12 @@ def main():
     """Botni ishga tushirish"""
     if BOT_TOKEN == 'YOUR_BOT_TOKEN_HERE':
         logger.error("BOT_TOKEN o'rnatilmagan! .env faylni tekshiring.")
+        return
+    if not BOT_SECRET_KEY:
+        logger.error(
+            "BOT_SECRET_KEY yoki TELEGRAM_BOT_SECRET o'rnatilmagan! "
+            "Railway: Bot servisida Variable qo'shing (Backend dagi TELEGRAM_BOT_SECRET bilan bir xil)."
+        )
         return
 
     app = Application.builder().token(BOT_TOKEN).build()
