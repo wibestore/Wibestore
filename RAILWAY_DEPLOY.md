@@ -6,6 +6,10 @@ Log'dagi xatoliklar ko‘pincha **o‘rnatilmagan env o‘zgaruvchilar** tufayli
 
 ## 1. Backend (Django) — Railway'da ishlashi uchun
 
+### Xato: `FATAL: DATABASE_URL yoki DATABASE_PUBLIC_URL kerak...` yoki `ValueError: Production requires a real database`
+
+**Sabab:** Backend servisida `DATABASE_URL` va `DATABASE_PUBLIC_URL` bo‘sh. Railway konteynerida DB ulanishi yo‘q.
+
 ### Xato: `connection to 127.0.0.1 port 5432 failed: Connection refused`
 
 **Sabab:** Backend `DATABASE_URL` olmayapti yoki localhost default ishlatilmoqda. Railway konteynerida localhost’da Postgres yo‘q.

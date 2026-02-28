@@ -17,6 +17,12 @@ if [ -z "${DATABASE_URL}" ] && [ -n "${DATABASE_PUBLIC_URL}" ]; then
     echo "==> Using DATABASE_PUBLIC_URL as DATABASE_URL"
 fi
 
+# Production (Railway): DB bo'lmasa aniq xabar va to'xtatish (traceback o'rniga)
+if [ -z "${DATABASE_URL}" ]; then
+    echo "FATAL: DATABASE_URL yoki DATABASE_PUBLIC_URL kerak. Railway: Postgres qo'shing, keyin Backend servisida Variables → Add Reference → Postgres → DATABASE_PUBLIC_URL tanlang."
+    exit 1
+fi
+
 echo "==> WibeStore Entrypoint Started (PORT=$PORT)"
 
 echo "==> Creating migrations if needed..."
