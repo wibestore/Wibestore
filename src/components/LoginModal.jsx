@@ -304,14 +304,25 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }) => {
                     )}
                     <button
                         onClick={handleTelegramClick}
-                        className="btn btn-secondary btn-md w-full"
-                        style={{ gap: '8px' }}
+                        type="button"
+                        className="btn btn-md w-full"
+                        style={{
+                            gap: '8px',
+                            background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: 'var(--radius-md)',
+                            padding: '10px 16px',
+                            fontWeight: 600,
+                            boxShadow: '0 4px 12px rgba(42, 171, 238, 0.3)',
+                            cursor: 'pointer',
+                        }}
                     >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z" fill="#2AABEE" />
-                            <path d="M5.432 11.873l8.772-3.63c.65-.233 2.82-.935 2.82-.935s1.005-.39.922.558c-.027.39-.243 1.766-.458 3.256l-.676 4.403s-.057.65-.536.758c-.479.108-1.267-.39-1.404-.498-.108-.081-2.024-1.296-2.72-1.892-.19-.163-.406-.49.027-.87l2.845-2.72c.325-.307.65-1.024-.703-.152l-3.804 2.575s-.46.284-1.318.027c-.858-.257-1.857-.603-1.857-.603s-.693-.433.487-.893z" fill="#fff" />
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z" fill="#fff" />
+                            <path d="M5.432 11.873l8.772-3.63c.65-.233 2.82-.935 2.82-.935s1.005-.39.922.558c-.027.39-.243 1.766-.458 3.256l-.676 4.403s-.057.65-.536.758c-.479.108-1.267-.39-1.404-.498-.108-.081-2.024-1.296-2.72-1.892-.19-.163-.406-.49.027-.87l2.845-2.72c.325-.307.65-1.024-.703-.152l-3.804 2.575s-.46.284-1.318.027c-.858-.257-1.857-.603-1.857-.603s-.693-.433.487-.893z" fill="#2AABEE" />
                         </svg>
-                        Telegram
+                        {t('auth.telegram_btn') || 'Telegram orqali kirish'}
                     </button>
                 </div>
 

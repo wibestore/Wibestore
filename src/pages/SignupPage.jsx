@@ -352,7 +352,7 @@ const SignupPage = () => {
                         </>
                     )}
 
-                    {/* Telegram orqali ro'yxatdan o'tish */}
+                    {/* Telegram orqali ro'yxatdan o'tish — chiroyli kartochka */}
                     <div className="flex items-center gap-3" style={{ margin: '20px 0' }}>
                         <div className="divider flex-1" />
                         <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
@@ -362,28 +362,52 @@ const SignupPage = () => {
                     </div>
                     <div
                         style={{
-                            padding: '16px',
+                            padding: '20px',
                             borderRadius: 'var(--radius-lg)',
-                            border: '1px solid var(--color-border-muted)',
-                            backgroundColor: 'var(--color-bg-primary)',
+                            border: '1px solid rgba(42, 171, 238, 0.35)',
+                            background: 'linear-gradient(135deg, rgba(42, 171, 238, 0.06) 0%, rgba(42, 171, 238, 0.02) 100%)',
                             marginBottom: '16px',
                         }}
                     >
-                        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', marginBottom: '12px' }}>
-                            {t('signup.telegram_hint') || "Telegram bot orqali kod oling, keyin quyida telefon va kodni kiriting."}
-                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                            <div style={{
+                                width: '40px', height: '40px', borderRadius: 'var(--radius-lg)',
+                                background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                boxShadow: '0 4px 12px rgba(42, 171, 238, 0.35)',
+                            }}>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z" fill="#fff" />
+                                    <path d="M5.432 11.873l8.772-3.63c.65-.233 2.82-.935 2.82-.935s1.005-.39.922.558c-.027.39-.243 1.766-.458 3.256l-.676 4.403s-.057.65-.536.758c-.479.108-1.267-.39-1.404-.498-.108-.081-2.024-1.296-2.72-1.892-.19-.163-.406-.49.027-.87l2.845-2.72c.325-.307.65-1.024-.703-.152l-3.804 2.575s-.46.284-1.318.027c-.858-.257-1.857-.603-1.857-.603s-.693-.433.487-.893z" fill="#2AABEE" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', margin: 0 }}>
+                                    {t('signup.telegram_title') || "Telegram orqali ro'yxatdan o'tish"}
+                                </p>
+                                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', margin: '2px 0 0 0' }}>
+                                    {t('signup.telegram_hint') || "Botdan kod oling, keyin telefon va kodni kiriting."}
+                                </p>
+                            </div>
+                        </div>
                         <a
                             href={TELEGRAM_BOT_URL}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn btn-secondary btn-md w-full"
-                            style={{ gap: '8px', marginBottom: '16px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+                            className="btn btn-md w-full"
+                            style={{
+                                gap: '8px', marginBottom: '16px',
+                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none',
+                                background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)', color: '#fff', border: 'none',
+                                borderRadius: 'var(--radius-md)', padding: '10px 16px', fontWeight: 600, fontSize: 'var(--font-size-sm)',
+                                boxShadow: '0 4px 12px rgba(42, 171, 238, 0.3)',
+                            }}
                         >
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z" fill="#2AABEE" />
-                                <path d="M5.432 11.873l8.772-3.63c.65-.233 2.82-.935 2.82-.935s1.005-.39.922.558c-.027.39-.243 1.766-.458 3.256l-.676 4.403s-.057.65-.536.758c-.479.108-1.267-.39-1.404-.498-.108-.081-2.024-1.296-2.72-1.892-.19-.163-.406-.49.027-.87l2.845-2.72c.325-.307.65-1.024-.703-.152l-3.804 2.575s-.46.284-1.318.027c-.858-.257-1.857-.603-1.857-.603s-.693-.433.487-.893z" fill="#fff" />
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z" fill="#fff" />
+                                <path d="M5.432 11.873l8.772-3.63c.65-.233 2.82-.935 2.82-.935s1.005-.39.922.558c-.027.39-.243 1.766-.458 3.256l-.676 4.403s-.057.65-.536.758c-.479.108-1.267-.39-1.404-.498-.108-.081-2.024-1.296-2.72-1.892-.19-.163-.406-.49.027-.87l2.845-2.72c.325-.307.65-1.024-.703-.152l-3.804 2.575s-.46.284-1.318.027c-.858-.257-1.857-.603-1.857-.603s-.693-.433.487-.893z" fill="#2AABEE" />
                             </svg>
-                            {t('signup.telegram_open_bot') || '@wibestorebot — Kod olish'}
+                            @wibestorebot — Kod olish
                         </a>
                         <form onSubmit={handleTelegramSignup}>
                             <div style={{ marginBottom: '12px' }}>
@@ -397,7 +421,7 @@ const SignupPage = () => {
                                     style={{ paddingLeft: '12px' }}
                                 />
                             </div>
-                            <div style={{ marginBottom: '12px' }}>
+                            <div style={{ marginBottom: '14px' }}>
                                 <label className="input-label" style={{ fontSize: 'var(--font-size-sm)' }}>{t('signup.telegram_code') || '6 xonali kod'}</label>
                                 <input
                                     type="text"
@@ -413,7 +437,12 @@ const SignupPage = () => {
                             <button
                                 type="submit"
                                 disabled={telegramLoading}
-                                className="btn btn-primary btn-md w-full"
+                                className="btn btn-md w-full"
+                                style={{
+                                    background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)', color: '#fff', border: 'none',
+                                    borderRadius: 'var(--radius-md)', padding: '10px 16px', fontWeight: 600,
+                                    boxShadow: '0 4px 12px rgba(42, 171, 238, 0.3)',
+                                }}
                             >
                                 {telegramLoading && <span className="spinner" style={{ marginRight: '8px' }} />}
                                 {t('signup.telegram_submit') || "Telegram orqali ro'yxatdan o'tish"}
