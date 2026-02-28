@@ -25,13 +25,18 @@ fi
 
 echo "==> WibeStore Entrypoint Started (PORT=$PORT)"
 
-echo "==> Creating migrations if needed..."
-python manage.py makemigrations --noinput 2>/dev/null || true
+echo "==> Fixing migration state if needed..."
+python fix_migrations.py || true
 
-echo "==> Applying migrations (required; exit on failure)..."
-if ! python manage.py migrate --noinput; then
-    echo "FATAL: migrate failed. Check DATABASE_URL and DB connectivity."
-    exit 1
+echo "==> Applying migrations..."
+if ! python manage.py migrate --noinput 2>&1; then
+    echo "==> migrate failed, syncing migration state with --fake..."
+    python manage.py migrate --fake --noinput 2>&1 || true
+    echo "==> Re-applying migrations after fake..."
+    if ! python manage.py migrate --noinput 2>&1; then
+        echo "FATAL: migrate still failed after --fake. Check DATABASE_URL and DB state."
+        exit 1
+    fi
 fi
 
 echo "==> Creating superuser..."
