@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from apps.accounts.models import PasswordHistory, Referral
+from apps.accounts.models import PasswordHistory, Referral, TelegramRegistrationCode
 
 User = get_user_model()
 
@@ -26,6 +26,8 @@ class UserAdmin(BaseUserAdmin):
         "email",
         "username",
         "full_name",
+        "phone_number",
+        "telegram_id",
         "is_active",
         "is_staff",
         "is_verified",
@@ -42,7 +44,7 @@ class UserAdmin(BaseUserAdmin):
         (None, {"fields": ("email", "password")}),
         (
             "Personal Info",
-            {"fields": ("username", "full_name", "phone_number", "avatar", "language", "timezone")},
+            {"fields": ("username", "full_name", "phone_number", "telegram_id", "avatar", "language", "timezone")},
         ),
         (
             "Marketplace",
@@ -66,6 +68,15 @@ class UserAdmin(BaseUserAdmin):
             },
         ),
     )
+
+
+@admin.register(TelegramRegistrationCode)
+class TelegramRegistrationCodeAdmin(admin.ModelAdmin):
+    list_display = ["telegram_id", "phone_number", "code", "is_used", "expires_at", "created_at"]
+    list_filter = ["is_used", "created_at"]
+    search_fields = ["phone_number", "code"]
+    readonly_fields = ["created_at"]
+    ordering = ["-created_at"]
 
 
 @admin.register(Referral)

@@ -75,6 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
             "full_name",
             "display_name",
             "phone_number",
+            "telegram_id",
             "avatar",
             "is_verified",
             "rating",
@@ -89,6 +90,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
             "email",
+            "telegram_id",
             "is_verified",
             "rating",
             "total_sales",
@@ -197,3 +199,21 @@ class OTPVerifySerializer(serializers.Serializer):
 
     phone_number = serializers.CharField()
     otp = serializers.CharField(max_length=6)
+
+
+# ----- Telegram bot orqali ro'yxatdan o'tish -----
+
+
+class TelegramOTPCreateSerializer(serializers.Serializer):
+    """Bot uchun OTP kod yaratish (secret_key, telegram_id, phone_number)."""
+
+    secret_key = serializers.CharField(write_only=True)
+    telegram_id = serializers.IntegerField(min_value=1)
+    phone_number = serializers.CharField(max_length=20)
+
+
+class TelegramRegisterSerializer(serializers.Serializer):
+    """Saytda telefon + kod orqali ro'yxatdan o'tish."""
+
+    phone = serializers.CharField(max_length=20)
+    code = serializers.CharField(min_length=4, max_length=6)

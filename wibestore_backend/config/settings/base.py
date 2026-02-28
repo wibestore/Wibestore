@@ -277,6 +277,10 @@ CORS_ALLOWED_ORIGINS = env.list(
     default=["http://localhost:5173", "http://localhost:3000"],
 )
 CORS_ALLOW_CREDENTIALS = True
+
+# Telegram bot: bot create-otp endpoint uchun maxfiy kalit (env da TELEGRAM_BOT_SECRET yoki BOT_SECRET_KEY)
+TELEGRAM_BOT_SECRET = os.environ.get("TELEGRAM_BOT_SECRET") or os.environ.get("BOT_SECRET_KEY", "")
+
 CORS_ALLOW_HEADERS = [
     "accept",
     "authorization",

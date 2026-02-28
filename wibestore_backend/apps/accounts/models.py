@@ -47,6 +47,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, db_index=True)
     username = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    # Telegram: bot orqali ro'yxatdan o'tganda to'ldiriladi
+    telegram_id = models.BigIntegerField(null=True, blank=True, unique=True, db_index=True)
     phone_number = models.CharField(
         max_length=20,
         unique=True,
@@ -99,6 +101,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             models.Index(fields=["email"]),
             models.Index(fields=["username"]),
             models.Index(fields=["phone_number"]),
+            models.Index(fields=["telegram_id"]),
             models.Index(fields=["created_at"]),
         ]
 
@@ -183,3 +186,31 @@ class Referral(models.Model):
 
     def __str__(self) -> str:
         return f"{self.referrer.email} → {self.referred.email}"
+
+
+class TelegramRegistrationCode(models.Model):
+    """
+    Bot orqali ro'yxatdan o'tish uchun bir martalik kod.
+    Kod 10 daqiqa amal qiladi, bir marta ishlatiladi.
+    """
+
+    telegram_id = models.BigIntegerField(db_index=True)
+    phone_number = models.CharField(max_length=20)
+    code = models.CharField(max_length=6, db_index=True)
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    class Meta:
+        db_table = "telegram_registration_codes"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["code", "is_used"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"Code {self.code} for telegram_id={self.telegram_id}"
+
+    @property
+    def is_valid(self) -> bool:
+        return not self.is_used and timezone.now() < self.expires_at

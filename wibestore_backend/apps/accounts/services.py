@@ -14,7 +14,7 @@ from django.utils import timezone
 from core.exceptions import BusinessLogicError
 from core.utils import generate_otp, generate_token
 
-from .models import PasswordHistory
+from .models import PasswordHistory, TelegramRegistrationCode
 
 logger = logging.getLogger("apps.accounts")
 User = get_user_model()
@@ -195,6 +195,99 @@ class AuthService:
             raise BusinessLogicError("Invalid or expired OTP code.")
         cache.delete(f"otp_{phone_number}")
         return True
+
+    # ----- Telegram bot orqali ro'yxatdan o'tish -----
+    TELEGRAM_OTP_EXPIRE_MINUTES = 10
+
+    @staticmethod
+    def _normalize_phone(phone: str) -> str:
+        """Raqamni +998XXXXXXXXX formatiga keltirish."""
+        cleaned = "".join(c for c in phone if c.isdigit())
+        if cleaned.startswith("998") and len(cleaned) == 12:
+            return "+" + cleaned
+        if len(cleaned) == 9 and cleaned[0] == "9":
+            return "+998" + cleaned
+        return phone if phone.startswith("+") else "+" + phone
+
+    @staticmethod
+    def create_telegram_otp(*, telegram_id: int, phone_number: str) -> "TelegramRegistrationCode":
+        """Bot uchun bir martalik kod yaratish (10 daqiqa amal qiladi)."""
+        from core.utils import generate_otp
+
+        phone_normalized = AuthService._normalize_phone(phone_number)
+        # Eski ishlatilmagan kodlarni bekor qilish
+        TelegramRegistrationCode.objects.filter(
+            telegram_id=telegram_id, is_used=False
+        ).update(is_used=True)
+
+        code = generate_otp(6)
+        expires_at = timezone.now() + timezone.timedelta(
+            minutes=AuthService.TELEGRAM_OTP_EXPIRE_MINUTES
+        )
+        return TelegramRegistrationCode.objects.create(
+            telegram_id=telegram_id,
+            phone_number=phone_normalized,
+            code=code,
+            expires_at=expires_at,
+        )
+
+    @staticmethod
+    def validate_telegram_code_and_register(*, phone_number: str, code: str) -> User:
+        """
+        Kod va telefonni tekshirish, agar to'g'ri bo'lsa User yaratish (yoki mavjudni qaytarish).
+        Kod bir marta ishlatiladi.
+        """
+        from .models import TelegramRegistrationCode
+
+        phone_normalized = AuthService._normalize_phone(phone_number)
+        code_clean = code.strip()
+
+        record = (
+            TelegramRegistrationCode.objects.filter(
+                code=code_clean,
+                phone_number=phone_normalized,
+                is_used=False,
+            )
+            .order_by("-created_at")
+            .first()
+        )
+
+        if not record:
+            raise BusinessLogicError("Kod noto'g'ri yoki allaqachon ishlatilgan.")
+
+        if timezone.now() >= record.expires_at:
+            raise BusinessLogicError("Kod muddati tugagan. Botdan yangi kod oling.")
+
+        # Telegram_id bilan allaqachon user bormi?
+        user = User.objects.filter(telegram_id=record.telegram_id).first()
+        if user:
+            record.is_used = True
+            record.save(update_fields=["is_used"])
+            return user
+
+        # Telefon bilan user bormi? — ulash
+        user = User.objects.filter(phone_number=phone_normalized).first()
+        if user:
+            user.telegram_id = record.telegram_id
+            user.save(update_fields=["telegram_id"])
+            record.is_used = True
+            record.save(update_fields=["is_used"])
+            return user
+
+        # Yangi user: placeholder email, parolsiz (set_password(None) = unusable)
+        placeholder_email = f"tg_{record.telegram_id}@telegram.wibestore.local"
+        user = User.objects.create_user(
+            email=placeholder_email,
+            password=None,
+            phone_number=phone_normalized,
+            telegram_id=record.telegram_id,
+            is_verified=True,
+        )
+
+        record.is_used = True
+        record.save(update_fields=["is_used"])
+        logger.info("New user registered via Telegram: telegram_id=%s, phone=%s", record.telegram_id, phone_normalized)
+        return user
 
 
 class UserService:

@@ -5,6 +5,7 @@ WibeStore Backend - Accounts Views (API)
 import logging
 
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -21,6 +22,8 @@ from .serializers import (
     OTPVerifySerializer,
     PasswordResetConfirmSerializer,
     PasswordResetRequestSerializer,
+    TelegramOTPCreateSerializer,
+    TelegramRegisterSerializer,
     UserProfileUpdateSerializer,
     UserPublicSerializer,
     UserRegisterSerializer,
@@ -271,6 +274,109 @@ class OTPVerifyView(APIView):
             {"success": True, "message": "OTP verified successfully."},
             status=status.HTTP_200_OK,
         )
+
+
+@extend_schema(tags=["Authentication"])
+class BotCreateOTPView(APIView):
+    """
+    Bot uchun bir martalik kod yaratish.
+    POST /api/v1/auth/telegram/otp/create/
+    Body: { "secret_key": "...", "telegram_id": 123, "phone_number": "+998901234567" }
+    """
+
+    permission_classes = [permissions.AllowAny]
+    throttle_scope = "auth"
+
+    def post(self, request):
+        from django.conf import settings
+
+        serializer = TelegramOTPCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        if data["secret_key"] != getattr(settings, "TELEGRAM_BOT_SECRET", ""):
+            return Response(
+                {"success": False, "error": "Unauthorized"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        otp_record = AuthService.create_telegram_otp(
+            telegram_id=data["telegram_id"],
+            phone_number=data["phone_number"],
+        )
+        remaining = max(0, int((otp_record.expires_at - timezone.now()).total_seconds()))
+        return Response(
+            {
+                "success": True,
+                "code": otp_record.code,
+                "expires_at": otp_record.expires_at.isoformat(),
+                "remaining_seconds": remaining,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+@extend_schema(tags=["Authentication"])
+class TelegramRegisterView(APIView):
+    """
+    Telegram orqali ro'yxatdan o'tish: telefon + botdan olingan kod.
+    POST /api/v1/auth/register/telegram/
+    Body: { "phone": "+998901234567", "code": "123456" }
+    JWT access token httpOnly cookie'da qaytariladi (XSS himoya).
+    """
+
+    permission_classes = [permissions.AllowAny]
+    throttle_scope = "auth"
+
+    def post(self, request):
+        serializer = TelegramRegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        user = AuthService.validate_telegram_code_and_register(
+            phone_number=data["phone"],
+            code=data["code"],
+        )
+
+        tokens = RefreshToken.for_user(user)
+        access = str(tokens.access_token)
+        refresh = str(tokens)
+
+        response = Response(
+            {
+                "success": True,
+                "message": "Muvaffaqiyatli ro'yxatdan o'tdingiz!",
+                "data": {
+                    "user": UserSerializer(user).data,
+                    "tokens": {"access": access, "refresh": refresh},
+                },
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+        # JWT ni httpOnly cookie'da berish (XSS himoya)
+        from django.conf import settings as django_settings
+
+        max_age_access = 60 * 15  # 15 min (SIMPLE_JWT default)
+        response.set_cookie(
+            key="access_token",
+            value=access,
+            max_age=max_age_access,
+            httponly=True,
+            secure=not django_settings.DEBUG,
+            samesite="Lax",
+            path="/",
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh,
+            max_age=60 * 60 * 24 * 7,  # 7 kun
+            httponly=True,
+            secure=not django_settings.DEBUG,
+            samesite="Lax",
+            path="/api/v1/auth/refresh/",
+        )
+        return response
 
 
 @extend_schema(tags=["Profile"])
