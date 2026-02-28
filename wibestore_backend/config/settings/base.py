@@ -365,10 +365,11 @@ AXES_CACHE = "default"  # Use default cache (LocMem in dev, Redis in prod when s
 FERNET_KEY = env("FERNET_KEY", default=None)
 if not FERNET_KEY:
     import warnings
-    warnings.warn(
-        "FERNET_KEY not set! Sensitive data encryption will not work. "
-        "Generate a key with: python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\""
-    )
+    if "production" not in os.environ.get("DJANGO_SETTINGS_MODULE", ""):
+        warnings.warn(
+            "FERNET_KEY not set! Sensitive data encryption will not work. "
+            "Generate a key with: python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\""
+        )
     FERNET_KEY = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="  # Dummy key for development only; never use in production
 
 # ============================================================

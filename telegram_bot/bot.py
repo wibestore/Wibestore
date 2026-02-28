@@ -45,8 +45,8 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
-# Conflict (409) da telegram kutubxonasi ERROR yozadi — bitta instance masalasi, WARNING yetarli
-logging.getLogger("telegram.ext.Updater").setLevel(logging.WARNING)
+# Conflict (409) da telegram kutubxonasi ERROR yozadi — faqat bizning WARNING chiqadi
+logging.getLogger("telegram.ext.Updater").setLevel(logging.CRITICAL)
 
 # ===== KONFIGURATSIYA =====
 BOT_TOKEN = os.getenv('BOT_TOKEN', 'YOUR_BOT_TOKEN_HERE')

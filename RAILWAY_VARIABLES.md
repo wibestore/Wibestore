@@ -69,7 +69,35 @@ Frontend **build** paytida bu o‘zgaruvchilar ishlatiladi. Railway’da Fronten
 
 ---
 
-## 5. Tekshirish
+## 5. Variables nomlari — aniq yozing (xato bo‘lmasin)
+
+Railway’da Variable qo‘shayotganda **nomni** to‘g‘ri kiriting (katta-kichik harf, pastgi chiziq):
+
+**Backend:**  
+`DATABASE_URL` yoki `DATABASE_PUBLIC_URL` · `SECRET_KEY` · `CORS_ALLOWED_ORIGINS` · `TELEGRAM_BOT_SECRET`
+
+**Frontend:**  
+`VITE_API_BASE_URL` · `VITE_TELEGRAM_BOT_USERNAME` · `VITE_WS_BASE_URL`
+
+**Bot:**  
+`BOT_TOKEN` · `WEBSITE_URL` · `BOT_SECRET_KEY` · `REGISTER_URL`
+
+Noto‘g‘ri yozuvlar (ishlamaydi): `TELEGRAM_BOT_TOKEN`, `BOT_SECRET`, `VITE_API_URL`, `WEBSITE_BASE_URL`.
+
+---
+
+## 6. Bot: 409 Conflict — "only one bot instance"
+
+Agar logda **Conflict: terminated by other getUpdates request** chiqsa — bir xil `BOT_TOKEN` bilan **ikki joyda** bot ishlayapti.
+
+**Qilish kerak:** Botni **faqat bitta** joyda ishlating:
+- Railway’da **Wibestore** (yoki Bot) servisi bor bo‘lsa — faqat shu servis ishlasin; kompyuteringizda `python bot.py` ishlamasin.
+- Yoki faqat kompyuteringizda ishlating, Railway’dagi Bot servisini **to‘xtating** (Stop) yoki o‘chiring.
+- Railway’da Bot servisi **replica 1** bo‘lishi kerak (Settings’da tekshiring).
+
+---
+
+## 7. Tekshirish
 
 - Backend: brauzerda `https://exemplary-fascination-production-9514.up.railway.app/api/v1/` (yoki admin/docs) ochilsa — backend ishlayapti.
 - Frontend: `https://frontend-production-76e67.up.railway.app` — sayt ochilsa, Telegram tugmasi va ro‘yxatdan o‘tish ishlashi uchun `VITE_API_BASE_URL` to‘g‘ri bo‘lishi kerak.
