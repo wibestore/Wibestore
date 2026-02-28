@@ -105,24 +105,35 @@ REDIS_URL = (env("REDIS_URL", default="") or "").strip()  # noqa: F405
 
 
 def _use_redis_cache():
-    """Use Redis only if REDIS_URL is set and not localhost (production Redis is external)."""
+    """Use Redis only if REDIS_URL is set and not localhost.
+
+    Note: Don't use socket.connect() here — Railway internal DNS (redis.railway.internal)
+    may not be resolvable at settings-load time, causing false negatives.
+    """
     if not REDIS_URL or "localhost" in REDIS_URL or "127.0.0.1" in REDIS_URL:
         return False
-    try:
-        from urllib.parse import urlparse
-        parsed = urlparse(REDIS_URL)
-        host = parsed.hostname or "localhost"
-        port = parsed.port or 6379
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(2)
-        s.connect((host, port))
-        s.close()
-        return True
-    except (OSError, Exception):
-        return False
+    return True
 
 
-if not _use_redis_cache():
+if _use_redis_cache():
+    # Redis available — override base.py CACHES to use REDIS_URL (not CACHE_REDIS_URL)
+    CACHES = {  # noqa: F811
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": REDIS_URL,
+        }
+    }
+    CHANNEL_LAYERS = {  # noqa: F811
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [REDIS_URL],
+            },
+        },
+    }
+    CELERY_BROKER_URL = REDIS_URL  # noqa: F811
+    CELERY_RESULT_BACKEND = REDIS_URL  # noqa: F811
+else:
     # No Redis — use local memory cache and disable Redis-dependent features
     CACHES = {  # noqa: F811
         "default": {
