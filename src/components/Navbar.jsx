@@ -457,7 +457,7 @@ const Navbar = () => {
                                                 </div>
                                                 <div
                                                     className="text-[12px] truncate mb-1"
-                                                    style={{ color: isDark ? '#484f58' : '#8c959f', paddingTop: {user?.email ? '2px' : '0'}, paddingBottom: '4px' }}
+                                                    style={{ color: isDark ? '#484f58' : '#8c959f', paddingTop: user?.email ? '2px' : '0', paddingBottom: '4px' }}
                                                 >
                                                     {user?.email || user?.telegram || ''}
                                                 </div>
