@@ -438,10 +438,10 @@ const Navbar = () => {
 
                                     {isProfileOpen && (
                                         <div
-                                            className="absolute right-0 top-full mt-1.5 py-1 rounded-lg shadow-xl"
+                                            className="absolute right-0 top-full mt-2 py-2 rounded-lg shadow-xl"
                                             style={{
-                                                minWidth: '220px',
-                                                padding: '10px',
+                                                minWidth: '240px',
+                                                padding: '16px 12px',
                                                 backgroundColor: isDark ? '#161b22' : '#ffffff',
                                                 border: `1px solid ${isDark ? '#30363d' : '#d0d7de'}`,
                                                 zIndex: 100,
@@ -450,19 +450,19 @@ const Navbar = () => {
                                             {/* User Info */}
                                             <div className="px-3 py-2 mb-1" style={{ borderBottom: `1px solid ${isDark ? '#21262d' : '#eaeef2'}` }}>
                                                 <div
-                                                    className="text-[13px] font-semibold"
-                                                    style={{ color: isDark ? '#f0f6fc' : '#1f2328' }}
+                                                    className="text-[13px] font-semibold mb-1"
+                                                    style={{ color: isDark ? '#f0f6fc' : '#1f2328', paddingTop: '4px', paddingBottom: '4px' }}
                                                 >
                                                     {user?.name || 'User'}
                                                 </div>
                                                 <div
-                                                    className="text-[12px] truncate"
-                                                    style={{ color: isDark ? '#484f58' : '#8c959f' }}
+                                                    className="text-[12px] truncate mb-1"
+                                                    style={{ color: isDark ? '#484f58' : '#8c959f', paddingTop: {user?.email ? '2px' : '0'}, paddingBottom: '4px' }}
                                                 >
-                                                    {user?.email || ''}
+                                                    {user?.email || user?.telegram || ''}
                                                 </div>
                                                 {coins > 0 && (
-                                                    <div className="flex items-center gap-1 mt-1">
+                                                    <div className="flex items-center gap-1 mt-2 mb-1">
                                                         <Crown className="w-3 h-3" style={{ color: '#e3b341' }} />
                                                         <span className="text-[12px] font-semibold" style={{ color: '#e3b341' }}>
                                                             {coins} coins
@@ -480,14 +480,14 @@ const Navbar = () => {
                                                 <Link
                                                     key={item.to}
                                                     to={item.to}
-                                                    className="flex items-center gap-2.5 px-3 py-2 transition-colors duration-100"
+                                                    className="flex items-center gap-2.5 px-3 py-2 my-1 transition-colors duration-100"
                                                     onClick={() => setIsProfileOpen(false)}
                                                     style={{ textDecoration: 'none' }}
                                                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'; }}
                                                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                                                 >
                                                     <item.icon className="w-4 h-4" style={{ color: isDark ? '#8b949e' : '#656d76' }} />
-                                                    <span className="text-[13px] font-medium" style={{ color: isDark ? '#c9d1d9' : '#1f2328' }}>
+                                                    <span className="text-[13px] font-medium" style={{ color: isDark ? '#c9d1d9' : '#1f2328', paddingTop: '2px', paddingBottom: '2px' }}>
                                                         {item.label}
                                                     </span>
                                                 </Link>

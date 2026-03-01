@@ -8,14 +8,14 @@ const Footer = () => {
 
     const footerLinks = {
         marketplace: [
-            { label: t('footer.all_products'), to: '/products' },
-            { label: t('footer.top_accounts'), to: '/top' },
-            { label: t('footer.premium_sub'), to: '/premium' },
+            { label: t('footer.all_products') || 'Все товары', to: '/products' },
+            { label: t('footer.top_accounts') || 'Топ аккаунты', to: '/top' },
+            { label: t('footer.premium_sub') || 'Премиум подписка', to: '/premium' },
         ],
         support: [
-            { label: t('footer.faq'), to: '/faq' },
-            { label: t('footer.terms'), to: '/terms' },
-            { label: t('footer.privacy'), to: '/terms' },
+            { label: t('footer.faq') || 'Часто задаваемые вопросы', to: '/faq' },
+            { label: t('footer.terms') || 'Условия использования', to: '/terms' },
+            { label: t('footer.privacy') || 'Политика конфиденциальности', to: '/privacy' },
         ],
     };
 
@@ -57,7 +57,7 @@ const Footer = () => {
                                 lineHeight: '20px',
                             }}
                         >
-                            {t('footer.description')}
+                            {t('footer.description') || 'Самая надёжная платформа торговли игровыми аккаунтами в Узбекистане'}
                         </p>
                         <div className="space-y-2">
                             <a
@@ -177,11 +177,12 @@ const Footer = () => {
                         {['Payme', 'Click', 'Paynet'].map((method) => (
                             <div
                                 key={method}
-                                className="px-3 py-1.5 rounded-md text-xs font-medium"
+                                className="rounded-md text-xs font-medium"
                                 style={{
                                     backgroundColor: 'var(--color-bg-tertiary)',
                                     color: 'var(--color-text-secondary)',
                                     border: '1px solid var(--color-border-muted)',
+                                    padding: '10px',
                                 }}
                             >
                                 {method}
